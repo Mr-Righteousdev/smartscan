@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart Campus Security</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-header h2 {
+            color: #2c5aa0;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .university-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2c5aa0, #1e3d72);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2rem;
+        }
+        
+        .form-floating {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #2c5aa0;
+            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, #2c5aa0, #1e3d72);
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn-login:hover {
+            background: linear-gradient(135deg, #1e3d72, #2c5aa0);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 90, 160, 0.4);
+        }
+        
+        .alert {
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .security-badge {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .quick-access {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .role-badge {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+        
+        .demo-credentials {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .demo-credentials h6 {
+            color: #495057;
+            margin-bottom: 10px;
+        }
+        
+        .credential-item {
+            font-size: 0.85rem;
+            margin: 5px 0;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        
+        .credential-item:hover {
+            background-color: #e9ecef;
+        }
+        
+        .two-factor-section {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Header -->
+        <div class="login-header">
+            <div class="university-logo">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2>Smart Campus Security</h2>
+            <p class="text-muted">St. Lawrence University Uganda</p>
+            <span class="security-badge">
+                <i class="fas fa-lock me-1"></i>Secure Access Portal
+            </span>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="loginForm" method="POST">
+            <!-- Error/Success Messages -->
+            {% if error %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
+            </div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>{{ success }}
+            </div>
+            {% endif %}
+            
+            <!-- Main Login Fields -->
+            <div id="mainLogin">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="username" name="username" 
+                           placeholder="Username" required autocomplete="username">
+                    <label for="username">
+                        <i class="fas fa-user me-2"></i>Username
+                    </label>
+                </div>
+                
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="password" name="password" 
+                           placeholder="Password" required autocomplete="current-password">
+                    <label for="password">
+                        <i class="fas fa-lock me-2"></i>Password
+                    </label>
+                </div>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
+                    <label class="form-check-label" for="rememberMe">
+                        Remember me for 30 days
+                    </label>
+                </div>
+            </div>
+            
+            <!-- Two-Factor Authentication Section -->
+            <div class="two-factor-section" id="twoFactorSection">
+                <div class="alert alert-info">
+                    <i class="fas fa-shield-alt me-2"></i>
+                    Two-factor authentication required. Check your phone/email for the verification code.
+                </div>
+                
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="verification_code" name="verification_code" 
+                           placeholder="000000" maxlength="6" pattern="[0-9]{6}">
+                    <label for="verification_code">
+                        <i class="fas fa-key me-2"></i>Verification Code
+                    </label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-login">
+                <span class="loading-spinner" id="loadingSpinner"></span>
+                <i class="fas fa-sign-in-alt me-2"></i>
+                <span id="loginButtonText">Sign In Securely</span>
+            </button>
+        </form>
+        
+        <!-- Quick Access Section -->
+        <div class="quick-access">
+            <div class="text-center">
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary btn-sm me-2">
+                    <i class="fas fa-eye me-1"></i>View Campus (Guest)
+                </a>
+                <a href="#" class="btn btn-outline-secondary btn-sm" onclick="showForgotPassword()">
+                    <i class="fas fa-question-circle me-1"></i>Forgot Password?
+                </a>
+            </div>
+        </div>
+        
+        <!-- Demo Credentials -->
+        <div class="demo-credentials">
+            <h6><i class="fas fa-info-circle me-2"></i>Demo Credentials (Educational Use)</h6>
+            
+            <div class="credential-item" onclick="fillCredentials('admin', 'admin123')">
+                <i class="fas fa-user-shield me-2"></i>
+                <strong>Administrator</strong>
+                <span class="badge bg-danger role-badge">Admin</span>
+                <br><small class="text-muted">Username: admin | Password: admin123</small>
+            </div>
+            
+            <div class="credential-item" onclick="fillCredentials('security', 'security123')">
+                <i class="fas fa-user-tie me-2"></i>
+                <strong>Security Officer</strong>
+                <span class="badge bg-warning role-badge">Security</span>
+                <br><small class="text-muted">Username: security | Password: security123</small>
+            </div>
+            
+            <div class="credential-item" onclick="fillCredentials('john_doe', 'staff123')">
+                <i class="fas fa-user me-2"></i>
+                <strong>Staff Member</strong>
+                <span class="badge bg-info role-badge">Staff</span>
+                <br><small class="text-muted">Username: john_doe | Password: staff123</small>
+            </div>
+            
+            <small class="text-muted d-block mt-2">
+                <i class="fas fa-graduation-cap me-1"></i>
+                Click any credential above to auto-fill the login form
+            </small>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fill demo credentials
+        function fillCredentials(username, password) {
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+            
+            // Add visual feedback
+            const form = document.getElementById('loginForm');
+            form.style.border = '2px solid #28a745';
+            form.style.borderRadius = '20px';
+            
+            setTimeout(() => {
+                form.style.border = 'none';
+            }, 2000);
+        }
+        
+        // Handle form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const spinner = document.getElementById('loadingSpinner');
+            const buttonText = document.getElementById('loginButtonText');
+            
+            spinner.style.display = 'inline-block';
+            buttonText.textContent = 'Authenticating...';
+        });
+        
+        // Forgot password functionality
+        function showForgotPassword() {
+            alert('Password Reset Feature\n\nIn a real system, this would:\n' +
+                  '1. Send a reset link to your email\n' +
+                  '2. Verify your identity\n' +
+                  '3. Allow you to set a new password\n\n' +
+                  'For demo purposes, contact the system administrator.');
+        }
+        
+        // Auto-focus on username field
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('username').focus();
+        });
+        
+        // Handle Enter key in password field
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('loginForm').submit();
+            }
+        });
+        
+        // Show/hide password toggle
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            const icon = event.target;
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        // Simulate two-factor authentication (for educational purposes)
+        function simulateTwoFactor() {
+            document.getElementById('mainLogin').style.display = 'none';
+            document.getElementById('twoFactorSection').style.display = 'block';
+            document.getElementById('loginButtonText').textContent = 'Verify Code';
+            
+            // Auto-fill demo code after 3 seconds
+            setTimeout(() => {
+                document.getElementById('verification_code').value = '123456';
+                document.getElementById('verification_code').focus();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

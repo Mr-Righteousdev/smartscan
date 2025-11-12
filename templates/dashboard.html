@@ -1,0 +1,500 @@
+{% extends "base.html" %}
+
+{% block title %}Security Dashboard - Smart Campus Security{% endblock %}
+
+{% block extra_css %}
+<style>
+    .stats-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .stats-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    
+    .alert-item {
+        border-left: 4px solid;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .alert-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .alert-critical {
+        border-left-color: #dc3545;
+    }
+    
+    .alert-high {
+        border-left-color: #fd7e14;
+    }
+    
+    .alert-medium {
+        border-left-color: #ffc107;
+    }
+    
+    .alert-low {
+        border-left-color: #28a745;
+    }
+    
+    .access-log {
+        font-size: 0.9rem;
+        border-bottom: 1px solid #eee;
+        padding: 8px 0;
+    }
+    
+    .access-granted {
+        border-left: 3px solid #28a745;
+        padding-left: 10px;
+    }
+    
+    .access-denied {
+        border-left: 3px solid #dc3545;
+        padding-left: 10px;
+    }
+    
+    .real-time-indicator {
+        position: relative;
+        display: inline-block;
+        margin-left: 10px;
+    }
+    
+    .pulse-dot {
+        width: 12px;
+        height: 12px;
+        background: #28a745;
+        border-radius: 50%;
+        display: inline-block;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+        }
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+        }
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+        }
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-top: 20px;
+    }
+    
+    .severity-badge {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+    }
+    
+    .table-responsive {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .filter-tabs {
+        margin-bottom: 20px;
+    }
+    
+    .filter-tabs .nav-link {
+        border-radius: 20px;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-tabs .nav-link.active {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        border-color: transparent;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Header -->
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2><i class="fas fa-chart-line me-2"></i>Security Dashboard</h2>
+                <p class="text-muted mb-0">Real-time campus security monitoring
+                    <span class="real-time-indicator">
+                        <span class="pulse-dot"></span>
+                        <small class="ms-1">Live</small>
+                    </span>
+                </p>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary me-2" onclick="refreshDashboard()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#alertModal">
+                    <i class="fas fa-bell"></i> View All Alerts
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row">
+    <div class="col-md-3">
+        <div class="stats-card text-center">
+            <div class="stats-number">{{ data.stats.total_access_today }}</div>
+            <div class="stats-label">
+                <i class="fas fa-door-open me-1"></i>Access Attempts Today
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card text-center">
+            <div class="stats-number">{{ data.stats.denied_access_today }}</div>
+            <div class="stats-label">
+                <i class="fas fa-times-circle me-1"></i>Access Denied Today
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card text-center">
+            <div class="stats-number">{{ data.stats.active_alerts }}</div>
+            <div class="stats-label">
+                <i class="fas fa-exclamation-triangle me-1"></i>Active Security Alerts
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stats-card text-center">
+            <div class="stats-number">{{ data.stats.total_students }}</div>
+            <div class="stats-label">
+                <i class="fas fa-users me-1"></i>Active Students
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Security Alerts Panel -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-exclamation-triangle me-2"></i>Active Security Alerts</h5>
+            </div>
+            <div class="card-body">
+                {% if data.active_alerts %}
+                    {% for alert in data.active_alerts[:5] %}
+                    <div class="alert-item alert-{{ alert.severity }} p-3 mb-2 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="badge severity-badge 
+                                        {% if alert.severity == 'critical' %}bg-danger
+                                        {% elif alert.severity == 'high' %}bg-warning
+                                        {% elif alert.severity == 'medium' %}bg-info
+                                        {% else %}bg-success{% endif %}">
+                                        {{ alert.severity.upper() }}
+                                    </span>
+                                    <span class="badge bg-secondary ms-2">{{ alert.alert_type.replace('_', ' ').title() }}</span>
+                                </div>
+                                <p class="mb-1"><strong>{{ alert.alert_message }}</strong></p>
+                                <small class="text-muted">
+                                    {% if alert.location_name %}
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ alert.location_name }}
+                                    {% endif %}
+                                    {% if alert.full_name %}
+                                        | <i class="fas fa-user me-1"></i>{{ alert.full_name }}
+                                    {% endif %}
+                                </small>
+                            </div>
+                            <small class="text-muted">
+                                {{ alert.alert_time.strftime('%H:%M') if alert.alert_time else 'Unknown' }}
+                            </small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    {% if data.active_alerts|length > 5 %}
+                    <div class="text-center mt-3">
+                        <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#alertModal">
+                            View {{ data.active_alerts|length - 5 }} more alerts
+                        </button>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="text-center text-success py-4">
+                        <i class="fas fa-shield-alt fa-3x mb-3"></i>
+                        <h6>No Active Alerts</h6>
+                        <p class="text-muted mb-0">Campus security status is normal</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Access Logs -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-history me-2"></i>Recent Access Logs</h5>
+                
+                <!-- Filter Tabs -->
+                <ul class="nav nav-pills filter-tabs mt-2" id="logFilter">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-filter="all" href="#">All</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-filter="granted" href="#">Granted</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-filter="denied" href="#">Denied</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" style="max-height: 400px;">
+                    {% if data.recent_access %}
+                        {% for log in data.recent_access[:15] %}
+                        <div class="access-log {% if log.access_granted %}access-granted{% else %}access-denied{% endif %} 
+                                    log-item" data-status="{% if log.access_granted %}granted{% else %}denied{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="flex-grow-1">
+                                    <strong>{{ log.full_name or 'Unknown User' }}</strong>
+                                    <br>
+                                    <small class="text-muted">
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ log.location_name or 'Unknown Location' }}
+                                        {% if log.building %}({{ log.building }}){% endif %}
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge {% if log.access_granted %}bg-success{% else %}bg-danger{% endif %}">
+                                        {% if log.access_granted %}
+                                            <i class="fas fa-check"></i> GRANTED
+                                        {% else %}
+                                            <i class="fas fa-times"></i> DENIED
+                                        {% endif %}
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">
+                                        {{ log.access_time.strftime('%H:%M:%S') if log.access_time else 'Unknown' }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-clock fa-2x mb-3"></i>
+                            <p>No access logs available</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions Panel -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5><i class="fas fa-tools me-2"></i>Quick Actions</h5>
+                <div class="row">
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="simulateEmergency()">
+                            <i class="fas fa-exclamation-triangle me-2"></i>Test Emergency Alert
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-info w-100 mb-2" onclick="generateReport()">
+                            <i class="fas fa-file-download me-2"></i>Generate Report
+                        </button>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('card_simulator') }}" class="btn btn-outline-success w-100 mb-2">
+                            <i class="fas fa-play me-2"></i>Run Simulation
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-warning w-100 mb-2" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                            <i class="fas fa-cog me-2"></i>System Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- All Alerts Modal -->
+<div class="modal fade" id="alertModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>All Security Alerts</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                {% if data.active_alerts %}
+                    {% for alert in data.active_alerts %}
+                    <div class="alert-item alert-{{ alert.severity }} p-3 mb-3 bg-light rounded">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="badge severity-badge 
+                                        {% if alert.severity == 'critical' %}bg-danger
+                                        {% elif alert.severity == 'high' %}bg-warning
+                                        {% elif alert.severity == 'medium' %}bg-info
+                                        {% else %}bg-success{% endif %}">
+                                        {{ alert.severity.upper() }}
+                                    </span>
+                                    <span class="badge bg-secondary ms-2">{{ alert.alert_type.replace('_', ' ').title() }}</span>
+                                </div>
+                                <h6>{{ alert.alert_message }}</h6>
+                                <small class="text-muted">
+                                    {% if alert.location_name %}
+                                        <i class="fas fa-map-marker-alt me-1"></i>{{ alert.location_name }}<br>
+                                    {% endif %}
+                                    {% if alert.full_name %}
+                                        <i class="fas fa-user me-1"></i>{{ alert.full_name }}<br>
+                                    {% endif %}
+                                    <i class="fas fa-clock me-1"></i>{{ alert.alert_time.strftime('%Y-%m-%d %H:%M:%S') if alert.alert_time else 'Unknown' }}
+                                </small>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <button class="btn btn-sm btn-outline-primary mb-1">Acknowledge</button><br>
+                                <button class="btn btn-sm btn-outline-success">Resolve</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center text-success py-4">
+                        <i class="fas fa-shield-alt fa-3x mb-3"></i>
+                        <h6>No Active Alerts</h6>
+                        <p class="text-muted mb-0">All security systems are operating normally</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Dashboard refresh functionality
+function refreshDashboard() {
+    location.reload();
+}
+
+// Filter access logs
+document.addEventListener('DOMContentLoaded', function() {
+    const filterLinks = document.querySelectorAll('#logFilter .nav-link');
+    const logItems = document.querySelectorAll('.log-item');
+    
+    filterLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Update active tab
+            filterLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            
+            // Filter log items
+            logItems.forEach(item => {
+                if (filter === 'all' || item.getAttribute('data-status') === filter) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+
+// Simulate emergency alert (for demonstration)
+function simulateEmergency() {
+    const alertTypes = ['security_breach', 'fire_alarm', 'unauthorized_access', 'system_failure'];
+    const randomAlert = alertTypes[Math.floor(Math.random() * alertTypes.length)];
+    
+    // Show confirmation
+    if (confirm('This will create a test emergency alert. Continue?')) {
+        // In a real system, this would trigger an actual alert
+        alert(`Emergency Alert Created: ${randomAlert.replace('_', ' ').toUpperCase()}\n\nThis is a simulation for educational purposes.`);
+        
+        // Refresh dashboard to show new alert
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    }
+}
+
+// Generate report functionality
+function generateReport() {
+    const reportTypes = ['Daily Access Report', 'Security Incidents Report', 'Student Activity Report', 'System Performance Report'];
+    
+    const report = prompt('Select report type:\n1. Daily Access Report\n2. Security Incidents Report\n3. Student Activity Report\n4. System Performance Report\n\nEnter number (1-4):');
+    
+    if (report && report >= 1 && report <= 4) {
+        const reportName = reportTypes[report - 1];
+        alert(`Generating ${reportName}...\n\nIn a real system, this would create and download a PDF report.`);
+    }
+}
+
+// Auto-refresh dashboard every 30 seconds
+setInterval(() => {
+    // Update timestamp indicator
+    const timestamp = new Date().toLocaleTimeString();
+    document.querySelector('.real-time-indicator small').textContent = `Live - ${timestamp}`;
+}, 30000);
+
+// Real-time updates simulation
+function simulateRealTimeUpdates() {
+    // This would typically connect to a WebSocket or use Server-Sent Events
+    // For now, we'll simulate with periodic updates
+    
+    fetch('/api/recent_activity')
+        .then(response => response.json())
+        .then(data => {
+            // Update recent activity if there are new entries
+            if (data && data.length > 0) {
+                // You could update the UI here without full page refresh
+                console.log('New activity detected:', data[0]);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching real-time updates:', error);
+        });
+}
+
+// Start real-time simulation
+setInterval(simulateRealTimeUpdates, 10000); // Check every 10 seconds
+</script>
+{% endblock %}

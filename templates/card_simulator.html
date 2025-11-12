@@ -1,0 +1,501 @@
+{% extends "base.html" %}
+
+{% block title %}Card Simulator - Smart Campus Security{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card-simulator {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin: 20px 0;
+    }
+    
+    .virtual-card {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        border-radius: 10px;
+        padding: 20px;
+        color: white;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .virtual-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+    }
+    
+    .card-chip {
+        width: 40px;
+        height: 30px;
+        background: #ffd700;
+        border-radius: 4px;
+        margin: 10px 0;
+    }
+    
+    .rfid-animation {
+        width: 60px;
+        height: 60px;
+        border: 3px solid #007bff;
+        border-radius: 50%;
+        position: relative;
+        margin: 20px auto;
+        animation: rfid-pulse 2s infinite;
+    }
+    
+    .rfid-animation::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        background: #007bff;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    @keyframes rfid-pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 20px rgba(0, 123, 255, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+        }
+    }
+    
+    .scan-history {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .location-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+        margin: 15px 0;
+    }
+    
+    .location-btn {
+        padding: 10px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    
+    .location-btn:hover {
+        border-color: #007bff;
+        background: #f8f9fa;
+        transform: translateY(-2px);
+    }
+    
+    .location-btn.selected {
+        border-color: #007bff;
+        background: #e3f2fd;
+    }
+    
+    .location-btn.restricted {
+        border-color: #ffc107;
+        background: #fff3cd;
+    }
+    
+    .location-btn.staff-only {
+        border-color: #dc3545;
+        background: #f8d7da;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h3><i class="fas fa-credit-card me-2"></i>Virtual RFID Card Simulator</h3>
+                <p class="text-muted">Select a student card and location to simulate campus access</p>
+                
+                <!-- Student Selection -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label for="studentSelect" class="form-label">Select Student Card:</label>
+                        <select class="form-select" id="studentSelect" onchange="updateSelectedCard()">
+                            <option value="">Choose a student...</option>
+                            {% for student in students %}
+                            <option value="{{ student.card_id }}" 
+                                    data-name="{{ student.full_name }}" 
+                                    data-id="{{ student.student_id }}" 
+                                    data-program="{{ student.program }}">
+                                {{ student.full_name }} ({{ student.student_id }})
+                            </option>
+                            {% endfor %}
+                            <option value="UNKNOWN_CARD_123">Unknown Card (Test)</option>
+                            <option value="LOST_CARD_456">Lost Card (Test)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="accessType" class="form-label">Access Type:</label>
+                        <select class="form-select" id="accessType">
+                            <option value="entry">Entry</option>
+                            <option value="exit">Exit</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Virtual Card Display -->
+                <div id="selectedCardDisplay" style="display: none;">
+                    <div class="virtual-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="mb-1">ST. LAWRENCE UNIVERSITY</h5>
+                                <small class="text-light">Student ID Card</small>
+                                <div class="card-chip"></div>
+                                <div class="mt-3">
+                                    <h6 id="cardStudentName" class="mb-1"></h6>
+                                    <p class="mb-1" id="cardStudentId"></p>
+                                    <p class="mb-1" id="cardProgram"></p>
+                                    <small class="text-light" id="cardId"></small>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div class="rfid-animation"></div>
+                                <small>RFID Enabled</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Location Selection -->
+                <div class="mt-4">
+                    <h5>Select Campus Location:</h5>
+                    <div class="location-grid">
+                        <div class="location-btn" onclick="selectLocation(1, 'Main Library Entrance', 'public')">
+                            <i class="fas fa-book-open"></i><br>
+                            <small>Main Library Entrance</small><br>
+                            <span class="badge bg-success">Public</span>
+                        </div>
+                        <div class="location-btn restricted" onclick="selectLocation(2, 'Library Study Rooms', 'restricted')">
+                            <i class="fas fa-users"></i><br>
+                            <small>Library Study Rooms</small><br>
+                            <span class="badge bg-warning">Restricted</span>
+                        </div>
+                        <div class="location-btn restricted" onclick="selectLocation(3, 'Computer Lab 1', 'restricted')">
+                            <i class="fas fa-laptop"></i><br>
+                            <small>Computer Lab 1</small><br>
+                            <span class="badge bg-warning">Restricted</span>
+                        </div>
+                        <div class="location-btn restricted" onclick="selectLocation(5, 'Cybersecurity Lab', 'restricted')">
+                            <i class="fas fa-shield-alt"></i><br>
+                            <small>Cybersecurity Lab</small><br>
+                            <span class="badge bg-warning">Restricted</span>
+                        </div>
+                        <div class="location-btn staff-only" onclick="selectLocation(10, 'ICT Department Office', 'staff_only')">
+                            <i class="fas fa-building"></i><br>
+                            <small>ICT Department Office</small><br>
+                            <span class="badge bg-danger">Staff Only</span>
+                        </div>
+                        <div class="location-btn" onclick="selectLocation(11, 'Main Cafeteria', 'public')">
+                            <i class="fas fa-utensils"></i><br>
+                            <small>Main Cafeteria</small><br>
+                            <span class="badge bg-success">Public</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scan Button -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg" onclick="performScan()" id="scanButton" disabled>
+                        <i class="fas fa-wifi me-2"></i>Simulate Card Scan
+                    </button>
+                </div>
+                
+                <!-- Quick Test Scenarios -->
+                <div class="mt-4">
+                    <h6>Quick Test Scenarios:</h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-success w-100" onclick="quickTest('valid')">
+                                <i class="fas fa-check"></i> Valid Access
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-warning w-100" onclick="quickTest('unauthorized')">
+                                <i class="fas fa-exclamation"></i> Unauthorized Card
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-danger w-100" onclick="quickTest('staff_only')">
+                                <i class="fas fa-times"></i> Staff Area Access
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Live Results Panel -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-history me-2"></i>Scan Results</h5>
+            </div>
+            <div class="card-body">
+                <div id="scanResults">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-clock fa-2x mb-3"></i>
+                        <p>No scans performed yet.</p>
+                        <small>Select a card and location to start testing.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6><i class="fas fa-chart-line me-2"></i>Recent Campus Activity</h6>
+            </div>
+            <div class="card-body scan-history" id="recentActivity">
+                <div class="text-center text-muted">
+                    <small>Loading recent activity...</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let selectedLocationId = null;
+let selectedLocationName = '';
+let scanResults = [];
+
+function updateSelectedCard() {
+    const select = document.getElementById('studentSelect');
+    const display = document.getElementById('selectedCardDisplay');
+    const scanButton = document.getElementById('scanButton');
+    
+    if (select.value) {
+        const option = select.selectedOptions[0];
+        
+        document.getElementById('cardStudentName').textContent = option.dataset.name || 'Unknown User';
+        document.getElementById('cardStudentId').textContent = option.dataset.id || 'N/A';
+        document.getElementById('cardProgram').textContent = option.dataset.program || 'N/A';
+        document.getElementById('cardId').textContent = select.value;
+        
+        display.style.display = 'block';
+        updateScanButton();
+    } else {
+        display.style.display = 'none';
+        scanButton.disabled = true;
+    }
+}
+
+function selectLocation(locationId, locationName, accessLevel) {
+    // Remove previous selection
+    document.querySelectorAll('.location-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Add selection to clicked button
+    event.currentTarget.classList.add('selected');
+    
+    selectedLocationId = locationId;
+    selectedLocationName = locationName;
+    
+    updateScanButton();
+}
+
+function updateScanButton() {
+    const scanButton = document.getElementById('scanButton');
+    const studentSelect = document.getElementById('studentSelect');
+    
+    if (studentSelect.value && selectedLocationId) {
+        scanButton.disabled = false;
+        scanButton.innerHTML = `<i class="fas fa-wifi me-2"></i>Scan at ${selectedLocationName}`;
+    } else {
+        scanButton.disabled = true;
+        scanButton.innerHTML = '<i class="fas fa-wifi me-2"></i>Select Card and Location';
+    }
+}
+
+function performScan() {
+    const cardId = document.getElementById('studentSelect').value;
+    const accessType = document.getElementById('accessType').value;
+    
+    if (!cardId || !selectedLocationId) {
+        alert('Please select both a card and a location');
+        return;
+    }
+    
+    // Show loading state
+    const scanButton = document.getElementById('scanButton');
+    const originalText = scanButton.innerHTML;
+    scanButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Scanning...';
+    scanButton.disabled = true;
+    
+    // Perform the scan
+    fetch('/scan_card', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            card_id: cardId,
+            location_id: selectedLocationId,
+            access_type: accessType
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        addScanResult(data, cardId, selectedLocationName, accessType);
+        loadRecentActivity();
+        
+        // Reset button
+        scanButton.innerHTML = originalText;
+        scanButton.disabled = false;
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        addScanResult({
+            success: false,
+            message: 'System error occurred'
+        }, cardId, selectedLocationName, accessType);
+        
+        scanButton.innerHTML = originalText;
+        scanButton.disabled = false;
+    });
+}
+
+function addScanResult(result, cardId, locationName, accessType) {
+    const resultsDiv = document.getElementById('scanResults');
+    const timestamp = new Date().toLocaleString();
+    
+    const resultClass = result.success ? 'success' : 'danger';
+    const icon = result.success ? 'check-circle' : 'times-circle';
+    const status = result.success ? 'GRANTED' : 'DENIED';
+    
+    const resultHtml = `
+        <div class="alert alert-${resultClass} mb-2">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6><i class="fas fa-${icon} me-2"></i>${status}</h6>
+                    <small>
+                        <strong>Location:</strong> ${locationName}<br>
+                        <strong>Card:</strong> ${cardId}<br>
+                        <strong>Type:</strong> ${accessType.toUpperCase()}<br>
+                        <strong>Time:</strong> ${timestamp}
+                    </small>
+                    ${result.message ? `<br><small class="text-muted">${result.message}</small>` : ''}
+                    ${result.alert ? '<br><span class="badge bg-danger">SECURITY ALERT</span>' : ''}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    if (resultsDiv.innerHTML.includes('No scans performed')) {
+        resultsDiv.innerHTML = resultHtml;
+    } else {
+        resultsDiv.insertAdjacentHTML('afterbegin', resultHtml);
+    }
+    
+    // Keep only last 5 results
+    const alerts = resultsDiv.querySelectorAll('.alert');
+    if (alerts.length > 5) {
+        alerts[alerts.length - 1].remove();
+    }
+}
+
+function quickTest(scenario) {
+    const studentSelect = document.getElementById('studentSelect');
+    
+    switch (scenario) {
+        case 'valid':
+            studentSelect.value = 'RFID_001_ABC123';
+            selectLocationById(1); // Main Library
+            break;
+        case 'unauthorized':
+            studentSelect.value = 'UNKNOWN_CARD_123';
+            selectLocationById(3); // Computer Lab
+            break;
+        case 'staff_only':
+            studentSelect.value = 'RFID_002_DEF456';
+            selectLocationById(10); // ICT Department Office
+            break;
+    }
+    
+    updateSelectedCard();
+    setTimeout(() => {
+        performScan();
+    }, 500);
+}
+
+function selectLocationById(locationId) {
+    const locationBtns = document.querySelectorAll('.location-btn');
+    locationBtns.forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.onclick.toString().includes(`selectLocation(${locationId},`)) {
+            btn.classList.add('selected');
+            btn.click();
+        }
+    });
+}
+
+function loadRecentActivity() {
+    fetch('/api/recent_activity')
+        .then(response => response.json())
+        .then(data => {
+            const activityDiv = document.getElementById('recentActivity');
+            
+            if (data.length === 0) {
+                activityDiv.innerHTML = '<div class="text-center text-muted"><small>No recent activity</small></div>';
+                return;
+            }
+            
+            let html = '';
+            data.slice(0, 10).forEach(activity => {
+                const statusClass = activity.access_granted ? 'success' : 'danger';
+                const icon = activity.access_granted ? 'check' : 'times';
+                
+                html += `
+                    <div class="border-bottom py-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <small class="fw-bold">${activity.full_name || 'Unknown'}</small><br>
+                                <small class="text-muted">${activity.location_name || 'Unknown Location'}</small>
+                            </div>
+                            <div class="text-center">
+                                <span class="badge bg-${statusClass}">
+                                    <i class="fas fa-${icon}"></i>
+                                </span><br>
+                                <small class="text-muted">${new Date(activity.access_time).toLocaleTimeString()}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            activityDiv.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error loading recent activity:', error);
+        });
+}
+
+// Load recent activity on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadRecentActivity();
+    
+    // Refresh recent activity every 30 seconds
+    setInterval(loadRecentActivity, 30000);
+});
+</script>
+{% endblock %}
