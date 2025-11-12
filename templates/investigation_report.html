@@ -251,7 +251,7 @@
                     <div class="mb-3">
                         <label for="target_student" class="form-label">Student Name or ID</label>
                         <input type="text" class="form-control" id="target_student" name="target_student" 
-                               placeholder="e.g., John Doe or STU001" list="recentStudents">
+                               placeholder="e.g., Mukasa David or BAIT/21D/U/F0069" list="recentStudents">
                         <datalist id="recentStudents">
                             {% for student in recent_students %}
                             <option value="{{ student.student_id }}">{{ student.full_name }}</option>

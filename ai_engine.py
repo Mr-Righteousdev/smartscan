@@ -62,7 +62,7 @@ class SecurityAIEngine:
     
     def _generate_access_patterns(self):
         """Generate realistic access pattern training data"""
-        students = ['STU001', 'STU002', 'STU003', 'STU004', 'STU005']
+        students = ['BAIT/21D/U/F0069', 'BACS/22D/U/A0024', 'BAIT/23D/U/F0156', 'BCSE/20D/U/A0012', 'BAIT/22E/K/F0087']
         locations = list(range(1, 13))  # 12 campus locations
         
         # Normal patterns (80% of data)

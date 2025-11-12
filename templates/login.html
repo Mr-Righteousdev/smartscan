@@ -3,373 +3,830 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Smart Campus Security</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Login - Smart Campus Security | St. Lawrence University Uganda</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0a0a0a;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Particle.js container */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
         
         .login-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 450px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 10;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
         }
         
-        .login-header {
+        .login-left {
+            flex: 1;
+            background: linear-gradient(135deg, 
+                rgba(13, 110, 253, 0.95) 0%,
+                rgba(111, 66, 193, 0.95) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 60px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+            animation: shimmer 3s linear infinite;
+        }
+        
+        .login-right {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 60px;
+            position: relative;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .brand-section {
             text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .login-header h2 {
-            color: #2c5aa0;
-            font-weight: bold;
-            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
         }
         
         .university-logo {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #2c5aa0, #1e3d72);
-            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .university-logo:hover {
+            transform: scale(1.02);
+        }
+        
+        .university-logo i {
+            font-size: 48px;
             color: white;
-            font-size: 2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .brand-section h1 {
+            margin: 0 0 15px 0;
+            font-weight: 700;
+            font-size: 36px;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        
+        .brand-section .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+        
+        .brand-section .university-name {
+            font-size: 14px;
+            opacity: 0.8;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .features-list {
+            margin-top: 50px;
+            text-align: left;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .feature-item i {
+            margin-right: 15px;
+            font-size: 18px;
+            width: 24px;
+        }
+        
+        .login-form-section {
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .form-title {
+            color: white;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        
+        .form-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         .form-floating {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            position: relative;
         }
         
-        .form-control {
-            border-radius: 12px;
-            border: 2px solid #e9ecef;
+        .form-floating > .form-control {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            padding: 16px 20px;
+            font-size: 16px;
+            color: #333;
             transition: all 0.3s ease;
+            height: 58px;
         }
         
-        .form-control:focus {
-            border-color: #2c5aa0;
-            box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+        .form-floating > .form-control::placeholder {
+            color: rgba(51, 51, 51, 0.6);
+        }
+        
+        .form-floating > .form-control:focus {
+            background: rgba(255, 255, 255, 1);
+            border-color: rgba(13, 110, 253, 0.8);
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+            color: #333;
+            outline: none;
+        }
+        
+        .form-floating > label {
+            color: rgba(51, 51, 51, 0.7);
+            font-weight: 500;
+            padding: 0 8px;
+        }
+        
+        .form-floating > .form-control:focus + label,
+        .form-floating > .form-control:not(:placeholder-shown) + label {
+            color: rgba(13, 110, 253, 0.8);
+        }
+        
+        .input-group-text {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-left: none;
+            color: rgba(255, 255, 255, 0.7);
         }
         
         .btn-login {
-            background: linear-gradient(135deg, #2c5aa0, #1e3d72);
+            background: linear-gradient(135deg, 
+                rgba(13, 110, 253, 0.9) 0%,
+                rgba(111, 66, 193, 0.9) 100%);
             border: none;
-            border-radius: 12px;
-            padding: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
+            border-radius: 4px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
             width: 100%;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-login:hover::before {
+            left: 100%;
         }
         
         .btn-login:hover {
-            background: linear-gradient(135deg, #1e3d72, #2c5aa0);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(44, 90, 160, 0.4);
+            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4);
+            color: white;
+        }
+        
+        .btn-login:active {
+            transform: translateY(0);
         }
         
         .alert {
-            border-radius: 12px;
-            margin-bottom: 20px;
+            border-radius: 4px;
+            border: none;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
         }
         
-        .security-badge {
-            background: linear-gradient(45deg, #28a745, #20c997);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            display: inline-block;
-            margin-bottom: 20px;
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.15);
+            color: #ff6b6b;
+            border-left: 4px solid #dc3545;
         }
         
-        .quick-access {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e9ecef;
+        .alert-success {
+            background: rgba(25, 135, 84, 0.15);
+            color: #51cf66;
+            border-left: 4px solid #198754;
         }
         
-        .role-badge {
-            font-size: 0.7rem;
-            padding: 3px 8px;
-            border-radius: 10px;
-            margin-left: 5px;
+        .forgot-password {
+            text-align: center;
+            margin-top: 24px;
         }
         
-        .demo-credentials {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
-            border: 1px solid #dee2e6;
+        .forgot-password a {
+            color: rgba(13, 110, 253, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
         }
         
-        .demo-credentials h6 {
-            color: #495057;
-            margin-bottom: 10px;
+        .forgot-password a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 50%;
+            background: rgba(13, 110, 253, 0.8);
+            transition: all 0.3s ease;
         }
         
-        .credential-item {
-            font-size: 0.85rem;
-            margin: 5px 0;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-            transition: background-color 0.2s;
+        .forgot-password a:hover {
+            color: rgba(13, 110, 253, 1);
         }
         
-        .credential-item:hover {
-            background-color: #e9ecef;
+        .forgot-password a:hover::after {
+            width: 100%;
+            left: 0;
         }
         
-        .two-factor-section {
-            display: none;
-            margin-top: 20px;
+        .security-features {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 24px;
+            margin-top: 24px;
+            text-align: center;
         }
         
-        .loading-spinner {
-            display: none;
+        .security-features h6 {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 16px;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .security-item {
+            display: inline-flex;
+            align-items: center;
+            margin: 6px 12px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+        
+        .security-item i {
+            color: #51cf66;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+        
+        /* Loading animation for login button */
+        .btn-login.loading {
+            pointer-events: none;
+        }
+        
+        .btn-login.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
             width: 20px;
             height: 20px;
-            border: 2px solid #ffffff;
-            border-top: 2px solid transparent;
+            margin: -10px 0 0 -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 10px;
         }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        .form-check {
+            margin-bottom: 20px;
+        }
+        
+        .form-check-input:checked {
+            background-color: rgba(13, 110, 253, 0.8);
+            border-color: rgba(13, 110, 253, 0.8);
+        }
+        
+        .form-check-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+        
+        .form-check-input {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .demo-credentials {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .demo-credentials h6 {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 12px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .credential-item {
+            font-size: 12px;
+            margin: 8px 0;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .credential-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .role-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+        
+        .badge-admin {
+            background: rgba(220, 53, 69, 0.2);
+            color: #ff6b6b;
+        }
+        
+        .badge-security {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffd43b;
+        }
+        
+        .badge-staff {
+            background: rgba(25, 135, 84, 0.2);
+            color: #51cf66;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+            
+            .login-left {
+                flex: 0 0 40vh;
+                padding: 40px 30px;
+            }
+            
+            .login-right {
+                flex: 1;
+                padding: 40px 30px;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .university-logo {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 20px;
+            }
+            
+            .university-logo i {
+                font-size: 32px;
+            }
+            
+            .brand-section h1 {
+                font-size: 24px;
+            }
+            
+            .features-list {
+                display: none;
+            }
+        }
+        
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(13, 110, 253, 0.5);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(13, 110, 253, 0.7);
+        }
     </style>
 </head>
 <body>
+    <!-- Particle.js background -->
+    <div id="particles-js"></div>
+    
     <div class="login-container">
-        <!-- Header -->
-        <div class="login-header">
-            <div class="university-logo">
-                <i class="fas fa-shield-alt"></i>
-            </div>
-            <h2>Smart Campus Security</h2>
-            <p class="text-muted">St. Lawrence University Uganda</p>
-            <span class="security-badge">
-                <i class="fas fa-lock me-1"></i>Secure Access Portal
-            </span>
-        </div>
-        
-        <!-- Login Form -->
-        <form id="loginForm" method="POST">
-            <!-- Error/Success Messages -->
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        {% if category == 'error' %}
-                            <div class="alert alert-danger">
-                                <i class="fas fa-exclamation-triangle me-2"></i>{{ message }}
-                            </div>
-                        {% elif category == 'success' %}
-                            <div class="alert alert-success">
-                                <i class="fas fa-check-circle me-2"></i>{{ message }}
-                            </div>
-                        {% elif category == 'info' %}
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle me-2"></i>{{ message }}
-                            </div>
-                        {% elif category == 'warning' %}
-                            <div class="alert alert-warning">
-                                <i class="fas fa-exclamation-triangle me-2"></i>{{ message }}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-            
-            <!-- Main Login Fields -->
-            <div id="mainLogin">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="username" name="username" 
-                           placeholder="Username" required autocomplete="username">
-                    <label for="username">
-                        <i class="fas fa-user me-2"></i>Username
-                    </label>
+        <!-- Left Side - Branding -->
+        <div class="login-left">
+            <div class="brand-section">
+                <div class="university-logo">
+                    <i class="fas fa-graduation-cap"></i>
                 </div>
-                
-                <div class="form-floating">
-                    <input type="password" class="form-control" id="password" name="password" 
-                           placeholder="Password" required autocomplete="current-password">
-                    <label for="password">
-                        <i class="fas fa-lock me-2"></i>Password
-                    </label>
-                </div>
-                
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
-                    <label class="form-check-label" for="rememberMe">
-                        Remember me for 30 days
-                    </label>
-                </div>
+                <h1>Smart Campus Security</h1>
+                <div class="subtitle">Access Control System</div>
+                <div class="university-name">ST. LAWRENCE UNIVERSITY UGANDA</div>
             </div>
             
-            <!-- Two-Factor Authentication Section -->
-            <div class="two-factor-section" id="twoFactorSection">
-                <div class="alert alert-info">
-                    <i class="fas fa-shield-alt me-2"></i>
-                    Two-factor authentication required. Check your phone/email for the verification code.
+            <div class="features-list">
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Advanced Security Monitoring</span>
                 </div>
-                
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="verification_code" name="verification_code" 
-                           placeholder="000000" maxlength="6" pattern="[0-9]{6}">
-                    <label for="verification_code">
-                        <i class="fas fa-key me-2"></i>Verification Code
-                    </label>
+                <div class="feature-item">
+                    <i class="fas fa-user-shield"></i>
+                    <span>Multi-Factor Authentication</span>
                 </div>
-            </div>
-            
-            <button type="submit" class="btn btn-primary btn-login">
-                <span class="loading-spinner" id="loadingSpinner"></span>
-                <i class="fas fa-sign-in-alt me-2"></i>
-                <span id="loginButtonText">Sign In Securely</span>
-            </button>
-        </form>
-        
-        <!-- Quick Access Section -->
-        <div class="quick-access">
-            <div class="text-center">
-                <a href="{{ url_for('index') }}" class="btn btn-outline-primary btn-sm me-2">
-                    <i class="fas fa-eye me-1"></i>View Campus (Guest)
-                </a>
-                <a href="#" class="btn btn-outline-secondary btn-sm" onclick="showForgotPassword()">
-                    <i class="fas fa-question-circle me-1"></i>Forgot Password?
-                </a>
+                <div class="feature-item">
+                    <i class="fas fa-eye"></i>
+                    <span>Real-time Access Control</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>AI-Powered Analytics</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Enterprise-Grade Security</span>
+                </div>
             </div>
         </div>
         
-        <!-- Demo Credentials -->
-        <div class="demo-credentials">
-            <h6><i class="fas fa-info-circle me-2"></i>Demo Credentials (Educational Use)</h6>
-            
-            <div class="credential-item" onclick="fillCredentials('admin', 'admin123')">
-                <i class="fas fa-user-shield me-2"></i>
-                <strong>Administrator</strong>
-                <span class="badge bg-danger role-badge">Admin</span>
-                <br><small class="text-muted">Username: admin | Password: admin123</small>
+        <!-- Right Side - Login Form -->
+        <div class="login-right">
+            <div class="login-form-section">
+                <h2 class="form-title">Welcome Back</h2>
+                <p class="form-subtitle">Sign in to access the campus security system</p>
+                <!-- Error/Success Messages -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            {% if category == 'error' %}
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>{{ message }}
+                                </div>
+                            {% elif category == 'success' %}
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle me-2"></i>{{ message }}
+                                </div>
+                            {% elif category == 'info' %}
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>{{ message }}
+                                </div>
+                            {% elif category == 'warning' %}
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>{{ message }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Login Form -->
+                <form id="loginForm" method="POST">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="username" name="username" 
+                               placeholder="Username" required autocomplete="username">
+                        <label for="username">
+                            <i class="fas fa-user me-2"></i>Username
+                        </label>
+                    </div>
+                    
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="password" name="password" 
+                               placeholder="Password" required autocomplete="current-password">
+                        <label for="password">
+                            <i class="fas fa-lock me-2"></i>Password
+                        </label>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me">
+                        <label class="form-check-label" for="rememberMe">
+                            Remember me for 30 days
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-login" id="loginBtn">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Secure Login
+                    </button>
+                </form>
+                
+                <div class="forgot-password">
+                    <a href="#" onclick="alert('Please contact IT Support for password reset')">
+                        <i class="fas fa-key me-1"></i>Forgot Password?
+                    </a>
+                </div>
+                
+                <!-- Demo Credentials -->
+                <div class="demo-credentials">
+                    <h6><i class="fas fa-flask me-2"></i>Demo Accounts</h6>
+                    <div class="credential-item" onclick="fillCredentials('admin', 'admin123')">
+                        <i class="fas fa-user-shield me-2"></i>admin / admin123
+                        <span class="role-badge badge-admin">ADMIN</span>
+                    </div>
+                    <div class="credential-item" onclick="fillCredentials('security', 'security123')">
+                        <i class="fas fa-user-tie me-2"></i>security / security123
+                        <span class="role-badge badge-security">SECURITY</span>
+                    </div>
+                    <div class="credential-item" onclick="fillCredentials('john_doe', 'staff123')">
+                        <i class="fas fa-user me-2"></i>john_doe / staff123
+                        <span class="role-badge badge-staff">STAFF</span>
+                    </div>
+                </div>
+                
+                <!-- Security Features -->
+                <div class="security-features">
+                    <h6><i class="fas fa-shield-alt me-2"></i>Security Features</h6>
+                    <div class="security-item">
+                        <i class="fas fa-check"></i>
+                        256-bit SSL Encryption
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-check"></i>
+                        Two-Factor Authentication
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-check"></i>
+                        Session Timeout Protection
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-check"></i>
+                        Audit Trail Logging
+                    </div>
+                </div>
             </div>
-            
-            <div class="credential-item" onclick="fillCredentials('security', 'security123')">
-                <i class="fas fa-user-tie me-2"></i>
-                <strong>Security Officer</strong>
-                <span class="badge bg-warning role-badge">Security</span>
-                <br><small class="text-muted">Username: security | Password: security123</small>
-            </div>
-            
-            <div class="credential-item" onclick="fillCredentials('john_doe', 'staff123')">
-                <i class="fas fa-user me-2"></i>
-                <strong>Staff Member</strong>
-                <span class="badge bg-info role-badge">Staff</span>
-                <br><small class="text-muted">Username: john_doe | Password: staff123</small>
-            </div>
-            
-            <small class="text-muted d-block mt-2">
-                <i class="fas fa-graduation-cap me-1"></i>
-                Click any credential above to auto-fill the login form
-            </small>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+    
+    <!-- Particle.js Library -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        // Fill demo credentials
+        // Particle.js configuration
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: ['#0d6efd', '#6f42c1', '#dc3545', '#198754', '#ffc107']
+                },
+                shape: {
+                    type: 'circle',
+                    stroke: {
+                        width: 0,
+                        color: '#000000'
+                    }
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false,
+                    anim: {
+                        enable: false,
+                        speed: 1,
+                        opacity_min: 0.1,
+                        sync: false
+                    }
+                },
+                size: {
+                    value: 3,
+                    random: true,
+                    anim: {
+                        enable: false,
+                        speed: 40,
+                        size_min: 0.1,
+                        sync: false
+                    }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#ffffff',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 6,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false,
+                    attract: {
+                        enable: false,
+                        rotateX: 600,
+                        rotateY: 1200
+                    }
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'repulse'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                },
+                modes: {
+                    grab: {
+                        distance: 400,
+                        line_linked: {
+                            opacity: 1
+                        }
+                    },
+                    bubble: {
+                        distance: 400,
+                        size: 40,
+                        duration: 2,
+                        opacity: 8,
+                        speed: 3
+                    },
+                    repulse: {
+                        distance: 200,
+                        duration: 0.4
+                    },
+                    push: {
+                        particles_nb: 4
+                    },
+                    remove: {
+                        particles_nb: 2
+                    }
+                }
+            },
+            retina_detect: true
+        });
+        
+        // Login form functionality
         function fillCredentials(username, password) {
             document.getElementById('username').value = username;
             document.getElementById('password').value = password;
             
             // Add visual feedback
-            const form = document.getElementById('loginForm');
-            form.style.border = '2px solid #28a745';
-            form.style.borderRadius = '20px';
-            
+            const input = document.getElementById('username');
+            input.classList.add('is-valid');
             setTimeout(() => {
-                form.style.border = 'none';
-            }, 2000);
+                input.classList.remove('is-valid');
+            }, 1000);
         }
         
-        // Handle form submission
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            const spinner = document.getElementById('loadingSpinner');
-            const buttonText = document.getElementById('loginButtonText');
+        // Login button loading state
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            const btn = document.getElementById('loginBtn');
+            btn.classList.add('loading');
+            btn.innerHTML = '<span class="loading-spinner"></span>Authenticating...';
+        });
+        
+        // Add floating label animation enhancement
+        document.querySelectorAll('.form-floating input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
             
-            spinner.style.display = 'inline-block';
-            buttonText.textContent = 'Authenticating...';
+            input.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.parentElement.classList.remove('focused');
+                }
+            });
         });
         
-        // Forgot password functionality
-        function showForgotPassword() {
-            alert('Password Reset Feature\n\nIn a real system, this would:\n' +
-                  '1. Send a reset link to your email\n' +
-                  '2. Verify your identity\n' +
-                  '3. Allow you to set a new password\n\n' +
-                  'For demo purposes, contact the system administrator.');
-        }
+        // Security badge animation
+        setTimeout(() => {
+            document.querySelector('.security-badge')?.classList.add('animate__animated', 'animate__pulse');
+        }, 1000);
         
-        // Auto-focus on username field
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('username').focus();
-        });
-        
-        // Handle Enter key in password field
-        document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('loginForm').submit();
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Alt + 1 for admin
+            if (e.altKey && e.key === '1') {
+                fillCredentials('admin', 'admin123');
+            }
+            // Alt + 2 for security
+            if (e.altKey && e.key === '2') {
+                fillCredentials('security', 'security123');
+            }
+            // Alt + 3 for staff
+            if (e.altKey && e.key === '3') {
+                fillCredentials('john_doe', 'staff123');
             }
         });
-        
-        // Show/hide password toggle
-        function togglePasswordVisibility() {
-            const passwordField = document.getElementById('password');
-            const icon = event.target;
-            
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                passwordField.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
-        
-        // Simulate two-factor authentication (for educational purposes)
-        function simulateTwoFactor() {
-            document.getElementById('mainLogin').style.display = 'none';
-            document.getElementById('twoFactorSection').style.display = 'block';
-            document.getElementById('loginButtonText').textContent = 'Verify Code';
-            
-            // Auto-fill demo code after 3 seconds
-            setTimeout(() => {
-                document.getElementById('verification_code').value = '123456';
-                document.getElementById('verification_code').focus();
-            }, 3000);
-        }
     </script>
 </body>
 </html>

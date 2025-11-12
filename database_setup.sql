@@ -1,5 +1,7 @@
 -- Smart Campus ID Security System - Complete Database Setup
 -- St. Lawrence University Uganda - Cybersecurity & Innovations Club
+-- Student Number Format: PROGRAM/YEARSession/Nationality/IntakeNUMBER
+-- Example: BAIT/21D/U/F0069 = Bachelor IT, 2021, Day, Ugandan, February intake, #69
 -- Consolidated Database Script - Phase 1 & 2 Combined
 
 CREATE DATABASE IF NOT EXISTS smart_campus_security;
@@ -281,28 +283,40 @@ CREATE TABLE risk_assessments (
 -- DATA POPULATION
 -- ====================================
 
--- Insert sample campus locations
+-- Insert sample campus locations (St. Lawrence University Uganda)
 INSERT INTO campus_locations (location_name, location_type, building, floor_level, access_level) VALUES
-('Main Library Entrance', 'library', 'Library Building', 'Ground', 'public'),
-('Library Study Rooms', 'library', 'Library Building', '1st Floor', 'restricted'),
-('Computer Lab 1', 'laboratory', 'ICT Building', 'Ground', 'restricted'),
-('Computer Lab 2', 'laboratory', 'ICT Building', '1st Floor', 'restricted'),
-('Cybersecurity Lab', 'laboratory', 'ICT Building', '2nd Floor', 'restricted'),
-('Male Dormitory Block A', 'dormitory', 'Dormitory A', 'Ground', 'restricted'),
-('Female Dormitory Block B', 'dormitory', 'Dormitory B', 'Ground', 'restricted'),
-('Lecture Hall 1', 'lecture_hall', 'Academic Block', 'Ground', 'public'),
-('Lecture Hall 2', 'lecture_hall', 'Academic Block', '1st Floor', 'public'),
-('ICT Department Office', 'admin', 'ICT Building', '3rd Floor', 'staff_only'),
-('Main Cafeteria', 'cafeteria', 'Student Center', 'Ground', 'public'),
-('Sports Complex', 'sports', 'Sports Building', 'Ground', 'public');
+('University Main Library', 'library', 'Library Complex', 'Ground', 'public'),
+('Digital Library & E-Resources', 'library', 'Library Complex', '1st Floor', 'restricted'),
+('ICT Computer Laboratory 1', 'laboratory', 'School of Computing & IT', 'Ground', 'restricted'),
+('ICT Computer Laboratory 2', 'laboratory', 'School of Computing & IT', '1st Floor', 'restricted'),
+('Cybersecurity & Innovation Lab', 'laboratory', 'School of Computing & IT', '2nd Floor', 'restricted'),
+('Software Development Lab', 'laboratory', 'School of Computing & IT', '2nd Floor', 'restricted'),
+('Nkumba Male Hostel', 'dormitory', 'Student Accommodation', 'Ground', 'restricted'),
+('Kigungu Female Hostel', 'dormitory', 'Student Accommodation', 'Ground', 'restricted'),
+('Main Lecture Theatre', 'lecture_hall', 'Academic Complex', 'Ground', 'public'),
+('ICT Department Lecture Hall', 'lecture_hall', 'School of Computing & IT', '1st Floor', 'public'),
+('School of Computing & IT Office', 'admin', 'School of Computing & IT', '3rd Floor', 'staff_only'),
+('Students Canteen', 'cafeteria', 'Student Life Center', 'Ground', 'public'),
+('University Sports Grounds', 'sports', 'Recreation Center', 'Ground', 'public'),
+('Administration Block', 'admin', 'Main Administration', 'Ground', 'staff_only'),
+('Student Affairs Office', 'admin', 'Student Life Center', '1st Floor', 'public');
 
--- Insert sample students (for testing)
+-- Insert sample students (St. Lawrence University Uganda format)
+-- Student ID Format: PROGRAM/YEARSession/Nationality/IntakeNUMBER
+-- Programs: BAIT=Bachelor IT, BACS=Bachelor Computer Science, BCSE=Bachelor Computer Engineering
+-- Sessions: D=Day, E=Evening  |  Nationality: U=Ugandan, K=Kenyan, T=Tanzanian, R=Rwandan
+-- Intakes: F=February, A=August  |  Numbers: 4-digit with leading zeros
 INSERT INTO students (student_id, card_id, full_name, email, program, year_of_study, photo_url, card_expiry_date) VALUES
-('STU001', 'RFID_001_ABC123', 'John Doe', 'john.doe@student.slau.ac.ug', 'Computer Science', 3, 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face', '2026-12-31'),
-('STU002', 'RFID_002_DEF456', 'Jane Smith', 'jane.smith@student.slau.ac.ug', 'Cybersecurity', 2, 'https://images.unsplash.com/photo-1494790108755-2616b612b9e0?w=150&h=150&fit=crop&crop=face', '2027-12-31'),
-('STU003', 'RFID_003_GHI789', 'David Wilson', 'david.wilson@student.slau.ac.ug', 'Information Technology', 1, 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face', '2028-12-31'),
-('STU004', 'RFID_004_JKL012', 'Sarah Johnson', 'sarah.johnson@student.slau.ac.ug', 'Computer Engineering', 4, 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face', '2025-12-31'),
-('STU005', 'RFID_005_MNO345', 'Michael Brown', 'michael.brown@student.slau.ac.ug', 'Data Science', 2, 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face', '2027-12-31');
+('BAIT/21D/U/F0069', 'RFID_BAIT_21F_069', 'Mukasa David', 'dmukasa21@student.slau.ac.ug', 'Bachelor of Information Technology', 4, 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face', '2025-12-31'),
+('BACS/22D/U/A0024', 'RFID_BACS_22A_024', 'Nakato Sarah', 'snakato22@student.slau.ac.ug', 'Bachelor of Computer Science', 3, 'https://images.unsplash.com/photo-1494790108755-2616b612b9e0?w=150&h=150&fit=crop&crop=face', '2026-12-31'),
+('BAIT/23D/U/F0156', 'RFID_BAIT_23F_156', 'Ssemwogerere John', 'jssemwogerere23@student.slau.ac.ug', 'Bachelor of Information Technology', 2, 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face', '2027-12-31'),
+('BCSE/20D/U/A0012', 'RFID_BCSE_20A_012', 'Namugga Grace', 'gnamugga20@student.slau.ac.ug', 'Bachelor of Computer Science & Engineering', 5, 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face', '2024-12-31'),
+('BAIT/22E/K/F0087', 'RFID_BAIT_22F_087', 'Otieno Michael', 'motieno22@student.slau.ac.ug', 'Bachelor of Information Technology', 3, 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face', '2026-12-31'),
+('BACS/21D/U/A0145', 'RFID_BACS_21A_145', 'Atim Patricia', 'patim21@student.slau.ac.ug', 'Bachelor of Computer Science', 4, 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face', '2025-12-31'),
+('BAIT/24D/U/F0003', 'RFID_BAIT_24F_003', 'Kiwanuka Robert', 'rkiwanuka24@student.slau.ac.ug', 'Bachelor of Information Technology', 1, 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face', '2028-12-31'),
+('BCSE/23D/T/A0078', 'RFID_BCSE_23A_078', 'Mwalimu James', 'jmwalimu23@student.slau.ac.ug', 'Bachelor of Computer Science & Engineering', 2, 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop&crop=face', '2027-12-31'),
+('BAIT/22D/U/F0234', 'RFID_BAIT_22F_234', 'Namusoke Christine', 'cnamusoke22@student.slau.ac.ug', 'Bachelor of Information Technology', 3, 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop&crop=face', '2026-12-31'),
+('BACS/23E/R/A0056', 'RFID_BACS_23A_056', 'Uwimana Eric', 'euwimana23@student.slau.ac.ug', 'Bachelor of Computer Science', 2, 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=150&h=150&fit=crop&crop=face', '2027-12-31');
 
 -- Insert default system users (Phase 2 demo accounts)
 -- Password hashes generated using PBKDF2 with salt for security
