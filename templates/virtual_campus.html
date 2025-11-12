@@ -352,7 +352,16 @@ function performScan(cardId, locationId, locationName) {
             access_type: 'entry'
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            throw new TypeError("Expected JSON response but got " + contentType);
+        }
+        return response.json();
+    })
     .then(data => {
         document.getElementById('scanningAnimation').style.display = 'none';
         document.getElementById('resultContent').style.display = 'block';

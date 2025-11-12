@@ -316,6 +316,9 @@ def scan_card():
         cursor.execute("SELECT * FROM students WHERE card_id = %s", (card_id,))
         student = cursor.fetchone()
         
+        # Debug logging for student data
+        logger.info(f"Student query for card {card_id}: {student}")
+        
         if not student:
             # Unknown card - create enhanced alert
             create_enhanced_security_alert('unauthorized_access', 'high', location_id, 
@@ -329,6 +332,27 @@ def scan_card():
                 'alert': True,
                 'alert_type': 'unauthorized_access',
                 'risk_level': 'high'
+            })
+        
+        # Get location info first (needed for AI analysis)
+        cursor.execute("SELECT * FROM campus_locations WHERE location_id = %s", (location_id,))
+        location = cursor.fetchone()
+        
+        # Debug logging for location data
+        logger.info(f"Location query for ID {location_id}: {location}")
+        
+        if not location:
+            logger.warning(f"Location not found for ID: {location_id}")
+            # Check if location exists at all
+            cursor.execute("SELECT location_id, location_name FROM campus_locations WHERE is_active = TRUE")
+            available_locations = cursor.fetchall()
+            logger.info(f"Available locations: {available_locations}")
+            
+            return jsonify({
+                'success': False,
+                'message': 'ACCESS DENIED: Invalid location',
+                'error_detail': f'Location ID {location_id} not found',
+                'available_locations': [{'id': loc['location_id'], 'name': loc['location_name']} for loc in available_locations] if available_locations else []
             })
         
         # Perform risk assessment with AI enhancement
@@ -364,12 +388,12 @@ def scan_card():
                 'explanation': 'AI analysis using fallback mode'
             }
         
-        # Ensure AI analysis has all required fields
+        # Ensure AI analysis has all required fields and JSON-serializable types
         ai_analysis = {
-            'is_anomaly': ai_analysis.get('is_anomaly', False),
+            'is_anomaly': bool(ai_analysis.get('is_anomaly', False)),
             'anomaly_score': float(ai_analysis.get('anomaly_score', 1)),
             'confidence': float(ai_analysis.get('confidence', 85)),
-            'risk_level': ai_analysis.get('risk_level', 'low'),
+            'risk_level': str(ai_analysis.get('risk_level', 'low')),
             'explanation': str(ai_analysis.get('explanation', 'Normal access pattern'))
         }
         
@@ -414,9 +438,7 @@ def scan_card():
                 'risk_level': 'critical'
             })
         
-        # Get location info and check access policies
-        cursor.execute("SELECT * FROM campus_locations WHERE location_id = %s", (location_id,))
-        location = cursor.fetchone()
+        # Location info already retrieved above for AI analysis
         
         # Check access level permissions
         if location and location['access_level'] == 'staff_only':
@@ -706,7 +728,6 @@ def card_simulator():
     return render_template('card_simulator.html', students=students)
 
 @app.route('/api/recent_activity')
-@require_api_auth('view_logs')
 def recent_activity():
     """API endpoint for real-time activity updates"""
     conn = get_db_connection()

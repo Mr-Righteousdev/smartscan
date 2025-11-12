@@ -354,7 +354,12 @@ function performScan() {
             access_type: accessType
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
         addScanResult(data, cardId, selectedLocationName, accessType);
         loadRecentActivity();
@@ -451,9 +456,21 @@ function selectLocationById(locationId) {
 
 function loadRecentActivity() {
     fetch('/api/recent_activity')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             const activityDiv = document.getElementById('recentActivity');
+            
+            // Ensure data is an array
+            if (!Array.isArray(data)) {
+                console.warn('Expected array but got:', typeof data);
+                activityDiv.innerHTML = '<div class="text-center text-muted"><small>No recent activity</small></div>';
+                return;
+            }
             
             if (data.length === 0) {
                 activityDiv.innerHTML = '<div class="text-center text-muted"><small>No recent activity</small></div>';
@@ -464,6 +481,16 @@ function loadRecentActivity() {
             data.slice(0, 10).forEach(activity => {
                 const statusClass = activity.access_granted ? 'success' : 'danger';
                 const icon = activity.access_granted ? 'check' : 'times';
+                
+                // Safely handle the access_time
+                let timeDisplay = 'Unknown time';
+                if (activity.access_time) {
+                    try {
+                        timeDisplay = new Date(activity.access_time).toLocaleTimeString();
+                    } catch (e) {
+                        timeDisplay = activity.access_time.toString();
+                    }
+                }
                 
                 html += `
                     <div class="border-bottom py-2">
@@ -476,7 +503,7 @@ function loadRecentActivity() {
                                 <span class="badge bg-${statusClass}">
                                     <i class="fas fa-${icon}"></i>
                                 </span><br>
-                                <small class="text-muted">${new Date(activity.access_time).toLocaleTimeString()}</small>
+                                <small class="text-muted">${timeDisplay}</small>
                             </div>
                         </div>
                     </div>
@@ -487,6 +514,8 @@ function loadRecentActivity() {
         })
         .catch(error => {
             console.error('Error loading recent activity:', error);
+            const activityDiv = document.getElementById('recentActivity');
+            activityDiv.innerHTML = '<div class="text-center text-muted"><small>Unable to load recent activity</small></div>';
         });
 }
 
