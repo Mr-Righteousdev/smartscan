@@ -1,0 +1,502 @@
+{% extends "base.html" %}
+
+{% block title %}Location Access Report - {{ location_info.location_name if location_info else 'Unknown Location' }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .location-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .location-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+    
+    .location-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .stat-number.success { color: #28a745; }
+    .stat-number.danger { color: #dc3545; }
+    .stat-number.info { color: #17a2b8; }
+    .stat-number.warning { color: #ffc107; }
+    
+    .stat-label {
+        color: #6c757d;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    .access-timeline {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .timeline-entry {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-bottom: 1px solid #e9ecef;
+        transition: background-color 0.3s ease;
+    }
+    
+    .timeline-entry:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .timeline-entry:last-child {
+        border-bottom: none;
+    }
+    
+    .timeline-time {
+        font-weight: bold;
+        color: #495057;
+        min-width: 100px;
+        text-align: right;
+        margin-right: 20px;
+    }
+    
+    .timeline-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+        border: 2px solid #dee2e6;
+    }
+    
+    .avatar-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        border: 2px solid #dee2e6;
+    }
+    
+    .timeline-content {
+        flex-grow: 1;
+    }
+    
+    .timeline-status {
+        font-size: 0.8rem;
+        padding: 3px 8px;
+        border-radius: 10px;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+    
+    .status-success {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-danger {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .date-filter {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .location-details {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .access-chart {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        text-align: center;
+        min-height: 200px;
+    }
+    
+    .security-level-badge {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-weight: bold;
+    }
+    
+    .level-public { background: #d4edda; color: #155724; }
+    .level-restricted { background: #fff3cd; color: #856404; }
+    .level-staff-only { background: #f8d7da; color: #721c24; }
+    
+    .export-section {
+        background: #e3f2fd;
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 20px;
+        border: 1px solid #90caf9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if location_info %}
+<!-- Location Header -->
+<div class="location-header">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2><i class="fas fa-map-marker-alt me-2"></i>{{ location_info.location_name }}</h2>
+            <p class="mb-0 opacity-75">{{ location_info.building }}{% if location_info.floor_level %} - {{ location_info.floor_level }}{% endif %}</p>
+            <div class="mt-2">
+                <span class="security-level-badge level-{{ location_info.access_level.replace('_', '-') }}">
+                    <i class="fas fa-shield-alt me-1"></i>{{ location_info.access_level.replace('_', ' ').title() }} Access
+                </span>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{{ url_for('admin_access_logs', location=location_info.location_id) }}" class="btn btn-light">
+                    <i class="fas fa-list me-1"></i>View All Logs
+                </a>
+                <a href="{{ url_for('admin_locations') }}" class="btn btn-outline-light">
+                    <i class="fas fa-arrow-left me-1"></i>Back
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Date Filter -->
+<div class="date-filter">
+    <div class="d-flex justify-content-between align-items-center">
+        <h6><i class="fas fa-calendar me-2"></i>Report Period</h6>
+        <div class="btn-group" role="group">
+            <a href="?date=today" class="btn btn-{{ 'primary' if date_filter == 'today' else 'outline-primary' }} btn-sm">Today</a>
+            <a href="?date=yesterday" class="btn btn-{{ 'primary' if date_filter == 'yesterday' else 'outline-primary' }} btn-sm">Yesterday</a>
+            <a href="?date=week" class="btn btn-{{ 'primary' if date_filter == 'week' else 'outline-primary' }} btn-sm">This Week</a>
+            <a href="?date=month" class="btn btn-{{ 'primary' if date_filter == 'month' else 'outline-primary' }} btn-sm">This Month</a>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="location-stats">
+    <div class="stat-card">
+        <div class="stat-number success">{{ statistics.total_attempts or 0 }}</div>
+        <div class="stat-label">Total Attempts</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number success">{{ statistics.granted_count or 0 }}</div>
+        <div class="stat-label">Access Granted</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number danger">{{ statistics.denied_count or 0 }}</div>
+        <div class="stat-label">Access Denied</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number info">{{ statistics.unique_students or 0 }}</div>
+        <div class="stat-label">Unique Students</div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number warning">{{ "%.1f"|format(statistics.avg_risk_score or 0) }}</div>
+        <div class="stat-label">Avg Risk Score</div>
+    </div>
+</div>
+
+<!-- Access Chart Placeholder -->
+<div class="access-chart">
+    <h6><i class="fas fa-chart-bar me-2"></i>Access Pattern Analysis</h6>
+    <div class="mt-4">
+        {% if statistics.total_attempts and statistics.total_attempts > 0 %}
+        <div class="row text-center">
+            <div class="col-md-6">
+                <div class="progress mb-3" style="height: 20px;">
+                    <div class="progress-bar bg-success" style="width: {{ (statistics.granted_count / statistics.total_attempts * 100)|round(1) }}%">
+                        {{ (statistics.granted_count / statistics.total_attempts * 100)|round(1) }}% Granted
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="progress mb-3" style="height: 20px;">
+                    <div class="progress-bar bg-danger" style="width: {{ (statistics.denied_count / statistics.total_attempts * 100)|round(1) }}%">
+                        {{ (statistics.denied_count / statistics.total_attempts * 100)|round(1) }}% Denied
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-muted">
+            <i class="fas fa-chart-line fa-3x mb-3"></i>
+            <p>No access data available for the selected period</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Access Timeline -->
+<div class="access-timeline">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5><i class="fas fa-clock me-2"></i>Access Timeline</h5>
+        <small class="text-muted">Showing {{ access_data|length }} recent attempts</small>
+    </div>
+    
+    {% if access_data %}
+    <div id="timelineContainer">
+        {% for entry in access_data %}
+        <div class="timeline-entry">
+            <div class="timeline-time">
+                {{ entry.access_time.strftime('%H:%M') if entry.access_time else 'Unknown' }}
+                <br>
+                <small class="text-muted">{{ entry.access_time.strftime('%d/%m') if entry.access_time else '' }}</small>
+            </div>
+            
+            {% if entry.photo_url %}
+            <img src="{{ entry.photo_url }}" alt="{{ entry.full_name or 'Unknown' }}" class="timeline-avatar">
+            {% else %}
+            <div class="avatar-placeholder">
+                <i class="fas fa-user text-muted"></i>
+            </div>
+            {% endif %}
+            
+            <div class="timeline-content">
+                <div class="d-flex align-items-center">
+                    <strong>{{ entry.full_name or 'Unknown Student' }}</strong>
+                    <span class="timeline-status {{ 'status-success' if entry.access_granted else 'status-danger' }}">
+                        {{ 'GRANTED' if entry.access_granted else 'DENIED' }}
+                    </span>
+                </div>
+                
+                <div class="text-muted mt-1">
+                    <small>
+                        <i class="fas fa-id-card me-1"></i>{{ entry.student_id or 'Unknown ID' }}
+                        {% if entry.program %} | {{ entry.program }}{% endif %}
+                        {% if entry.access_type %} | {{ entry.access_type.title() }}{% endif %}
+                        {% if entry.risk_score > 0 %} | Risk: {{ entry.risk_score }}/10{% endif %}
+                    </small>
+                </div>
+                
+                {% if not entry.access_granted and entry.denial_reason %}
+                <div class="text-danger mt-1">
+                    <small><i class="fas fa-exclamation-triangle me-1"></i>{{ entry.denial_reason }}</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if access_data|length == 0 %}
+    <div class="text-center text-muted py-4">
+        <i class="fas fa-clock fa-3x mb-3"></i>
+        <h6>No Access Attempts</h6>
+        <p>No one has attempted to access this location during the selected period.</p>
+    </div>
+    {% endif %}
+    
+    {% else %}
+    <div class="text-center text-muted py-4">
+        <i class="fas fa-database fa-3x mb-3"></i>
+        <h6>No Data Available</h6>
+        <p>Unable to load access data for this location.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Export Section -->
+<div class="export-section">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h6><i class="fas fa-download me-2"></i>Export Location Report</h6>
+            <small class="text-muted">Generate detailed reports for compliance and analysis</small>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="btn-group">
+                <button class="btn btn-primary btn-sm" onclick="exportLocationData('csv')">
+                    <i class="fas fa-file-csv me-1"></i>CSV Report
+                </button>
+                <button class="btn btn-info btn-sm" onclick="exportLocationData('pdf')">
+                    <i class="fas fa-file-pdf me-1"></i>PDF Report
+                </button>
+                <button class="btn btn-success btn-sm" onclick="printLocationReport()">
+                    <i class="fas fa-print me-1"></i>Print
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- Location Not Found -->
+<div class="text-center py-5">
+    <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
+    <h4 class="text-muted">Location Not Found</h4>
+    <p class="text-muted">The requested location could not be found or you don't have permission to view it.</p>
+    <a href="{{ url_for('admin_locations') }}" class="btn btn-primary">
+        <i class="fas fa-arrow-left me-1"></i>Back to Locations
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Export location data
+function exportLocationData(format) {
+    const locationId = {{ location_info.location_id if location_info else 'null' }};
+    const dateFilter = '{{ date_filter }}';
+    
+    if (format === 'csv') {
+        // Create CSV export URL
+        const params = new URLSearchParams({
+            location: locationId,
+            date: dateFilter,
+            format: 'csv'
+        });
+        
+        window.location.href = `/admin/export_logs?${params.toString()}`;
+    } else if (format === 'pdf') {
+        alert('PDF Export Feature\n\nThis would generate a comprehensive PDF report including:\n\n• Location details and security level\n• Access statistics and charts\n• Complete timeline of access attempts\n• Risk analysis and recommendations\n\nFeature not yet implemented in this simulation.');
+    }
+}
+
+// Print location report
+function printLocationReport() {
+    const locationName = '{{ location_info.location_name if location_info else "Unknown Location" }}';
+    const dateFilter = '{{ date_filter }}';
+    
+    const printContent = `
+        <div style="font-family: Arial, sans-serif;">
+            <h1>Location Access Report</h1>
+            <h2>${locationName}</h2>
+            <h3>Period: ${dateFilter.charAt(0).toUpperCase() + dateFilter.slice(1)}</h3>
+            <h3>Generated: ${new Date().toLocaleString()}</h3>
+            <hr>
+            
+            <h4>Statistics Summary:</h4>
+            <ul>
+                <li>Total Attempts: {{ statistics.total_attempts or 0 }}</li>
+                <li>Access Granted: {{ statistics.granted_count or 0 }}</li>
+                <li>Access Denied: {{ statistics.denied_count or 0 }}</li>
+                <li>Unique Students: {{ statistics.unique_students or 0 }}</li>
+                <li>Average Risk Score: {{ "%.1f"|format(statistics.avg_risk_score or 0) }}</li>
+            </ul>
+            
+            <h4>Access Timeline:</h4>
+            ${document.getElementById('timelineContainer') ? document.getElementById('timelineContainer').innerHTML : '<p>No timeline data available</p>'}
+        </div>
+    `;
+    
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Location Access Report - ${locationName}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    .timeline-entry { border: 1px solid #ccc; padding: 10px; margin: 5px 0; }
+                    .timeline-avatar, .avatar-placeholder { display: none; }
+                    @media print { .btn, .no-print { display: none; } }
+                </style>
+            </head>
+            <body>${printContent}</body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+}
+
+// Auto-refresh functionality (optional)
+function refreshLocationData() {
+    // This could be used to refresh the data without page reload
+    location.reload();
+}
+
+// Highlight security events
+function highlightSecurityEvents() {
+    const timelineEntries = document.querySelectorAll('.timeline-entry');
+    timelineEntries.forEach(entry => {
+        const statusElement = entry.querySelector('.status-danger');
+        if (statusElement) {
+            entry.style.backgroundColor = '#fff3cd';
+            entry.style.borderLeft = '4px solid #ffc107';
+        }
+    });
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Location access report initialized');
+    
+    // Highlight any security events
+    highlightSecurityEvents();
+    
+    // Optional: Set up auto-refresh every 5 minutes for real-time monitoring
+    // setInterval(refreshLocationData, 300000);
+});
+
+// Real-time updates notification
+function notifyNewAccess() {
+    // This could show a notification when new access attempts are detected
+    const notification = document.createElement('div');
+    notification.className = 'alert alert-info alert-dismissible fade show';
+    notification.innerHTML = `
+        <i class="fas fa-info-circle me-2"></i>
+        New access attempt detected. <a href="#" onclick="refreshLocationData()">Refresh to view</a>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.querySelector('.location-header').after(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+</script>
+{% endblock %}

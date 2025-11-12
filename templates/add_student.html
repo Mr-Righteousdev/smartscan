@@ -1,0 +1,461 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Student - Smart Campus Security{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+    
+    .form-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+        border-left: 4px solid #007bff;
+    }
+    
+    .section-title {
+        color: #495057;
+        font-weight: 600;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+    }
+    
+    .photo-preview {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #dee2e6;
+        margin: 0 auto 15px;
+        display: block;
+    }
+    
+    .photo-placeholder {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        border: 4px dashed #dee2e6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .photo-placeholder:hover {
+        border-color: #007bff;
+        background: #e3f2fd;
+    }
+    
+    .generated-info {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .card-preview {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .card-preview::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100px;
+        height: 100px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+    
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    .btn-generate {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        border: none;
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-generate:hover {
+        background: linear-gradient(45deg, #0056b3, #004085);
+        transform: translateY(-1px);
+    }
+    
+    .sample-photos {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+    }
+    
+    .sample-photo {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .sample-photo:hover {
+        border-color: #007bff;
+        transform: scale(1.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2><i class="fas fa-user-plus me-2"></i>Add New Student</h2>
+                <p class="text-muted mb-0">Register a new student and generate access card</p>
+            </div>
+            <div>
+                <a href="{{ url_for('admin_students') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Students
+                </a>
+            </div>
+        </div>
+        
+        <form id="addStudentForm" method="POST">
+            <div class="form-container">
+                <!-- Personal Information Section -->
+                <div class="form-section">
+                    <h5 class="section-title">
+                        <i class="fas fa-user me-2"></i>Personal Information
+                    </h5>
+                    
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <img id="photoPreview" class="photo-preview" style="display: none;" alt="Student Photo">
+                            <div id="photoPlaceholder" class="photo-placeholder">
+                                <i class="fas fa-camera fa-2x text-muted"></i>
+                            </div>
+                            <input type="hidden" id="photo_url" name="photo_url">
+                            <small class="text-muted d-block mb-2">Click to select photo</small>
+                            
+                            <!-- Sample Photos -->
+                            <div class="sample-photos">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face" class="sample-photo" onclick="selectPhoto(this.src.replace('w=60&h=60', 'w=150&h=150'))">
+                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b9e0?w=60&h=60&fit=crop&crop=face" class="sample-photo" onclick="selectPhoto(this.src.replace('w=60&h=60', 'w=150&h=150'))">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face" class="sample-photo" onclick="selectPhoto(this.src.replace('w=60&h=60', 'w=150&h=150'))">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=60&h=60&fit=crop&crop=face" class="sample-photo" onclick="selectPhoto(this.src.replace('w=60&h=60', 'w=150&h=150'))">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60&h=60&fit=crop&crop=face" class="sample-photo" onclick="selectPhoto(this.src.replace('w=60&h=60', 'w=150&h=150'))">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&h=60&fit=crop&crop=face" class="sample-photo" onclick="selectPhoto(this.src.replace('w=60&h=60', 'w=150&h=150'))">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="full_name" class="form-label">Full Name *</label>
+                                    <input type="text" class="form-control" id="full_name" name="full_name" required>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="student_id" class="form-label">Student ID *</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="student_id" name="student_id" required placeholder="e.g., STU001">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="generateStudentId()">
+                                            <i class="fas fa-magic"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" class="form-control" id="email" name="email" required placeholder="student@slau.ac.ug">
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" placeholder="+256 700 000 000">
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="year_of_study" class="form-label">Year of Study *</label>
+                                    <select class="form-select" id="year_of_study" name="year_of_study" required onchange="calculateExpiry()">
+                                        <option value="">Select Year</option>
+                                        <option value="1">Year 1</option>
+                                        <option value="2">Year 2</option>
+                                        <option value="3">Year 3</option>
+                                        <option value="4">Year 4</option>
+                                        <option value="5">Year 5 (Masters)</option>
+                                        <option value="6">Year 6+ (PhD)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Academic Information Section -->
+                <div class="form-section">
+                    <h5 class="section-title">
+                        <i class="fas fa-graduation-cap me-2"></i>Academic Information
+                    </h5>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="program" class="form-label">Program of Study *</label>
+                            <select class="form-select" id="program" name="program" required>
+                                <option value="">Select Program</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Cybersecurity">Cybersecurity</option>
+                                <option value="Information Technology">Information Technology</option>
+                                <option value="Computer Engineering">Computer Engineering</option>
+                                <option value="Data Science">Data Science</option>
+                                <option value="Software Engineering">Software Engineering</option>
+                                <option value="Business Information Technology">Business Information Technology</option>
+                                <option value="Information Systems">Information Systems</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Generated Card Information -->
+                <div class="generated-info" id="generatedInfo" style="display: none;">
+                    <h6><i class="fas fa-id-card me-2"></i>Generated Card Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Card ID:</strong> <span id="generatedCardId">Will be generated</span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Expires:</strong> <span id="generatedExpiry">Will be calculated</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Virtual Card Preview -->
+                <div id="cardPreview" style="display: none;">
+                    <div class="card-preview">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">ST. LAWRENCE UNIVERSITY</h6>
+                                <small class="opacity-75">Student ID Card</small>
+                                <div class="mt-3">
+                                    <h6 id="previewName" class="mb-1"></h6>
+                                    <p class="mb-1" id="previewStudentId"></p>
+                                    <p class="mb-1" id="previewProgram"></p>
+                                    <small class="opacity-75" id="previewCardId"></small>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <img id="previewPhoto" src="" alt="" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid white;">
+                                <br>
+                                <small class="opacity-75 mt-1 d-block">RFID Enabled</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Submit Buttons -->
+                <div class="text-center mt-4">
+                    <button type="button" class="btn btn-outline-secondary me-2" onclick="previewCard()">
+                        <i class="fas fa-eye me-1"></i>Preview Card
+                    </button>
+                    <button type="submit" class="btn btn-generate btn-lg">
+                        <i class="fas fa-plus me-2"></i>Add Student & Generate Card
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Photo selection functionality
+function selectPhoto(photoUrl) {
+    document.getElementById('photo_url').value = photoUrl;
+    document.getElementById('photoPreview').src = photoUrl;
+    document.getElementById('photoPreview').style.display = 'block';
+    document.getElementById('photoPlaceholder').style.display = 'none';
+    
+    // Update preview card if visible
+    if (document.getElementById('cardPreview').style.display !== 'none') {
+        document.getElementById('previewPhoto').src = photoUrl;
+    }
+}
+
+// Generate unique student ID
+function generateStudentId() {
+    const prefix = 'STU';
+    const randomNum = Math.floor(Math.random() * 900) + 100; // 3-digit random number
+    const studentId = prefix + randomNum.toString().padStart(3, '0');
+    document.getElementById('student_id').value = studentId;
+    updatePreview();
+}
+
+// Calculate card expiry based on year of study
+function calculateExpiry() {
+    const year = parseInt(document.getElementById('year_of_study').value);
+    if (year) {
+        const currentDate = new Date();
+        let yearsToAdd = 4; // Default undergraduate
+        
+        if (year >= 5) {
+            yearsToAdd = 2; // Postgraduate
+        } else {
+            yearsToAdd = 5 - year; // Remaining years for undergraduate
+        }
+        
+        const expiryDate = new Date(currentDate);
+        expiryDate.setFullYear(expiryDate.getFullYear() + yearsToAdd);
+        
+        const formattedDate = expiryDate.toLocaleDateString('en-GB');
+        document.getElementById('generatedExpiry').textContent = formattedDate;
+        document.getElementById('generatedInfo').style.display = 'block';
+    }
+}
+
+// Preview card functionality
+function previewCard() {
+    const fullName = document.getElementById('full_name').value;
+    const studentId = document.getElementById('student_id').value;
+    const program = document.getElementById('program').value;
+    const photoUrl = document.getElementById('photo_url').value;
+    
+    if (!fullName || !studentId || !program) {
+        alert('Please fill in the required fields (Name, Student ID, Program) before previewing.');
+        return;
+    }
+    
+    // Generate card ID for preview
+    const cardId = generateCardId();
+    
+    // Update preview
+    document.getElementById('previewName').textContent = fullName;
+    document.getElementById('previewStudentId').textContent = studentId;
+    document.getElementById('previewProgram').textContent = program;
+    document.getElementById('previewCardId').textContent = cardId;
+    document.getElementById('generatedCardId').textContent = cardId;
+    
+    if (photoUrl) {
+        document.getElementById('previewPhoto').src = photoUrl;
+        document.getElementById('previewPhoto').style.display = 'block';
+    } else {
+        document.getElementById('previewPhoto').style.display = 'none';
+    }
+    
+    document.getElementById('cardPreview').style.display = 'block';
+    document.getElementById('generatedInfo').style.display = 'block';
+    
+    // Smooth scroll to preview
+    document.getElementById('cardPreview').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Generate card ID
+function generateCardId() {
+    const prefix = 'RFID_';
+    const part1 = Math.random().toString(16).substr(2, 3).toUpperCase();
+    const part2 = Math.random().toString(16).substr(2, 3).toUpperCase();
+    return prefix + part1 + '_' + part2;
+}
+
+// Update preview as user types
+function updatePreview() {
+    if (document.getElementById('cardPreview').style.display !== 'none') {
+        previewCard();
+    }
+}
+
+// Auto-generate email based on name
+document.getElementById('full_name').addEventListener('input', function() {
+    const name = this.value.toLowerCase().replace(/\s+/g, '.');
+    if (name) {
+        document.getElementById('email').value = name + '@student.slau.ac.ug';
+    }
+    updatePreview();
+});
+
+// Update preview on other field changes
+['student_id', 'program'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updatePreview);
+});
+
+// Form submission
+document.getElementById('addStudentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Validate required fields
+    if (!data.full_name || !data.student_id || !data.email || !data.program || !data.year_of_study) {
+        alert('Please fill in all required fields marked with *');
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Student...';
+    submitBtn.disabled = true;
+    
+    // Submit form
+    fetch('/admin/add_student', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert(`✅ Student Added Successfully!\n\nName: ${data.full_name}\nStudent ID: ${data.student_id}\nCard ID: ${result.card_id}\nCard Expires: ${new Date(result.expiry_date).toLocaleDateString()}\n\nThe student can now use their card for campus access.`);
+            window.location.href = '/admin/students';
+        } else {
+            alert('❌ Error adding student: ' + (result.error || 'Unknown error'));
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ Error adding student. Please try again.');
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-generate student ID
+    generateStudentId();
+});
+</script>
+{% endblock %}

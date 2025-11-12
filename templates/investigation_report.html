@@ -1,0 +1,721 @@
+{% extends "base.html" %}
+
+{% block title %}Security Investigation Report - Smart Campus Security{% endblock %}
+
+{% block extra_css %}
+<style>
+    .investigation-panel {
+        background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .investigation-panel::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+    
+    .investigation-form {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border: 2px solid #e9ecef;
+    }
+    
+    .timeline-container {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        max-height: 600px;
+        overflow-y: auto;
+    }
+    
+    .timeline-item {
+        display: flex;
+        align-items: start;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-left: 4px solid #007bff;
+        background: #f8f9fa;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .timeline-item:hover {
+        background: #e3f2fd;
+        transform: translateX(5px);
+    }
+    
+    .timeline-item.security-alert {
+        border-left-color: #dc3545;
+        background: #fff5f5;
+    }
+    
+    .timeline-item.denied-access {
+        border-left-color: #ffc107;
+        background: #fffbf0;
+    }
+    
+    .timeline-time {
+        min-width: 120px;
+        font-weight: bold;
+        color: #495057;
+        text-align: right;
+        margin-right: 20px;
+        padding-top: 5px;
+    }
+    
+    .timeline-content {
+        flex-grow: 1;
+    }
+    
+    .timeline-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+        border: 3px solid #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .evidence-card {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 10px 0;
+    }
+    
+    .security-warning {
+        background: #f8d7da;
+        border: 1px solid #dc3545;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .investigation-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: 2px solid #e9ecef;
+    }
+    
+    .stat-card.critical {
+        border-color: #dc3545;
+        background: linear-gradient(135deg, #fff5f5, #ffffff);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    
+    .suspect-profile {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-left: 5px solid #dc3545;
+        margin-bottom: 20px;
+    }
+    
+    .related-events {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .form-section {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #dee2e6;
+    }
+    
+    .generate-btn {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        border: none;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 15px 30px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .generate-btn:hover {
+        background: linear-gradient(45deg, #c82333, #a71e2a);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+    }
+    
+    .results-container {
+        display: none;
+        animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .alert-summary {
+        background: linear-gradient(135deg, #fff3cd, #ffffff);
+        border: 2px solid #ffc107;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .risk-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+    
+    .risk-critical { background-color: #dc3545; }
+    .risk-high { background-color: #fd7e14; }
+    .risk-medium { background-color: #ffc107; }
+    .risk-low { background-color: #28a745; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Investigation Header -->
+<div class="investigation-panel">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2><i class="fas fa-search me-2"></i>Security Investigation Center</h2>
+            <p class="mb-0 opacity-75">Advanced forensic analysis and incident reconstruction</p>
+            <div class="mt-2">
+                <span class="badge bg-light text-dark">
+                    <i class="fas fa-shield-alt me-1"></i>Authorized Personnel Only
+                </span>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-light" onclick="clearInvestigation()">
+                    <i class="fas fa-trash me-1"></i>Clear
+                </button>
+                <a href="{{ url_for('admin_access_logs') }}" class="btn btn-outline-light">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Logs
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Investigation Form -->
+<div class="investigation-form">
+    <h5><i class="fas fa-clipboard-list me-2"></i>Investigation Parameters</h5>
+    <p class="text-muted mb-4">Define the scope of your security investigation. Enter any combination of parameters to reconstruct events.</p>
+    
+    <form id="investigationForm">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-section">
+                    <h6><i class="fas fa-user me-2"></i>Target Subject</h6>
+                    <div class="mb-3">
+                        <label for="target_student" class="form-label">Student Name or ID</label>
+                        <input type="text" class="form-control" id="target_student" name="target_student" 
+                               placeholder="e.g., John Doe or STU001" list="recentStudents">
+                        <datalist id="recentStudents">
+                            {% for student in recent_students %}
+                            <option value="{{ student.student_id }}">{{ student.full_name }}</option>
+                            <option value="{{ student.full_name }}">{{ student.student_id }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <small class="text-muted">Enter student name, ID, or leave blank for location-based investigation</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-section">
+                    <h6><i class="fas fa-map-marker-alt me-2"></i>Location of Interest</h6>
+                    <div class="mb-3">
+                        <label for="target_location" class="form-label">Campus Location</label>
+                        <select class="form-select" id="target_location" name="target_location">
+                            <option value="">All Locations</option>
+                            {% for location in locations %}
+                            <option value="{{ location.location_id }}">
+                                {{ location.location_name }} ({{ location.building }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-muted">Focus investigation on specific campus location</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-section">
+                    <h6><i class="fas fa-calendar me-2"></i>Incident Timeline</h6>
+                    <div class="mb-3">
+                        <label for="incident_date" class="form-label">Incident Date & Time</label>
+                        <input type="datetime-local" class="form-control" id="incident_date" name="incident_date">
+                        <small class="text-muted">When did the security incident occur?</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-section">
+                    <h6><i class="fas fa-clock me-2"></i>Investigation Window</h6>
+                    <div class="mb-3">
+                        <label for="time_range_hours" class="form-label">Time Range (Hours)</label>
+                        <select class="form-select" id="time_range_hours" name="time_range_hours">
+                            <option value="1">±1 Hour</option>
+                            <option value="3">±3 Hours</option>
+                            <option value="6">±6 Hours</option>
+                            <option value="12">±12 Hours</option>
+                            <option value="24" selected>±24 Hours</option>
+                            <option value="48">±48 Hours</option>
+                        </select>
+                        <small class="text-muted">How far before/after the incident to analyze</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4">
+            <button type="submit" class="generate-btn">
+                <i class="fas fa-search me-2"></i>Generate Investigation Report
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Investigation Results Container -->
+<div id="investigationResults" class="results-container">
+    <!-- Target Profile -->
+    <div id="targetProfile" class="suspect-profile" style="display: none;">
+        <h5><i class="fas fa-user-secret me-2"></i>Subject Profile</h5>
+        <div id="targetInfo">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Statistics Summary -->
+    <div id="investigationStats" class="investigation-stats" style="display: none;">
+        <!-- Populated by JavaScript -->
+    </div>
+    
+    <!-- Security Alerts Summary -->
+    <div id="securityAlerts" class="alert-summary" style="display: none;">
+        <h6><i class="fas fa-exclamation-triangle me-2"></i>Related Security Alerts</h6>
+        <div id="alertsList">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Timeline Reconstruction -->
+    <div id="timelineReconstruction" class="timeline-container" style="display: none;">
+        <h5><i class="fas fa-timeline me-2"></i>Event Timeline Reconstruction</h5>
+        <p class="text-muted mb-4">Chronological sequence of events related to the investigation</p>
+        <div id="timelineEvents">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Related Events -->
+    <div id="relatedEvents" class="related-events" style="display: none;">
+        <h5><i class="fas fa-link me-2"></i>Related Security Events</h5>
+        <div id="relatedEventsList">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Investigation Summary -->
+    <div id="investigationSummary" class="evidence-card" style="display: none;">
+        <h6><i class="fas fa-clipboard-check me-2"></i>Investigation Summary</h6>
+        <div id="summaryContent">
+            <!-- Populated by JavaScript -->
+        </div>
+        
+        <!-- Export Options -->
+        <div class="mt-4">
+            <h6><i class="fas fa-download me-2"></i>Export Investigation Report</h6>
+            <div class="btn-group">
+                <button class="btn btn-primary btn-sm" onclick="exportInvestigation('detailed')">
+                    <i class="fas fa-file-alt me-1"></i>Detailed Report
+                </button>
+                <button class="btn btn-info btn-sm" onclick="exportInvestigation('summary')">
+                    <i class="fas fa-file-text me-1"></i>Executive Summary
+                </button>
+                <button class="btn btn-success btn-sm" onclick="printInvestigation()">
+                    <i class="fas fa-print me-1"></i>Print Report
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Indicator -->
+<div id="loadingIndicator" style="display: none;">
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Analyzing...</span>
+        </div>
+        <h5 class="mt-3">Analyzing Security Data</h5>
+        <p class="text-muted">Reconstructing timeline and correlating events...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Investigation form handling
+document.getElementById('investigationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Show loading indicator
+    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('investigationResults').style.display = 'none';
+    
+    // Simulate investigation processing time
+    setTimeout(() => {
+        generateInvestigationReport(data);
+    }, 2000);
+});
+
+function generateInvestigationReport(data) {
+    // Send investigation request to backend
+    fetch('/admin/investigation_report', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        document.getElementById('loadingIndicator').style.display = 'none';
+        
+        if (result.success) {
+            displayInvestigationResults(result.data, data);
+        } else {
+            alert('Investigation Error: ' + (result.error || 'Unable to complete investigation'));
+        }
+    })
+    .catch(error => {
+        document.getElementById('loadingIndicator').style.display = 'none';
+        console.error('Investigation error:', error);
+        alert('Investigation failed. Please try again.');
+    });
+}
+
+function displayInvestigationResults(investigationData, params) {
+    // Show results container
+    document.getElementById('investigationResults').style.display = 'block';
+    
+    // Display target profile if available
+    if (investigationData.target_info && investigationData.target_info.student_id) {
+        displayTargetProfile(investigationData.target_info);
+    }
+    
+    // Display investigation statistics
+    displayInvestigationStats(investigationData);
+    
+    // Display security alerts
+    if (investigationData.security_alerts && investigationData.security_alerts.length > 0) {
+        displaySecurityAlerts(investigationData.security_alerts);
+    }
+    
+    // Display timeline
+    if (investigationData.timeline && investigationData.timeline.length > 0) {
+        displayTimeline(investigationData.timeline);
+    }
+    
+    // Display investigation summary
+    displayInvestigationSummary(investigationData, params);
+}
+
+function displayTargetProfile(targetInfo) {
+    const profileDiv = document.getElementById('targetProfile');
+    const targetInfoDiv = document.getElementById('targetInfo');
+    
+    targetInfoDiv.innerHTML = `
+        <div class="row">
+            <div class="col-md-3 text-center">
+                ${targetInfo.photo_url ? 
+                    `<img src="${targetInfo.photo_url}" class="timeline-avatar" style="width: 80px; height: 80px;">` :
+                    `<div class="avatar-placeholder" style="width: 80px; height: 80px; margin: 0 auto;">
+                        <i class="fas fa-user fa-2x text-muted"></i>
+                    </div>`
+                }
+            </div>
+            <div class="col-md-9">
+                <h6>${targetInfo.full_name}</h6>
+                <p class="mb-1"><strong>Student ID:</strong> ${targetInfo.student_id}</p>
+                <p class="mb-1"><strong>Program:</strong> ${targetInfo.program || 'Not specified'}</p>
+                <p class="mb-1"><strong>Status:</strong> 
+                    <span class="badge bg-${targetInfo.status === 'active' ? 'success' : 'warning'}">${targetInfo.status}</span>
+                </p>
+                <p class="mb-0"><strong>Total Access Attempts:</strong> ${targetInfo.total_accesses || 0}</p>
+            </div>
+        </div>
+    `;
+    
+    profileDiv.style.display = 'block';
+}
+
+function displayInvestigationStats(data) {
+    const statsDiv = document.getElementById('investigationStats');
+    const timelineLength = data.timeline ? data.timeline.length : 0;
+    const alertsCount = data.security_alerts ? data.security_alerts.length : 0;
+    const deniedAttempts = data.timeline ? data.timeline.filter(t => !t.access_granted).length : 0;
+    
+    statsDiv.innerHTML = `
+        <div class="stat-card">
+            <div class="stat-number text-primary">${timelineLength}</div>
+            <div class="stat-label">Access Events</div>
+        </div>
+        <div class="stat-card ${alertsCount > 0 ? 'critical' : ''}">
+            <div class="stat-number text-danger">${alertsCount}</div>
+            <div class="stat-label">Security Alerts</div>
+        </div>
+        <div class="stat-card ${deniedAttempts > 0 ? 'critical' : ''}">
+            <div class="stat-number text-warning">${deniedAttempts}</div>
+            <div class="stat-label">Denied Attempts</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number text-info">${data.timeline ? new Set(data.timeline.map(t => t.location_id)).size : 0}</div>
+            <div class="stat-label">Locations Accessed</div>
+        </div>
+    `;
+    
+    statsDiv.style.display = 'grid';
+}
+
+function displaySecurityAlerts(alerts) {
+    const alertsDiv = document.getElementById('securityAlerts');
+    const alertsList = document.getElementById('alertsList');
+    
+    let alertsHtml = '';
+    alerts.forEach(alert => {
+        alertsHtml += `
+            <div class="security-warning mb-2">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-1">
+                            <span class="risk-indicator risk-${alert.severity}"></span>
+                            ${alert.alert_type.replace(/_/g, ' ').toUpperCase()}
+                        </h6>
+                        <p class="mb-1">${alert.alert_message}</p>
+                        <small class="text-muted">
+                            ${alert.location_name || 'Unknown Location'} | 
+                            ${new Date(alert.alert_time).toLocaleString()}
+                        </small>
+                    </div>
+                    <span class="badge bg-${alert.severity === 'critical' ? 'danger' : 
+                                          (alert.severity === 'high' ? 'warning' : 'info')}">${alert.severity}</span>
+                </div>
+            </div>
+        `;
+    });
+    
+    alertsList.innerHTML = alertsHtml;
+    alertsDiv.style.display = 'block';
+}
+
+function displayTimeline(timeline) {
+    const timelineDiv = document.getElementById('timelineReconstruction');
+    const eventsDiv = document.getElementById('timelineEvents');
+    
+    let timelineHtml = '';
+    timeline.forEach(event => {
+        const isSecurityEvent = !event.access_granted;
+        timelineHtml += `
+            <div class="timeline-item ${isSecurityEvent ? 'denied-access' : ''}">
+                <div class="timeline-time">
+                    ${new Date(event.access_time).toLocaleTimeString()}<br>
+                    <small>${new Date(event.access_time).toLocaleDateString()}</small>
+                </div>
+                
+                ${event.photo_url ? 
+                    `<img src="${event.photo_url}" class="timeline-avatar" alt="${event.full_name}">` :
+                    `<div class="timeline-avatar bg-secondary d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user text-white"></i>
+                    </div>`
+                }
+                
+                <div class="timeline-content">
+                    <div class="d-flex align-items-center mb-2">
+                        <h6 class="mb-0 me-2">${event.full_name || 'Unknown Student'}</h6>
+                        <span class="badge bg-${event.access_granted ? 'success' : 'danger'}">
+                            ${event.access_granted ? 'GRANTED' : 'DENIED'}
+                        </span>
+                    </div>
+                    
+                    <p class="mb-1">
+                        <i class="fas fa-map-marker-alt me-1"></i>${event.location_name || 'Unknown Location'}
+                        ${event.building ? ` (${event.building})` : ''}
+                    </p>
+                    
+                    <small class="text-muted">
+                        Student ID: ${event.student_id || 'Unknown'} | 
+                        Access Type: ${event.access_type || 'Entry'}
+                        ${event.risk_score ? ` | Risk Score: ${event.risk_score}/10` : ''}
+                    </small>
+                    
+                    ${!event.access_granted && event.denial_reason ? 
+                        `<div class="mt-2 text-danger">
+                            <i class="fas fa-exclamation-triangle me-1"></i>${event.denial_reason}
+                        </div>` : ''
+                    }
+                </div>
+            </div>
+        `;
+    });
+    
+    eventsDiv.innerHTML = timelineHtml || '<p class="text-muted">No events found for the specified criteria.</p>';
+    timelineDiv.style.display = 'block';
+}
+
+function displayInvestigationSummary(data, params) {
+    const summaryDiv = document.getElementById('investigationSummary');
+    const summaryContent = document.getElementById('summaryContent');
+    
+    const totalEvents = data.timeline ? data.timeline.length : 0;
+    const deniedAttempts = data.timeline ? data.timeline.filter(t => !t.access_granted).length : 0;
+    const alertsCount = data.security_alerts ? data.security_alerts.length : 0;
+    
+    let riskLevel = 'LOW';
+    let riskClass = 'success';
+    
+    if (alertsCount > 0 || deniedAttempts > 2) {
+        riskLevel = 'HIGH';
+        riskClass = 'danger';
+    } else if (deniedAttempts > 0) {
+        riskLevel = 'MEDIUM';
+        riskClass = 'warning';
+    }
+    
+    summaryContent.innerHTML = `
+        <div class="row">
+            <div class="col-md-8">
+                <h6>Investigation Parameters:</h6>
+                <ul class="mb-3">
+                    <li><strong>Target:</strong> ${params.target_student || 'All students'}</li>
+                    <li><strong>Location:</strong> ${params.target_location ? document.querySelector(`option[value="${params.target_location}"]`).textContent : 'All locations'}</li>
+                    <li><strong>Incident Time:</strong> ${params.incident_date || 'Not specified'}</li>
+                    <li><strong>Time Window:</strong> ±${params.time_range_hours} hours</li>
+                </ul>
+                
+                <h6>Key Findings:</h6>
+                <ul class="mb-3">
+                    <li>${totalEvents} access events analyzed</li>
+                    <li>${deniedAttempts} denied access attempts detected</li>
+                    <li>${alertsCount} security alerts generated</li>
+                    <li>${data.timeline ? new Set(data.timeline.map(t => t.student_id)).size : 0} unique individuals involved</li>
+                </ul>
+            </div>
+            <div class="col-md-4 text-center">
+                <h6>Overall Risk Assessment:</h6>
+                <span class="badge bg-${riskClass} fs-5 p-3">${riskLevel} RISK</span>
+                
+                <div class="mt-3">
+                    <small class="text-muted">Generated: ${new Date().toLocaleString()}</small>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    summaryDiv.style.display = 'block';
+}
+
+function clearInvestigation() {
+    if (confirm('Clear current investigation results?')) {
+        document.getElementById('investigationForm').reset();
+        document.getElementById('investigationResults').style.display = 'none';
+        document.getElementById('targetProfile').style.display = 'none';
+        document.getElementById('investigationStats').style.display = 'none';
+        document.getElementById('securityAlerts').style.display = 'none';
+        document.getElementById('timelineReconstruction').style.display = 'none';
+        document.getElementById('investigationSummary').style.display = 'none';
+    }
+}
+
+function exportInvestigation(type) {
+    alert(`Export Investigation Report\n\nReport Type: ${type.toUpperCase()}\n\nThis would generate a comprehensive ${type} report including:\n\n• Investigation parameters and scope\n• Timeline reconstruction\n• Security alerts and incidents\n• Risk assessment and recommendations\n• Evidence summary\n• Compliance documentation\n\nFeature not yet implemented in simulation.`);
+}
+
+function printInvestigation() {
+    const printContent = document.getElementById('investigationResults').innerHTML;
+    const printWindow = window.open('', '', 'height=800,width=1000');
+    
+    printWindow.document.write(`
+        <html>
+            <head>
+                <title>Security Investigation Report</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; }
+                    .timeline-item { border: 1px solid #ccc; padding: 10px; margin: 5px 0; }
+                    .timeline-avatar { display: none; }
+                    .btn { display: none; }
+                    @media print { .no-print { display: none; } }
+                </style>
+            </head>
+            <body>
+                <h1>Security Investigation Report</h1>
+                <h3>Generated: ${new Date().toLocaleString()}</h3>
+                <hr>
+                ${printContent}
+            </body>
+        </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.print();
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Set default incident date to current time
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('incident_date').value = now.toISOString().slice(0, 16);
+    
+    console.log('Investigation report system initialized');
+});
+</script>
+{% endblock %}

@@ -399,7 +399,10 @@ def scan_card():
             'access_type': access_type.upper(),
             'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'risk_level': risk_assessment['risk_level'],
-            'additional_auth_required': risk_assessment['requires_additional_auth']
+            'additional_auth_required': risk_assessment['requires_additional_auth'],
+            'photo_url': student.get('photo_url'),
+            'program': student.get('program'),
+            'year_of_study': student.get('year_of_study')
         })
         
     except mysql.connector.Error as err:
@@ -660,6 +663,1135 @@ def recent_security_events():
                 conn.close()
     
     return jsonify(events)
+
+# ====================================
+# ADMIN MANAGEMENT ROUTES
+# ====================================
+
+@app.route('/admin/manage')
+@require_auth('all')
+def admin_management():
+    """Admin management dashboard"""
+    return render_template('admin_management.html')
+
+@app.route('/admin/students')
+@require_auth('all')
+def admin_students():
+    """Student management interface"""
+    conn = get_db_connection()
+    students = []
+    
+    if conn:
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT s.*, 
+                       CASE WHEN s.card_expiry_date < NOW() THEN 'expired'
+                            WHEN s.card_expiry_date < DATE_ADD(NOW(), INTERVAL 30 DAY) THEN 'expiring'
+                            ELSE 'active' END as card_status
+                FROM students s 
+                ORDER BY s.full_name
+            """)
+            students = cursor.fetchall()
+        except mysql.connector.Error as err:
+            logger.error(f"Error fetching students: {err}")
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return render_template('admin_students.html', students=students)
+
+@app.route('/admin/add_student', methods=['GET', 'POST'])
+@require_auth('all')
+def add_student():
+    """Add new student"""
+    if request.method == 'POST':
+        data = request.get_json() if request.is_json else request.form
+        
+        # Generate unique card ID
+        card_id = f"RFID_{secrets.token_hex(3).upper()}_{secrets.token_hex(3).upper()}"
+        
+        # Calculate card expiry (4 years for undergraduate, 2 years for postgraduate)
+        years = 4 if int(data.get('year_of_study', 1)) <= 4 else 2
+        expiry_date = datetime.now() + timedelta(days=365 * years)
+        
+        conn = get_db_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                    INSERT INTO students (student_id, card_id, full_name, email, phone, 
+                                        program, year_of_study, photo_url, card_expiry_date, status)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
+                cursor.execute(query, (
+                    data.get('student_id'),
+                    card_id,
+                    data.get('full_name'),
+                    data.get('email'),
+                    data.get('phone'),
+                    data.get('program'),
+                    data.get('year_of_study'),
+                    data.get('photo_url'),
+                    expiry_date,
+                    'active'
+                ))
+                
+                # Log the action
+                log_security_event('student_added', 
+                                 f'New student added: {data.get("full_name")} ({data.get("student_id")})',
+                                 request.current_user['user_id'])
+                
+                conn.commit()
+                flash(f'Student {data.get("full_name")} added successfully! Card ID: {card_id}', 'success')
+                
+                if request.is_json:
+                    return jsonify({'success': True, 'card_id': card_id, 'expiry_date': expiry_date.isoformat()})
+                
+            except mysql.connector.Error as err:
+                logger.error(f"Error adding student: {err}")
+                flash('Error adding student. Please try again.', 'error')
+                if request.is_json:
+                    return jsonify({'success': False, 'error': str(err)})
+            finally:
+                if conn.is_connected():
+                    cursor.close()
+                    conn.close()
+        
+        return redirect(url_for('admin_students'))
+    
+    return render_template('add_student.html')
+
+@app.route('/admin/locations')
+@require_auth('all')
+def admin_locations():
+    """Location management interface"""
+    conn = get_db_connection()
+    locations = []
+    
+    if conn:
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM campus_locations ORDER BY building, location_name")
+            locations = cursor.fetchall()
+        except mysql.connector.Error as err:
+            logger.error(f"Error fetching locations: {err}")
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return render_template('admin_locations.html', locations=locations)
+
+@app.route('/admin/add_location', methods=['GET', 'POST'])
+@require_auth('all')
+def add_location():
+    """Add new campus location"""
+    if request.method == 'POST':
+        data = request.get_json() if request.is_json else request.form
+        
+        conn = get_db_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                    INSERT INTO campus_locations (location_name, location_type, building, 
+                                                floor_level, access_level, is_active)
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """
+                cursor.execute(query, (
+                    data.get('location_name'),
+                    data.get('location_type'),
+                    data.get('building'),
+                    data.get('floor_level'),
+                    data.get('access_level'),
+                    True
+                ))
+                
+                log_security_event('location_added', 
+                                 f'New location added: {data.get("location_name")} in {data.get("building")}',
+                                 request.current_user['user_id'])
+                
+                conn.commit()
+                flash(f'Location {data.get("location_name")} added successfully!', 'success')
+                
+                if request.is_json:
+                    return jsonify({'success': True})
+                
+            except mysql.connector.Error as err:
+                logger.error(f"Error adding location: {err}")
+                flash('Error adding location. Please try again.', 'error')
+                if request.is_json:
+                    return jsonify({'success': False, 'error': str(err)})
+            finally:
+                if conn.is_connected():
+                    cursor.close()
+                    conn.close()
+        
+        return redirect(url_for('admin_locations'))
+    
+    return render_template('add_location.html')
+
+@app.route('/admin/staff')
+@require_auth('all')
+def admin_staff():
+    """Staff/officer management interface"""
+    conn = get_db_connection()
+    staff_members = []
+    
+    if conn:
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM system_users ORDER BY role, full_name")
+            staff_members = cursor.fetchall()
+        except mysql.connector.Error as err:
+            logger.error(f"Error fetching staff: {err}")
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return render_template('admin_staff.html', staff_members=staff_members)
+
+@app.route('/admin/add_staff', methods=['GET', 'POST'])
+@require_auth('all')
+def add_staff():
+    """Add new staff member/officer"""
+    if request.method == 'POST':
+        data = request.get_json() if request.is_json else request.form
+        
+        # Hash password
+        password_hash = security_manager.hash_password(data.get('password'))
+        
+        conn = get_db_connection()
+        if conn:
+            try:
+                cursor = conn.cursor()
+                query = """
+                    INSERT INTO system_users (username, email, password_hash, full_name, 
+                                            role, status, created_by)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                """
+                cursor.execute(query, (
+                    data.get('username'),
+                    data.get('email'),
+                    password_hash,
+                    data.get('full_name'),
+                    data.get('role'),
+                    'active',
+                    request.current_user['user_id']
+                ))
+                
+                log_security_event('staff_added', 
+                                 f'New {data.get("role")} added: {data.get("full_name")} ({data.get("username")})',
+                                 request.current_user['user_id'])
+                
+                conn.commit()
+                flash(f'{data.get("role").replace("_", " ").title()} {data.get("full_name")} added successfully!', 'success')
+                
+                if request.is_json:
+                    return jsonify({'success': True})
+                
+            except mysql.connector.Error as err:
+                logger.error(f"Error adding staff: {err}")
+                flash('Error adding staff member. Please try again.', 'error')
+                if request.is_json:
+                    return jsonify({'success': False, 'error': str(err)})
+            finally:
+                if conn.is_connected():
+                    cursor.close()
+                    conn.close()
+        
+        return redirect(url_for('admin_staff'))
+    
+    return render_template('add_staff.html')
+
+@app.route('/admin/cards')
+@require_auth('all')
+def admin_cards():
+    """Card management interface with filters"""
+    # Get filter parameters
+    status_filter = request.args.get('status', 'all')
+    search_query = request.args.get('search', '')
+    
+    conn = get_db_connection()
+    cards = []
+    
+    if conn:
+        try:
+            cursor = conn.cursor(dictionary=True)
+            
+            # Build query with filters
+            base_query = """
+                SELECT s.*, 
+                       CASE WHEN s.card_expiry_date < NOW() THEN 'expired'
+                            WHEN s.card_expiry_date < DATE_ADD(NOW(), INTERVAL 30 DAY) THEN 'expiring'
+                            WHEN s.status = 'suspended' THEN 'suspended'
+                            WHEN s.status = 'inactive' THEN 'inactive'
+                            ELSE 'active' END as card_status,
+                       ls.status as lost_stolen_status
+                FROM students s
+                LEFT JOIN lost_stolen_cards ls ON s.card_id = ls.card_id AND ls.status = 'active'
+            """
+            
+            conditions = []
+            params = []
+            
+            if status_filter != 'all':
+                if status_filter == 'expired':
+                    conditions.append("s.card_expiry_date < NOW()")
+                elif status_filter == 'expiring':
+                    conditions.append("s.card_expiry_date < DATE_ADD(NOW(), INTERVAL 30 DAY) AND s.card_expiry_date >= NOW()")
+                elif status_filter == 'suspended':
+                    conditions.append("s.status = 'suspended'")
+                elif status_filter == 'lost_stolen':
+                    conditions.append("ls.status = 'active'")
+                else:
+                    conditions.append("s.status = %s")
+                    params.append(status_filter)
+            
+            if search_query:
+                conditions.append("(s.full_name LIKE %s OR s.student_id LIKE %s OR s.card_id LIKE %s)")
+                search_pattern = f"%{search_query}%"
+                params.extend([search_pattern, search_pattern, search_pattern])
+            
+            if conditions:
+                base_query += " WHERE " + " AND ".join(conditions)
+            
+            base_query += " ORDER BY s.full_name"
+            
+            cursor.execute(base_query, params)
+            cards = cursor.fetchall()
+            
+        except mysql.connector.Error as err:
+            logger.error(f"Error fetching cards: {err}")
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return render_template('admin_cards.html', cards=cards, 
+                         status_filter=status_filter, search_query=search_query)
+
+@app.route('/admin/block_card/<card_id>', methods=['POST'])
+@require_auth('all')
+def block_card(card_id):
+    """Block/suspend a student card"""
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE students SET status = 'suspended' WHERE card_id = %s", (card_id,))
+            
+            # Get student info for logging
+            cursor.execute("SELECT full_name, student_id FROM students WHERE card_id = %s", (card_id,))
+            student = cursor.fetchone()
+            
+            if student:
+                log_security_event('card_blocked', 
+                                 f'Card blocked for {student[0]} ({student[1]}) - Card: {card_id}',
+                                 request.current_user['user_id'])
+                
+                conn.commit()
+                flash(f'Card {card_id} has been blocked successfully!', 'success')
+            else:
+                flash('Card not found!', 'error')
+                
+        except mysql.connector.Error as err:
+            logger.error(f"Error blocking card: {err}")
+            flash('Error blocking card. Please try again.', 'error')
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return redirect(url_for('admin_cards'))
+
+@app.route('/admin/activate_card/<card_id>', methods=['POST'])
+@require_auth('all')
+def activate_card(card_id):
+    """Activate a blocked/suspended card"""
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE students SET status = 'active' WHERE card_id = %s", (card_id,))
+            
+            # Get student info for logging
+            cursor.execute("SELECT full_name, student_id FROM students WHERE card_id = %s", (card_id,))
+            student = cursor.fetchone()
+            
+            if student:
+                log_security_event('card_activated', 
+                                 f'Card activated for {student[0]} ({student[1]}) - Card: {card_id}',
+                                 request.current_user['user_id'])
+                
+                conn.commit()
+                flash(f'Card {card_id} has been activated successfully!', 'success')
+            else:
+                flash('Card not found!', 'error')
+                
+        except mysql.connector.Error as err:
+            logger.error(f"Error activating card: {err}")
+            flash('Error activating card. Please try again.', 'error')
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return redirect(url_for('admin_cards'))
+
+# ====================================
+# ACCESS LOGS MANAGEMENT
+# ====================================
+
+@app.route('/admin/access_logs')
+@require_auth('all')
+def admin_access_logs():
+    """Access logs management interface with advanced filtering"""
+    # Get filter parameters
+    location_filter = request.args.get('location', 'all')
+    date_filter = request.args.get('date', 'today')
+    status_filter = request.args.get('status', 'all')
+    student_filter = request.args.get('student', '')
+    time_from = request.args.get('time_from', '')
+    time_to = request.args.get('time_to', '')
+    
+    conn = get_db_connection()
+    access_logs = []
+    locations = []
+    
+    if conn:
+        try:
+            cursor = conn.cursor(dictionary=True)
+            
+            # Get all locations for filter dropdown
+            cursor.execute("SELECT location_id, location_name, building FROM campus_locations ORDER BY building, location_name")
+            locations = cursor.fetchall()
+            
+            # Build query with filters
+            base_query = """
+                SELECT al.*, s.full_name, s.student_id, s.photo_url,
+                       cl.location_name, cl.building, cl.access_level,
+                       CASE WHEN al.risk_score >= 5 THEN 'high'
+                            WHEN al.risk_score >= 3 THEN 'medium' 
+                            ELSE 'low' END as risk_category
+                FROM access_logs al
+                LEFT JOIN students s ON al.student_id = s.student_id
+                LEFT JOIN campus_locations cl ON al.location_id = cl.location_id
+            """
+            
+            conditions = []
+            params = []
+            
+            # Location filter
+            if location_filter != 'all':
+                conditions.append("al.location_id = %s")
+                params.append(location_filter)
+            
+            # Date filter
+            if date_filter == 'today':
+                conditions.append("DATE(al.access_time) = CURDATE()")
+            elif date_filter == 'yesterday':
+                conditions.append("DATE(al.access_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)")
+            elif date_filter == 'week':
+                conditions.append("al.access_time >= DATE_SUB(NOW(), INTERVAL 7 DAY)")
+            elif date_filter == 'month':
+                conditions.append("al.access_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)")
+            elif date_filter == 'custom' and time_from and time_to:
+                conditions.append("DATE(al.access_time) BETWEEN %s AND %s")
+                params.extend([time_from, time_to])
+            
+            # Status filter
+            if status_filter == 'granted':
+                conditions.append("al.access_granted = TRUE")
+            elif status_filter == 'denied':
+                conditions.append("al.access_granted = FALSE")
+            elif status_filter == 'high_risk':
+                conditions.append("al.risk_score >= 5")
+            
+            # Student filter
+            if student_filter:
+                conditions.append("(s.full_name LIKE %s OR s.student_id LIKE %s OR al.card_id LIKE %s)")
+                search_pattern = f"%{student_filter}%"
+                params.extend([search_pattern, search_pattern, search_pattern])
+            
+            if conditions:
+                base_query += " WHERE " + " AND ".join(conditions)
+            
+            base_query += " ORDER BY al.access_time DESC LIMIT 500"
+            
+            cursor.execute(base_query, params)
+            access_logs = cursor.fetchall()
+            
+        except mysql.connector.Error as err:
+            logger.error(f"Error fetching access logs: {err}")
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return render_template('admin_access_logs.html', 
+                         access_logs=access_logs, 
+                         locations=locations,
+                         filters={
+                             'location': location_filter,
+                             'date': date_filter, 
+                             'status': status_filter,
+                             'student': student_filter,
+                             'time_from': time_from,
+                             'time_to': time_to
+                         })
+
+@app.route('/admin/location_report/<int:location_id>')
+@require_auth('all')
+def location_access_report(location_id):
+    """Detailed access report for a specific location"""
+    date_filter = request.args.get('date', 'today')
+    
+    conn = get_db_connection()
+    location_info = {}
+    access_data = []
+    statistics = {}
+    
+    if conn:
+        try:
+            cursor = conn.cursor(dictionary=True)
+            
+            # Get location information
+            cursor.execute("SELECT * FROM campus_locations WHERE location_id = %s", (location_id,))
+            location_info = cursor.fetchone()
+            
+            if location_info:
+                # Build date condition
+                if date_filter == 'today':
+                    date_condition = "DATE(al.access_time) = CURDATE()"
+                    params = [location_id]
+                elif date_filter == 'yesterday':
+                    date_condition = "DATE(al.access_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)"
+                    params = [location_id]
+                elif date_filter == 'week':
+                    date_condition = "al.access_time >= DATE_SUB(NOW(), INTERVAL 7 DAY)"
+                    params = [location_id]
+                else:  # month
+                    date_condition = "al.access_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)"
+                    params = [location_id]
+                
+                # Get access logs for this location
+                cursor.execute(f"""
+                    SELECT al.*, s.full_name, s.student_id, s.program, s.photo_url
+                    FROM access_logs al
+                    LEFT JOIN students s ON al.student_id = s.student_id
+                    WHERE al.location_id = %s AND {date_condition}
+                    ORDER BY al.access_time DESC
+                """, params)
+                access_data = cursor.fetchall()
+                
+                # Get statistics
+                cursor.execute(f"""
+                    SELECT 
+                        COUNT(*) as total_attempts,
+                        SUM(CASE WHEN access_granted = TRUE THEN 1 ELSE 0 END) as granted_count,
+                        SUM(CASE WHEN access_granted = FALSE THEN 1 ELSE 0 END) as denied_count,
+                        COUNT(DISTINCT student_id) as unique_students,
+                        AVG(risk_score) as avg_risk_score
+                    FROM access_logs 
+                    WHERE location_id = %s AND {date_condition}
+                """, params)
+                statistics = cursor.fetchone()
+                
+        except mysql.connector.Error as err:
+            logger.error(f"Error fetching location report: {err}")
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return render_template('location_access_report.html',
+                         location_info=location_info,
+                         access_data=access_data, 
+                         statistics=statistics,
+                         date_filter=date_filter)
+
+@app.route('/admin/export_logs')
+@require_auth('all')
+def export_access_logs():
+    """Export access logs to CSV format"""
+    from io import StringIO
+    import csv
+    
+    # Get same filters as access_logs view
+    location_filter = request.args.get('location', 'all')
+    date_filter = request.args.get('date', 'today')
+    status_filter = request.args.get('status', 'all')
+    student_filter = request.args.get('student', '')
+    
+    conn = get_db_connection()
+    
+    if conn:
+        try:
+            cursor = conn.cursor(dictionary=True)
+            
+            # Same query logic as admin_access_logs but without LIMIT
+            base_query = """
+                SELECT 
+                    al.access_time,
+                    s.full_name,
+                    s.student_id,
+                    s.program,
+                    al.card_id,
+                    cl.location_name,
+                    cl.building,
+                    cl.access_level,
+                    al.access_type,
+                    CASE WHEN al.access_granted THEN 'GRANTED' ELSE 'DENIED' END as access_status,
+                    al.denial_reason,
+                    al.risk_score,
+                    al.ip_address
+                FROM access_logs al
+                LEFT JOIN students s ON al.student_id = s.student_id
+                LEFT JOIN campus_locations cl ON al.location_id = cl.location_id
+            """
+            
+            conditions = []
+            params = []
+            
+            # Apply same filters
+            if location_filter != 'all':
+                conditions.append("al.location_id = %s")
+                params.append(location_filter)
+            
+            if date_filter == 'today':
+                conditions.append("DATE(al.access_time) = CURDATE()")
+            elif date_filter == 'yesterday':
+                conditions.append("DATE(al.access_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)")
+            elif date_filter == 'week':
+                conditions.append("al.access_time >= DATE_SUB(NOW(), INTERVAL 7 DAY)")
+            elif date_filter == 'month':
+                conditions.append("al.access_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)")
+            
+            if status_filter == 'granted':
+                conditions.append("al.access_granted = TRUE")
+            elif status_filter == 'denied':
+                conditions.append("al.access_granted = FALSE")
+            
+            if student_filter:
+                conditions.append("(s.full_name LIKE %s OR s.student_id LIKE %s)")
+                search_pattern = f"%{student_filter}%"
+                params.extend([search_pattern, search_pattern])
+            
+            if conditions:
+                base_query += " WHERE " + " AND ".join(conditions)
+            
+            base_query += " ORDER BY al.access_time DESC"
+            
+            cursor.execute(base_query, params)
+            results = cursor.fetchall()
+            
+            # Create CSV
+            output = StringIO()
+            writer = csv.writer(output)
+            
+            # Write header
+            writer.writerow([
+                'Date/Time', 'Student Name', 'Student ID', 'Program', 'Card ID',
+                'Location', 'Building', 'Access Level', 'Access Type', 'Status',
+                'Denial Reason', 'Risk Score', 'IP Address'
+            ])
+            
+            # Write data
+            for row in results:
+                writer.writerow([
+                    row['access_time'].strftime('%Y-%m-%d %H:%M:%S') if row['access_time'] else '',
+                    row['full_name'] or 'Unknown',
+                    row['student_id'] or 'Unknown',
+                    row['program'] or '',
+                    row['card_id'] or '',
+                    row['location_name'] or 'Unknown Location',
+                    row['building'] or '',
+                    row['access_level'] or '',
+                    row['access_type'] or '',
+                    row['access_status'],
+                    row['denial_reason'] or '',
+                    row['risk_score'] or 0,
+                    row['ip_address'] or ''
+                ])
+            
+            # Create response
+            from flask import Response
+            output.seek(0)
+            filename = f"access_logs_{date_filter}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+            
+            return Response(
+                output.getvalue(),
+                mimetype='text/csv',
+                headers={'Content-Disposition': f'attachment; filename={filename}'}
+            )
+            
+        except mysql.connector.Error as err:
+            logger.error(f"Error exporting logs: {err}")
+            flash('Error exporting logs. Please try again.', 'error')
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return redirect(url_for('admin_access_logs'))
+
+@app.route('/admin/investigation_report', methods=['GET', 'POST'])
+@require_auth('all')
+def investigation_report():
+    """Generate detailed investigation report for specific incidents"""
+    if request.method == 'POST':
+        data = request.get_json() if request.is_json else request.form
+        
+        target_student = data.get('target_student')
+        target_location = data.get('target_location')
+        incident_date = data.get('incident_date')
+        time_range_hours = int(data.get('time_range_hours', 24))
+        
+        # Search both current and archived logs
+        investigation_data = search_logs_with_archives(
+            target_student, target_location, incident_date, time_range_hours
+        )
+        
+        return jsonify({
+            'success': True,
+            'data': investigation_data
+        })
+    
+    # GET request - show investigation form
+    conn = get_db_connection()
+    locations = []
+    recent_students = []
+    
+    if conn:
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("SELECT location_id, location_name, building FROM campus_locations ORDER BY building, location_name")
+            locations = cursor.fetchall()
+            
+            cursor.execute("""
+                SELECT DISTINCT s.student_id, s.full_name 
+                FROM students s 
+                JOIN access_logs al ON s.student_id = al.student_id 
+                WHERE al.access_time >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                ORDER BY s.full_name
+                LIMIT 50
+            """)
+            recent_students = cursor.fetchall()
+            
+        except mysql.connector.Error as err:
+            logger.error(f"Error fetching investigation form data: {err}")
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return render_template('investigation_report.html', locations=locations, recent_students=recent_students)
+
+# ====================================
+# DATABASE ARCHIVING & BACKUP SYSTEM
+# ====================================
+
+def search_logs_with_archives(target_student=None, target_location=None, incident_date=None, time_range_hours=24):
+    """Search both current logs and archived logs for investigations"""
+    investigation_data = {
+        'target_info': {},
+        'timeline': [],
+        'security_alerts': [],
+        'data_sources': []
+    }
+    
+    conn = get_db_connection()
+    if not conn:
+        return investigation_data
+    
+    try:
+        cursor = conn.cursor(dictionary=True)
+        
+        # Determine date range for search
+        if incident_date:
+            incident_datetime = datetime.fromisoformat(incident_date.replace('Z', '+00:00'))
+            start_time = incident_datetime - timedelta(hours=time_range_hours)
+            end_time = incident_datetime + timedelta(hours=time_range_hours)
+        else:
+            end_time = datetime.now()
+            start_time = end_time - timedelta(days=7)
+        
+        # Search current access_logs table (last 30 days)
+        current_results = search_current_logs(cursor, target_student, target_location, start_time, end_time)
+        investigation_data['timeline'].extend(current_results)
+        investigation_data['data_sources'].append('current_database')
+        
+        # Check if we need to search archived data
+        if start_time < datetime.now() - timedelta(days=30):
+            archived_results = search_archived_logs(target_student, target_location, start_time, end_time)
+            investigation_data['timeline'].extend(archived_results)
+            if archived_results:
+                investigation_data['data_sources'].append('archived_files')
+        
+        # Get target student info if provided
+        if target_student:
+            cursor.execute("""
+                SELECT s.*, COUNT(al.log_id) as total_accesses
+                FROM students s
+                LEFT JOIN access_logs al ON s.student_id = al.student_id
+                WHERE s.student_id = %s OR s.full_name LIKE %s
+                GROUP BY s.student_id
+            """, (target_student, f"%{target_student}%"))
+            investigation_data['target_info'] = cursor.fetchone() or {}
+        
+        # Get security alerts
+        if incident_date:
+            cursor.execute("""
+                SELECT sa.*, cl.location_name, s.full_name
+                FROM security_alerts sa
+                LEFT JOIN campus_locations cl ON sa.location_id = cl.location_id
+                LEFT JOIN students s ON sa.student_id = s.student_id
+                WHERE DATE(sa.alert_time) = DATE(%s)
+                ORDER BY sa.alert_time DESC
+            """, (incident_date,))
+            investigation_data['security_alerts'] = cursor.fetchall()
+        
+        # Sort combined timeline by access_time
+        investigation_data['timeline'] = sorted(
+            investigation_data['timeline'], 
+            key=lambda x: x.get('access_time', datetime.min)
+        )
+        
+    except mysql.connector.Error as err:
+        logger.error(f"Error searching logs with archives: {err}")
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+    
+    return investigation_data
+
+def search_current_logs(cursor, target_student, target_location, start_time, end_time):
+    """Search current access_logs table"""
+    conditions = ["al.access_time BETWEEN %s AND %s"]
+    params = [start_time, end_time]
+    
+    if target_student:
+        conditions.append("(s.student_id = %s OR s.full_name LIKE %s)")
+        params.extend([target_student, f"%{target_student}%"])
+    
+    if target_location:
+        conditions.append("al.location_id = %s")
+        params.append(target_location)
+    
+    query = """
+        SELECT al.*, s.full_name, s.student_id, s.photo_url,
+               cl.location_name, cl.building, 'current' as data_source
+        FROM access_logs al
+        LEFT JOIN students s ON al.student_id = s.student_id
+        LEFT JOIN campus_locations cl ON al.location_id = cl.location_id
+        WHERE """ + " AND ".join(conditions) + """
+        ORDER BY al.access_time ASC
+    """
+    
+    cursor.execute(query, params)
+    return cursor.fetchall()
+
+def search_archived_logs(target_student, target_location, start_time, end_time):
+    """Search archived log files"""
+    import os
+    import csv
+    from pathlib import Path
+    
+    archived_results = []
+    archive_dir = Path("archive/access_logs")
+    
+    if not archive_dir.exists():
+        return archived_results
+    
+    # Search through archived CSV files
+    for archive_file in archive_dir.glob("*.csv"):
+        try:
+            with open(archive_file, 'r', newline='', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    try:
+                        row_time = datetime.fromisoformat(row['access_time'])
+                        
+                        # Check if within time range
+                        if start_time <= row_time <= end_time:
+                            # Apply filters
+                            if target_student:
+                                if not (target_student in row.get('full_name', '') or 
+                                       target_student in row.get('student_id', '')):
+                                    continue
+                            
+                            if target_location:
+                                if str(target_location) != str(row.get('location_id', '')):
+                                    continue
+                            
+                            # Convert string values back to appropriate types
+                            archived_log = {
+                                'access_time': row_time,
+                                'full_name': row.get('full_name'),
+                                'student_id': row.get('student_id'),
+                                'photo_url': row.get('photo_url'),
+                                'location_name': row.get('location_name'),
+                                'building': row.get('building'),
+                                'access_granted': row.get('access_granted', '').lower() == 'true',
+                                'denial_reason': row.get('denial_reason'),
+                                'risk_score': int(row.get('risk_score', 0)) if row.get('risk_score') else 0,
+                                'card_id': row.get('card_id'),
+                                'access_type': row.get('access_type'),
+                                'data_source': 'archived'
+                            }
+                            
+                            archived_results.append(archived_log)
+                    except (ValueError, KeyError) as e:
+                        continue  # Skip malformed rows
+                        
+        except (IOError, csv.Error) as e:
+            logger.error(f"Error reading archive file {archive_file}: {e}")
+            continue
+    
+    return archived_results
+
+@app.route('/admin/database_management')
+@require_auth('all')
+def database_management():
+    """Database management interface for archiving and backups"""
+    conn = get_db_connection()
+    db_stats = {
+        'current_logs': 0,
+        'archived_logs': 0,
+        'database_size': '0 MB',
+        'oldest_record': None,
+        'archive_available': False,
+        'last_backup': None,
+        'retention_days': 30
+    }
+    
+    if conn:
+        try:
+            cursor = conn.cursor(dictionary=True)
+            
+            # Get current log count
+            cursor.execute("SELECT COUNT(*) as count FROM access_logs")
+            db_stats['current_logs'] = cursor.fetchone()['count']
+            
+            # Get oldest record
+            cursor.execute("SELECT MIN(access_time) as oldest FROM access_logs")
+            oldest = cursor.fetchone()['oldest']
+            db_stats['oldest_record'] = oldest.strftime('%Y-%m-%d') if oldest else None
+            
+            # Get database size (approximate)
+            cursor.execute("""
+                SELECT 
+                    ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) AS size_mb
+                FROM information_schema.tables 
+                WHERE table_schema = DATABASE()
+            """)
+            result = cursor.fetchone()
+            db_stats['database_size'] = f"{result['size_mb'] or 0} MB"
+            
+            # Check for archive directory
+            import os
+            archive_dir = "archive/access_logs"
+            if os.path.exists(archive_dir):
+                db_stats['archive_available'] = True
+                # Count archived files
+                db_stats['archived_logs'] = len([f for f in os.listdir(archive_dir) if f.endswith('.csv')])
+            
+            # Check last backup (from system settings)
+            cursor.execute("SELECT setting_value FROM system_settings WHERE setting_key = 'last_backup_date'")
+            backup_result = cursor.fetchone()
+            if backup_result:
+                db_stats['last_backup'] = backup_result['setting_value']
+            
+        except mysql.connector.Error as err:
+            logger.error(f"Error fetching database stats: {err}")
+        finally:
+            if conn.is_connected():
+                cursor.close()
+                conn.close()
+    
+    return render_template('database_management.html', db_stats=db_stats)
+
+@app.route('/admin/archive_old_logs', methods=['POST'])
+@require_auth('all')
+def archive_old_logs():
+    """Archive access logs older than specified days"""
+    data = request.get_json() if request.is_json else request.form
+    retention_days = int(data.get('retention_days', 30))
+    
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({'success': False, 'error': 'Database connection failed'})
+    
+    try:
+        cursor = conn.cursor(dictionary=True)
+        
+        # Calculate cutoff date
+        cutoff_date = datetime.now() - timedelta(days=retention_days)
+        
+        # Get logs to archive
+        cursor.execute("""
+            SELECT al.*, s.full_name, s.student_id, s.photo_url, s.program,
+                   cl.location_name, cl.building, cl.access_level
+            FROM access_logs al
+            LEFT JOIN students s ON al.student_id = s.student_id
+            LEFT JOIN campus_locations cl ON al.location_id = cl.location_id
+            WHERE al.access_time < %s
+            ORDER BY al.access_time
+        """, (cutoff_date,))
+        
+        logs_to_archive = cursor.fetchall()
+        
+        if not logs_to_archive:
+            return jsonify({'success': True, 'archived_count': 0, 'message': 'No logs to archive'})
+        
+        # Create archive
+        archive_success = create_archive_file(logs_to_archive, cutoff_date)
+        
+        if archive_success:
+            # Delete archived logs from main table
+            cursor.execute("DELETE FROM access_logs WHERE access_time < %s", (cutoff_date,))
+            conn.commit()
+            
+            # Log the archiving action
+            log_security_event(
+                'database_archived',
+                f'Archived {len(logs_to_archive)} access logs older than {retention_days} days',
+                request.current_user['user_id']
+            )
+            
+            return jsonify({
+                'success': True, 
+                'archived_count': len(logs_to_archive),
+                'message': f'Successfully archived {len(logs_to_archive)} logs'
+            })
+        else:
+            return jsonify({'success': False, 'error': 'Failed to create archive file'})
+            
+    except mysql.connector.Error as err:
+        logger.error(f"Error archiving logs: {err}")
+        return jsonify({'success': False, 'error': str(err)})
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+def create_archive_file(logs_data, cutoff_date):
+    """Create CSV archive file for old logs"""
+    import os
+    import csv
+    from pathlib import Path
+    
+    try:
+        # Create archive directory
+        archive_dir = Path("archive/access_logs")
+        archive_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Create filename with date range
+        filename = f"access_logs_archive_{cutoff_date.strftime('%Y%m%d')}.csv"
+        filepath = archive_dir / filename
+        
+        # Write CSV file
+        with open(filepath, 'w', newline='', encoding='utf-8') as f:
+            if logs_data:
+                fieldnames = [
+                    'log_id', 'access_time', 'student_id', 'full_name', 'program',
+                    'card_id', 'location_id', 'location_name', 'building', 'access_level',
+                    'access_type', 'access_granted', 'denial_reason', 'risk_score',
+                    'ip_address', 'user_agent', 'photo_url'
+                ]
+                
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writeheader()
+                
+                for log in logs_data:
+                    # Convert datetime to ISO string for CSV storage
+                    log_copy = dict(log)
+                    if log_copy.get('access_time'):
+                        log_copy['access_time'] = log_copy['access_time'].isoformat()
+                    writer.writerow(log_copy)
+        
+        logger.info(f"Created archive file: {filepath}")
+        return True
+        
+    except (IOError, csv.Error) as e:
+        logger.error(f"Error creating archive file: {e}")
+        return False
+
+@app.route('/admin/create_backup', methods=['POST'])
+@require_auth('all')
+def create_database_backup():
+    """Create complete database backup"""
+    import subprocess
+    import os
+    from datetime import datetime
+    
+    try:
+        # Create backup directory
+        backup_dir = Path("backups")
+        backup_dir.mkdir(exist_ok=True)
+        
+        # Create backup filename
+        backup_filename = f"campus_security_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.sql"
+        backup_path = backup_dir / backup_filename
+        
+        # Create mysqldump command
+        dump_cmd = [
+            'mysqldump',
+            '--host', DB_CONFIG['host'],
+            '--user', DB_CONFIG['user'],
+            '--password=' + DB_CONFIG['password'],
+            '--single-transaction',
+            '--routines',
+            '--triggers',
+            DB_CONFIG['database']
+        ]
+        
+        # Execute backup
+        with open(backup_path, 'w') as f:
+            result = subprocess.run(dump_cmd, stdout=f, stderr=subprocess.PIPE, text=True)
+        
+        if result.returncode == 0:
+            # Update last backup time in settings
+            conn = get_db_connection()
+            if conn:
+                try:
+                    cursor = conn.cursor()
+                    cursor.execute("""
+                        INSERT INTO system_settings (setting_key, setting_value, description)
+                        VALUES ('last_backup_date', %s, 'Last database backup timestamp')
+                        ON DUPLICATE KEY UPDATE setting_value = %s
+                    """, (datetime.now().isoformat(), datetime.now().isoformat()))
+                    conn.commit()
+                except mysql.connector.Error:
+                    pass  # Non-critical error
+                finally:
+                    cursor.close()
+                    conn.close()
+            
+            # Log backup action
+            log_security_event(
+                'database_backup_created',
+                f'Database backup created: {backup_filename}',
+                request.current_user['user_id']
+            )
+            
+            return jsonify({
+                'success': True,
+                'backup_file': backup_filename,
+                'backup_size': f"{os.path.getsize(backup_path) / (1024*1024):.1f} MB"
+            })
+        else:
+            logger.error(f"Backup failed: {result.stderr}")
+            return jsonify({'success': False, 'error': result.stderr})
+            
+    except Exception as e:
+        logger.error(f"Backup error: {e}")
+        return jsonify({'success': False, 'error': str(e)})
 
 @app.errorhandler(403)
 def forbidden(e):

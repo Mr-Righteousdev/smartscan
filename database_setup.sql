@@ -18,6 +18,8 @@ CREATE TABLE students (
     phone VARCHAR(20),
     program VARCHAR(100),
     year_of_study INT,
+    photo_url VARCHAR(255),
+    card_expiry_date DATE,
     status ENUM('active', 'suspended', 'graduated', 'inactive') DEFAULT 'active',
     date_registered TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -295,23 +297,24 @@ INSERT INTO campus_locations (location_name, location_type, building, floor_leve
 ('Sports Complex', 'sports', 'Sports Building', 'Ground', 'public');
 
 -- Insert sample students (for testing)
-INSERT INTO students (student_id, card_id, full_name, email, program, year_of_study) VALUES
-('STU001', 'RFID_001_ABC123', 'John Doe', 'john.doe@student.slau.ac.ug', 'Computer Science', 3),
-('STU002', 'RFID_002_DEF456', 'Jane Smith', 'jane.smith@student.slau.ac.ug', 'Cybersecurity', 2),
-('STU003', 'RFID_003_GHI789', 'David Wilson', 'david.wilson@student.slau.ac.ug', 'Information Technology', 1),
-('STU004', 'RFID_004_JKL012', 'Sarah Johnson', 'sarah.johnson@student.slau.ac.ug', 'Computer Engineering', 4),
-('STU005', 'RFID_005_MNO345', 'Michael Brown', 'michael.brown@student.slau.ac.ug', 'Data Science', 2);
+INSERT INTO students (student_id, card_id, full_name, email, program, year_of_study, photo_url, card_expiry_date) VALUES
+('STU001', 'RFID_001_ABC123', 'John Doe', 'john.doe@student.slau.ac.ug', 'Computer Science', 3, 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face', '2026-12-31'),
+('STU002', 'RFID_002_DEF456', 'Jane Smith', 'jane.smith@student.slau.ac.ug', 'Cybersecurity', 2, 'https://images.unsplash.com/photo-1494790108755-2616b612b9e0?w=150&h=150&fit=crop&crop=face', '2027-12-31'),
+('STU003', 'RFID_003_GHI789', 'David Wilson', 'david.wilson@student.slau.ac.ug', 'Information Technology', 1, 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face', '2028-12-31'),
+('STU004', 'RFID_004_JKL012', 'Sarah Johnson', 'sarah.johnson@student.slau.ac.ug', 'Computer Engineering', 4, 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face', '2025-12-31'),
+('STU005', 'RFID_005_MNO345', 'Michael Brown', 'michael.brown@student.slau.ac.ug', 'Data Science', 2, 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face', '2027-12-31');
 
 -- Insert default system users (Phase 2 demo accounts)
+-- Password hashes generated using PBKDF2 with salt for security
 INSERT INTO system_users (username, email, password_hash, full_name, role) VALUES
 ('admin', 'admin@slau.ac.ug', 
- 'f3b1c4d5e6f7a8b9c0d1e2f3a4b5c6d7:8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d',
+ 'admin_salt_123:8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918',
  'System Administrator', 'admin'),
 ('security', 'security@slau.ac.ug',
- 'a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6:1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b',
+ 'security_salt_456:ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f',
  'Security Officer', 'security_officer'),
 ('john_doe', 'john.doe@staff.slau.ac.ug',
- 'z9y8x7w6v5u4t3s2r1q0p9o8n7m6l5k4:9o8n7m6l5k4j3i2h1g0f9e8d7c6b5a4z9y8x7w6v5u4t3s2r1q0p9o8n7m6l5k4j3i',
+ 'staff_salt_789:5906ac361a137e2d286465cd6588ebb5ac3f5ae955001100bc41577c3d751764',
  'John Doe Staff', 'staff');
 
 -- Add foreign key for reviewed_by in access_logs

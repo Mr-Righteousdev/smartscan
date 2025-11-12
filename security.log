@@ -160,3 +160,593 @@
 2025-11-12 14:41:26,787 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
 2025-11-12 14:41:26,796 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
 2025-11-12 14:41:27,338 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:47:00,145 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:47:00,197 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.18.3:5000
+2025-11-12 14:47:00,198 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-12 14:47:00,252 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:47:02,037 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:47:02,049 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:47:02,055 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 14:47:07,692 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 14:47:07,695 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 14:47:07,698 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 14:47:08,104 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:47:08] "GET / HTTP/1.1" 200 -
+2025-11-12 14:47:25,442 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:47:25,573 - __main__ - INFO - Access attempt logged: Student STU001, Location 3, Granted: True
+2025-11-12 14:47:25,580 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:47:25] "POST /scan_card HTTP/1.1" 200 -
+2025-11-12 14:47:26,275 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:47:27,976 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:47:27,990 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:47:27,994 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 14:47:37,692 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:47:37] "[32mGET /dashboard HTTP/1.1[0m" 302 -
+2025-11-12 14:47:37,742 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:47:37] "GET /login HTTP/1.1" 200 -
+2025-11-12 14:47:58,371 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 14:47:58,372 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 14:47:58,374 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 14:47:58,982 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:47:58] "POST /login HTTP/1.1" 200 -
+2025-11-12 14:48:11,504 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 14:48:11,876 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:48:13,849 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:48:13,863 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:48:13,867 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 14:50:18,112 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:50:18,926 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:50:20,696 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:50:20,708 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:50:20,713 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 14:52:25,651 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 14:52:25,653 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 14:52:25,657 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 14:52:26,259 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:52:26] "POST /login HTTP/1.1" 200 -
+2025-11-12 14:52:26,504 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/flask/app.py', reloading
+2025-11-12 14:52:26,507 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:52:26,513 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/flask/templating.py', reloading
+2025-11-12 14:52:26,522 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/jinja2/environment.py', reloading
+2025-11-12 14:52:26,527 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/jinja2/loaders.py', reloading
+2025-11-12 14:52:26,555 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:52:26] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-11-12 14:52:26,918 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:52:28,830 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:52:28,843 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:52:28,848 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 14:52:38,315 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 14:52:38,315 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 14:52:38,317 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 14:52:39,012 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:52:39] "POST /login HTTP/1.1" 200 -
+2025-11-12 14:52:39,200 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/flask/app.py', reloading
+2025-11-12 14:52:39,206 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:52:39,213 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/flask/templating.py', reloading
+2025-11-12 14:52:39,216 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/jinja2/environment.py', reloading
+2025-11-12 14:52:39,226 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/jinja2/loaders.py', reloading
+2025-11-12 14:52:39,262 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:52:39] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-11-12 14:52:39,659 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:52:41,425 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:52:41,442 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:52:41,446 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 14:56:09,450 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 14:56:09,451 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 14:56:09,453 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 14:56:09,732 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:56:09] "GET / HTTP/1.1" 200 -
+2025-11-12 14:56:24,371 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:56:24] "[32mGET /dashboard HTTP/1.1[0m" 302 -
+2025-11-12 14:56:24,391 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:56:24] "GET /login HTTP/1.1" 200 -
+2025-11-12 14:56:36,207 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:56:36] "POST /login HTTP/1.1" 200 -
+2025-11-12 14:58:19,945 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:58:20,629 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:58:22,290 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:58:22,301 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:58:22,306 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 14:58:24,107 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:58:24,905 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:58:26,544 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:58:26,555 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:58:26,560 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 14:58:57,779 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 14:58:57,852 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 14:58:58,152 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:58:59,967 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:58:59,978 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:58:59,982 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 14:59:12,620 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 14:59:12,625 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 14:59:12,631 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 14:59:12,670 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 14:59:12,677 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 14:59:12,685 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 14:59:13,586 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:59:15,255 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:59:15,267 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:59:15,271 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 14:59:50,033 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 14:59:50,033 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 14:59:50,036 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 14:59:50,465 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:59:50] "POST /login HTTP/1.1" 200 -
+2025-11-12 14:59:50,605 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:59:50] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 14:59:54,345 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:59:54] "POST /login HTTP/1.1" 200 -
+2025-11-12 14:59:54,535 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:59:54] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 15:00:10,310 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:00:10,545 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.18.3:5000
+2025-11-12 15:00:10,545 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-12 15:00:10,560 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:00:12,165 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:00:12,179 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:00:12,183 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:00:44,756 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 15:00:44,757 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 15:00:44,763 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 15:00:45,717 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:00:45] "POST /login HTTP/1.1" 200 -
+2025-11-12 15:00:46,071 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:00:46] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 15:00:54,030 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:00:54] "POST /login HTTP/1.1" 200 -
+2025-11-12 15:02:01,619 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:02:01] "POST /login HTTP/1.1" 200 -
+2025-11-12 15:02:01,826 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:02:01] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 15:09:43,648 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:09:43,695 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:09:43,710 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:09:44,143 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:09:45,958 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:09:45,970 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:09:45,974 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:10:09,443 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:10:09,457 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:10:09,472 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:10:09,567 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:10:09,572 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:10:09,581 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:10:10,659 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:10:12,422 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:10:12,434 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:10:12,438 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:11:13,730 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 15:11:13,730 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 15:11:13,733 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 15:11:14,258 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:11:14] "POST /login HTTP/1.1" 200 -
+2025-11-12 15:11:14,408 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:11:14] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 15:11:19,904 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:11:19] "POST /login HTTP/1.1" 200 -
+2025-11-12 15:11:20,223 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:11:20] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 15:12:56,510 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:12:56,511 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:12:56,520 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:12:56,523 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:12:57,739 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:12:59,527 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:12:59,542 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:12:59,547 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:13:20,484 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 15:13:20,484 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 15:13:20,485 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 15:13:21,180 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:13:21] "[32mPOST /login HTTP/1.1[0m" 302 -
+2025-11-12 15:13:21,473 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:13:21] "GET /advanced_dashboard HTTP/1.1" 200 -
+2025-11-12 15:13:21,770 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:13:21] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 15:13:21,776 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:13:21] "[31m[1mGET /api/recent_security_events HTTP/1.1[0m" 401 -
+2025-11-12 15:13:56,353 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:13:56] "[31m[1mGET /api/recent_security_events HTTP/1.1[0m" 401 -
+2025-11-12 15:14:06,893 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:14:06] "GET /advanced_dashboard HTTP/1.1" 200 -
+2025-11-12 15:14:07,184 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:14:07] "[31m[1mGET /api/recent_security_events HTTP/1.1[0m" 401 -
+2025-11-12 15:14:37,121 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:14:37] "[31m[1mGET /api/recent_security_events HTTP/1.1[0m" 401 -
+2025-11-12 15:15:15,605 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:15:15] "[31m[1mGET /api/recent_security_events HTTP/1.1[0m" 401 -
+2025-11-12 15:15:45,604 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:15:45] "[31m[1mGET /api/recent_security_events HTTP/1.1[0m" 401 -
+2025-11-12 15:15:50,542 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:15:50] "GET /dashboard HTTP/1.1" 200 -
+2025-11-12 15:15:55,371 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:15:55] "GET /dashboard HTTP/1.1" 200 -
+2025-11-12 15:15:56,994 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:15:56] "GET /dashboard HTTP/1.1" 200 -
+2025-11-12 15:15:57,171 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:15:57] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 15:16:00,465 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:00] "GET /dashboard HTTP/1.1" 200 -
+2025-11-12 15:16:10,011 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:10] "GET /dashboard HTTP/1.1" 200 -
+2025-11-12 15:16:11,500 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:11] "GET /card_simulator HTTP/1.1" 200 -
+2025-11-12 15:16:11,714 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:11] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:16:21,656 - __main__ - INFO - Access attempt logged: Student STU002, Location 2, Granted: True
+2025-11-12 15:16:21,665 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:21] "POST /scan_card HTTP/1.1" 200 -
+2025-11-12 15:16:21,679 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:21] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:16:30,913 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:30] "GET /dashboard HTTP/1.1" 200 -
+2025-11-12 15:16:38,503 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:38] "GET /card_simulator HTTP/1.1" 200 -
+2025-11-12 15:16:38,688 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:38] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 15:16:38,698 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:38] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:16:48,279 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:48] "GET / HTTP/1.1" 200 -
+2025-11-12 15:16:48,522 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:16:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 15:17:33,955 - __main__ - INFO - Access attempt logged: Student STU001, Location 11, Granted: True
+2025-11-12 15:17:33,961 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:17:33] "POST /scan_card HTTP/1.1" 200 -
+2025-11-12 15:17:44,124 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:17:44] "GET /card_simulator HTTP/1.1" 200 -
+2025-11-12 15:17:44,399 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:17:44] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:17:56,545 - __main__ - INFO - Access attempt logged: Student STU005, Location 3, Granted: True
+2025-11-12 15:17:56,554 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:17:56] "POST /scan_card HTTP/1.1" 200 -
+2025-11-12 15:17:56,566 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:17:56] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:18:14,392 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:18:14] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:18:44,392 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:18:44] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:19:14,392 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:19:14] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:19:44,392 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:19:44] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:20:14,394 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:20:14] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:20:44,395 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:20:44] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:21:14,398 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:21:14] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:21:44,399 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:21:44] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 15:21:48,539 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:21:48] "GET / HTTP/1.1" 200 -
+2025-11-12 15:21:48,788 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:21:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-11-12 15:22:06,347 - __main__ - INFO - Access attempt logged: Student STU001, Location 1, Granted: True
+2025-11-12 15:22:06,353 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 15:22:06] "POST /scan_card HTTP/1.1" 200 -
+2025-11-12 15:24:09,921 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:09,928 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:09,944 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:09,987 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:09,991 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:10,004 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:11,279 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:24:13,066 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:24:13,078 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:24:13,083 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:24:18,228 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:18,238 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:18,256 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:18,303 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:18,310 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:18,323 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:18,894 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:24:21,188 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:24:21,200 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:24:21,204 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:24:30,794 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:30,807 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:30,836 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:30,870 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:30,875 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:30,883 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:32,125 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:24:34,285 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:24:34,305 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:24:34,309 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:24:44,722 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:44,734 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:44,753 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:44,803 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:44,806 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:24:45,138 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:24:47,083 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:24:47,095 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:24:47,101 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:25:08,941 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:25:09,076 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:25:09,087 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:25:09,133 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:25:09,210 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:25:09,228 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py.tmp', reloading
+2025-11-12 15:25:09,390 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:25:09,395 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:25:09,410 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:25:09,415 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:25:09,445 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:25:09,455 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:25:09,458 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:25:09,509 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:25:09,630 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:25:10,166 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:25:12,330 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:25:12,342 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:25:12,347 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:28:36,897 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:36,978 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:36,981 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:37,008 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:37,012 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:37,032 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:37,039 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:37,072 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:37,075 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py.tmp', reloading
+2025-11-12 15:28:37,090 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:37,097 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:37,102 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:37,105 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:37,117 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:38,004 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:28:40,523 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:28:40,535 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:28:40,542 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:28:45,031 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:45,034 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:45,044 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:45,047 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:45,060 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:45,066 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:45,112 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:45,116 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:45,124 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:45,126 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:45,140 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:45,148 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:46,251 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:28:48,391 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:28:48,403 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:28:48,408 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:28:59,479 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:59,482 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:59,494 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:59,497 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:59,512 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:59,516 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:59,566 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:59,568 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:59,576 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:59,579 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:28:59,591 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:28:59,595 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:29:00,282 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:29:02,164 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:29:02,176 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:29:02,180 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:29:39,699 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:29:39,709 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:29:39,715 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:29:39,719 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:29:39,734 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:29:39,740 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:29:39,775 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:29:39,776 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:29:39,781 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:29:39,785 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:29:39,799 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:29:39,805 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:29:40,986 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:29:43,198 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:29:43,215 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:29:43,222 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:30:34,269 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:30:34,275 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:30:34,280 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:30:34,285 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:30:34,321 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:30:34,329 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:30:34,388 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:30:34,391 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:30:34,397 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:30:34,399 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:30:34,410 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:30:34,415 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:30:35,406 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:30:37,716 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:30:37,728 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:30:37,733 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:31:38,590 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:31:38,593 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:31:38,605 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:31:38,627 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:31:38,658 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:31:38,667 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:31:38,791 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:31:38,793 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:31:38,823 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:31:38,828 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:31:38,870 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:31:38,876 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:31:40,040 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:31:42,290 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:31:42,309 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:31:42,314 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:32:58,264 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:32:58,711 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:33:00,737 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:33:00,748 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:33:00,752 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:34:41,900 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/encodings/__init__.py', reloading
+2025-11-12 15:34:41,957 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/encodings/aliases.py', reloading
+2025-11-12 15:34:41,991 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/encodings/utf_8.py', reloading
+2025-11-12 15:34:42,038 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/encodings/utf_8_sig.py', reloading
+2025-11-12 15:34:42,048 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/types.py', reloading
+2025-11-12 15:34:42,077 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/importlib/__init__.py', reloading
+2025-11-12 15:34:42,089 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/importlib/_abc.py', reloading
+2025-11-12 15:34:42,170 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/_distutils_hack/__init__.py', reloading
+2025-11-12 15:34:42,398 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/locale.py', reloading
+2025-11-12 15:34:42,420 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/re/__init__.py', reloading
+2025-11-12 15:34:42,448 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/enum.py', reloading
+2025-11-12 15:34:42,524 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/functools.py', reloading
+2025-11-12 15:34:42,564 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/collections/__init__.py', reloading
+2025-11-12 15:34:42,611 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/keyword.py', reloading
+2025-11-12 15:34:42,613 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/operator.py', reloading
+2025-11-12 15:34:42,961 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:34:45,489 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:34:45,502 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:34:45,506 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:34:47,003 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/ctypes/__init__.py', reloading
+2025-11-12 15:34:47,298 - werkzeug - INFO -  * Detected change in '/usr/lib/python3.13/ctypes/_endian.py', reloading
+2025-11-12 15:34:47,728 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:34:50,115 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:34:50,127 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:34:50,132 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:35:04,329 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/__init__.py', reloading
+2025-11-12 15:35:04,354 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/initialise.py', reloading
+2025-11-12 15:35:04,358 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansitowin32.py', reloading
+2025-11-12 15:35:04,366 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansi.py', reloading
+2025-11-12 15:35:04,369 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/winterm.py', reloading
+2025-11-12 15:35:04,373 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/win32.py', reloading
+2025-11-12 15:35:05,191 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:35:07,110 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:35:07,121 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:35:07,125 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:35:09,242 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/__init__.py', reloading
+2025-11-12 15:35:09,249 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/initialise.py', reloading
+2025-11-12 15:35:09,259 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansitowin32.py', reloading
+2025-11-12 15:35:09,336 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansi.py', reloading
+2025-11-12 15:35:09,339 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/winterm.py', reloading
+2025-11-12 15:35:09,340 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/win32.py', reloading
+2025-11-12 15:35:10,745 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:35:14,635 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:35:14,657 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:35:14,673 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:35:19,655 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/__init__.py', reloading
+2025-11-12 15:35:19,660 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/initialise.py', reloading
+2025-11-12 15:35:19,666 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansitowin32.py', reloading
+2025-11-12 15:35:19,677 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansi.py', reloading
+2025-11-12 15:35:19,680 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/winterm.py', reloading
+2025-11-12 15:35:19,688 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/win32.py', reloading
+2025-11-12 15:35:20,167 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/__init__.py', reloading
+2025-11-12 15:35:20,171 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/initialise.py', reloading
+2025-11-12 15:35:20,174 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansitowin32.py', reloading
+2025-11-12 15:35:20,179 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansi.py', reloading
+2025-11-12 15:35:20,182 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/winterm.py', reloading
+2025-11-12 15:35:20,187 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/win32.py', reloading
+2025-11-12 15:35:20,659 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:35:23,629 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:35:23,652 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:35:23,659 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:35:35,032 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/__init__.py', reloading
+2025-11-12 15:35:35,037 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/initialise.py', reloading
+2025-11-12 15:35:35,041 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansitowin32.py', reloading
+2025-11-12 15:35:35,049 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansi.py', reloading
+2025-11-12 15:35:35,052 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/winterm.py', reloading
+2025-11-12 15:35:35,057 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/win32.py', reloading
+2025-11-12 15:35:35,337 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/__init__.py', reloading
+2025-11-12 15:35:35,342 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/initialise.py', reloading
+2025-11-12 15:35:35,346 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansitowin32.py', reloading
+2025-11-12 15:35:35,352 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/ansi.py', reloading
+2025-11-12 15:35:35,354 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/winterm.py', reloading
+2025-11-12 15:35:35,358 - werkzeug - INFO -  * Detected change in '/usr/lib/python3/dist-packages/colorama/win32.py', reloading
+2025-11-12 15:35:36,010 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:35:38,642 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:35:38,660 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:35:38,667 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:36:18,642 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:36:20,138 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:36:23,887 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:36:23,903 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:36:23,914 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:36:32,216 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:36:32,268 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:36:33,439 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:36:35,425 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:36:35,439 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:36:35,446 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:43:24,799 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:43:24,862 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:43:24,866 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:43:24,887 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:43:24,892 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:43:24,909 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:43:24,915 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:43:24,965 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:43:24,972 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py.tmp', reloading
+2025-11-12 15:43:25,018 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:43:25,019 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:43:25,023 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:43:25,025 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:43:25,047 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:43:25,054 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:43:25,097 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:43:25,704 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:43:28,290 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:43:28,301 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:43:28,305 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:44:32,002 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:44:32,008 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:44:32,018 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:44:32,023 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:44:32,040 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:44:32,045 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:44:32,089 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:44:32,090 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:44:32,106 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:44:32,112 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:44:32,121 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:44:32,123 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:44:33,236 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:44:34,986 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:44:34,996 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:44:35,001 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:45:38,673 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:45:38,691 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:45:38,710 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:45:38,714 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:45:38,729 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:45:38,732 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:45:38,775 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:45:38,778 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:45:38,785 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:45:38,787 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:45:38,796 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:45:38,799 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:45:39,826 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:45:41,586 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:45:41,597 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:45:41,601 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:47:13,339 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:13,342 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:13,347 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:13,349 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:13,371 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:13,380 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:13,455 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:13,458 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:13,464 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:13,467 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:13,483 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:13,487 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:14,629 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:47:16,659 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:47:16,672 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:47:16,677 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:47:27,459 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:27,462 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:27,470 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:27,478 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:27,514 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:27,518 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:27,574 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:27,581 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:27,587 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:27,589 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:27,600 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:27,603 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:28,294 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:47:30,165 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:47:30,178 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:47:30,182 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:47:40,748 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:40,751 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:40,760 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:40,763 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:40,794 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:40,802 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:40,864 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:40,865 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:40,872 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:40,876 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:40,887 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:47:40,891 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:47:41,826 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:47:43,637 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:47:43,648 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:47:43,652 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:52:15,335 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:52:15,378 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:52:15,380 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:52:15,404 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:52:15,421 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:52:15,445 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:52:15,454 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:52:15,520 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:52:15,531 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py.tmp', reloading
+2025-11-12 15:52:15,537 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:52:15,540 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:52:15,544 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:52:15,546 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:52:15,558 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:52:15,562 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:52:15,603 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:52:15,740 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:52:16,341 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:52:18,398 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:52:18,408 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:52:18,413 - werkzeug - INFO -  * Debugger PIN: 111-301-938
+2025-11-12 15:53:55,343 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:53:55,345 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:53:55,351 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:53:55,353 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:53:55,387 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:53:55,394 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:53:55,473 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:53:55,474 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:53:55,478 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:53:55,479 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:53:55,491 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 15:53:55,494 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-12 15:53:56,345 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 15:53:58,426 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 15:53:58,441 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 15:53:58,451 - werkzeug - INFO -  * Debugger PIN: 111-301-938

@@ -178,17 +178,29 @@
         <!-- Login Form -->
         <form id="loginForm" method="POST">
             <!-- Error/Success Messages -->
-            {% if error %}
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
-            </div>
-            {% endif %}
-            
-            {% if success %}
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle me-2"></i>{{ success }}
-            </div>
-            {% endif %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'error' %}
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>{{ message }}
+                            </div>
+                        {% elif category == 'success' %}
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle me-2"></i>{{ message }}
+                            </div>
+                        {% elif category == 'info' %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>{{ message }}
+                            </div>
+                        {% elif category == 'warning' %}
+                            <div class="alert alert-warning">
+                                <i class="fas fa-exclamation-triangle me-2"></i>{{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             
             <!-- Main Login Fields -->
             <div id="mainLogin">

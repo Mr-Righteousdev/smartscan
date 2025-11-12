@@ -365,6 +365,17 @@ function performScan(cardId, locationId, locationName) {
                     <h4><i class="fas fa-check-circle me-2"></i>ACCESS GRANTED</h4>
                 </div>
                 <div class="row text-start">
+                    ${data.photo_url ? `
+                    <div class="col-12 text-center mb-3">
+                        <img src="${data.photo_url}" alt="${data.student_name}" 
+                             class="rounded-circle border border-success border-3" 
+                             style="width: 100px; height: 100px; object-fit: cover;">
+                        <div class="mt-2">
+                            <span class="badge bg-success">VERIFIED STUDENT</span>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
                     <div class="col-6"><strong>Student:</strong></div>
                     <div class="col-6">${data.student_name}</div>
                     
@@ -379,6 +390,15 @@ function performScan(cardId, locationId, locationName) {
                     
                     <div class="col-6"><strong>Access Type:</strong></div>
                     <div class="col-6">${data.access_type}</div>
+                    
+                    ${data.risk_level ? `
+                    <div class="col-6"><strong>Risk Level:</strong></div>
+                    <div class="col-6">
+                        <span class="badge bg-${data.risk_level === 'low' ? 'success' : (data.risk_level === 'medium' ? 'warning' : 'danger')}">
+                            ${data.risk_level.toUpperCase()}
+                        </span>
+                    </div>
+                    ` : ''}
                 </div>
             `;
         } else {

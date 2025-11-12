@@ -1,0 +1,775 @@
+{% extends "base.html" %}
+
+{% block title %}Database Management - Smart Campus Security{% endblock %}
+
+{% block extra_css %}
+<style>
+    .db-panel {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .db-panel::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s ease;
+        border: 2px solid #e9ecef;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    
+    .stat-card.warning {
+        border-color: #ffc107;
+        background: linear-gradient(135deg, #fff3cd, #ffffff);
+    }
+    
+    .stat-card.success {
+        border-color: #28a745;
+        background: linear-gradient(135deg, #d4edda, #ffffff);
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .stat-label {
+        color: #6c757d;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+    
+    .stat-detail {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .action-panel {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .archive-controls {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #dee2e6;
+    }
+    
+    .backup-controls {
+        background: #e3f2fd;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #90caf9;
+    }
+    
+    .progress-indicator {
+        background: #e9ecef;
+        border-radius: 10px;
+        height: 20px;
+        overflow: hidden;
+        margin: 15px 0;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(45deg, #28a745, #20c997);
+        transition: width 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    
+    .action-btn {
+        background: linear-gradient(45deg, #007bff, #0056b3);
+        border: none;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 12px 25px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin: 5px;
+    }
+    
+    .action-btn:hover {
+        background: linear-gradient(45deg, #0056b3, #004085);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    }
+    
+    .action-btn.danger {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+    }
+    
+    .action-btn.danger:hover {
+        background: linear-gradient(45deg, #c82333, #a71e2a);
+    }
+    
+    .action-btn.success {
+        background: linear-gradient(45deg, #28a745, #1e7e34);
+    }
+    
+    .action-btn.success:hover {
+        background: linear-gradient(45deg, #1e7e34, #155724);
+    }
+    
+    .archive-log {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #dee2e6;
+    }
+    
+    .log-entry {
+        padding: 10px;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 0.9rem;
+    }
+    
+    .log-entry:last-child {
+        border-bottom: none;
+    }
+    
+    .timestamp {
+        color: #6c757d;
+        font-size: 0.8rem;
+    }
+    
+    .size-indicator {
+        display: inline-block;
+        background: #e9ecef;
+        color: #495057;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        margin-left: 10px;
+    }
+    
+    .retention-selector {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .backup-schedule {
+        background: #d1ecf1;
+        border: 1px solid #b8daff;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .alert-info {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+        color: #0c5460;
+    }
+    
+    .alert-warning {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        color: #856404;
+    }
+    
+    .alert-success {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Database Management Header -->
+<div class="db-panel">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2><i class="fas fa-database me-2"></i>Database Management & Archiving</h2>
+            <p class="mb-0 opacity-75">Manage data retention, create backups, and archive old records</p>
+            <div class="mt-2">
+                <span class="badge bg-light text-dark">
+                    <i class="fas fa-shield-alt me-1"></i>Data Protection & Compliance
+                </span>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-light" onclick="refreshStats()">
+                    <i class="fas fa-sync me-1"></i>Refresh
+                </button>
+                <a href="{{ url_for('admin_management') }}" class="btn btn-outline-light">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Admin
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Database Statistics -->
+<div class="stats-grid">
+    <div class="stat-card {{ 'warning' if db_stats.current_logs > 10000 else 'success' }}">
+        <div class="stat-number text-primary">{{ "{:,}".format(db_stats.current_logs) }}</div>
+        <div class="stat-label">Current Access Logs</div>
+        <div class="stat-detail">
+            {% if db_stats.oldest_record %}
+            Oldest: {{ db_stats.oldest_record }}
+            {% else %}
+            No records yet
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="stat-card {{ 'success' if db_stats.archived_logs > 0 else '' }}">
+        <div class="stat-number text-success">{{ db_stats.archived_logs }}</div>
+        <div class="stat-label">Archived Files</div>
+        <div class="stat-detail">
+            {% if db_stats.archive_available %}
+            Archive system active
+            {% else %}
+            No archives yet
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-number text-info">{{ db_stats.database_size }}</div>
+        <div class="stat-label">Database Size</div>
+        <div class="stat-detail">All tables and indexes</div>
+    </div>
+    
+    <div class="stat-card {{ 'success' if db_stats.last_backup else 'warning' }}">
+        <div class="stat-number text-{{ 'success' if db_stats.last_backup else 'warning' }}">
+            {% if db_stats.last_backup %}
+            <i class="fas fa-check-circle"></i>
+            {% else %}
+            <i class="fas fa-exclamation-triangle"></i>
+            {% endif %}
+        </div>
+        <div class="stat-label">Last Backup</div>
+        <div class="stat-detail">
+            {% if db_stats.last_backup %}
+            {{ db_stats.last_backup[:10] }}
+            {% else %}
+            Never backed up
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Data Archiving Panel -->
+<div class="action-panel">
+    <h5><i class="fas fa-archive me-2"></i>Data Archiving & Retention</h5>
+    <p class="text-muted">Archive old access logs to maintain database performance while preserving historical data for investigations.</p>
+    
+    <!-- Retention Policy -->
+    <div class="retention-selector">
+        <h6><i class="fas fa-calendar-alt me-2"></i>Data Retention Policy</h6>
+        <p class="mb-3">Choose how long to keep access logs in the active database before archiving:</p>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">Retention Period</label>
+                <select class="form-select" id="retentionDays">
+                    <option value="7">7 Days (Weekly Archive)</option>
+                    <option value="14">14 Days (Bi-weekly Archive)</option>
+                    <option value="30" selected>30 Days (Monthly Archive)</option>
+                    <option value="60">60 Days (Bi-monthly Archive)</option>
+                    <option value="90">90 Days (Quarterly Archive)</option>
+                    <option value="365">365 Days (Annual Archive)</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Estimated Archive Impact</label>
+                <div class="form-control-plaintext">
+                    <span id="archiveEstimate">Will archive logs older than 30 days</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Archive Controls -->
+    <div class="archive-controls">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h6><i class="fas fa-box me-2"></i>Archive Old Records</h6>
+                <p class="mb-0">Move old access logs to CSV archive files to reduce database size</p>
+                <small class="text-muted">Archived data remains searchable through the investigation system</small>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="action-btn success" onclick="startArchiving()">
+                    <i class="fas fa-archive me-1"></i>Start Archiving
+                </button>
+            </div>
+        </div>
+        
+        <!-- Progress Indicator -->
+        <div id="archiveProgress" style="display: none;">
+            <div class="progress-indicator mt-3">
+                <div class="progress-bar" style="width: 0%" id="archiveProgressBar">
+                    Preparing...
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Archive Benefits -->
+    <div class="alert alert-info">
+        <h6><i class="fas fa-lightbulb me-2"></i>Benefits of Regular Archiving</h6>
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="mb-0">
+                    <li>Improved database performance</li>
+                    <li>Faster query response times</li>
+                    <li>Reduced backup size and time</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <ul class="mb-0">
+                    <li>Compliance with data retention policies</li>
+                    <li>Historical data remains accessible</li>
+                    <li>Efficient storage management</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Database Backup Panel -->
+<div class="action-panel">
+    <h5><i class="fas fa-save me-2"></i>Database Backup & Recovery</h5>
+    <p class="text-muted">Create complete database backups for disaster recovery and system migration.</p>
+    
+    <!-- Backup Schedule -->
+    <div class="backup-schedule">
+        <h6><i class="fas fa-clock me-2"></i>Recommended Backup Schedule</h6>
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <i class="fas fa-calendar-day fa-2x text-primary mb-2"></i>
+                <h6>Daily</h6>
+                <small>Automatic incremental backups</small>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-calendar-week fa-2x text-success mb-2"></i>
+                <h6>Weekly</h6>
+                <small>Full database backups</small>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-calendar-check fa-2x text-info mb-2"></i>
+                <h6>Monthly</h6>
+                <small>Long-term archive backups</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Backup Controls -->
+    <div class="backup-controls">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h6><i class="fas fa-download me-2"></i>Create Database Backup</h6>
+                <p class="mb-0">Generate a complete backup of all system data and configuration</p>
+                <small class="text-muted">Includes student records, access logs, security settings, and user accounts</small>
+            </div>
+            <div class="col-md-4 text-end">
+                <button class="action-btn" onclick="createBackup()">
+                    <i class="fas fa-save me-1"></i>Create Backup
+                </button>
+            </div>
+        </div>
+        
+        <!-- Progress Indicator -->
+        <div id="backupProgress" style="display: none;">
+            <div class="progress-indicator mt-3">
+                <div class="progress-bar" style="width: 0%" id="backupProgressBar">
+                    Initializing...
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Backup Information -->
+    <div class="alert alert-warning">
+        <h6><i class="fas fa-exclamation-triangle me-2"></i>Backup Security Notice</h6>
+        <p class="mb-0">Backup files contain sensitive student and security data. Ensure proper encryption and secure storage of backup files in production environments.</p>
+    </div>
+</div>
+
+<!-- Activity Log Panel -->
+<div class="action-panel">
+    <h5><i class="fas fa-history me-2"></i>Database Maintenance Activity</h5>
+    <p class="text-muted">Recent archiving and backup activities</p>
+    
+    <div class="archive-log" id="activityLog">
+        <div class="text-center text-muted py-4">
+            <i class="fas fa-clock fa-2x mb-3"></i>
+            <p>No maintenance activities recorded yet.</p>
+            <small>Archive or backup operations will appear here.</small>
+        </div>
+    </div>
+</div>
+
+<!-- Advanced Settings Panel -->
+<div class="action-panel">
+    <h5><i class="fas fa-cogs me-2"></i>Advanced Database Settings</h5>
+    <p class="text-muted">Configure automatic maintenance and optimization settings</p>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="autoArchive" checked>
+                <label class="form-check-label" for="autoArchive">
+                    Enable automatic archiving
+                </label>
+            </div>
+            <small class="text-muted">Automatically archive logs based on retention policy</small>
+        </div>
+        <div class="col-md-6">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="autoBackup">
+                <label class="form-check-label" for="autoBackup">
+                    Enable automatic daily backups
+                </label>
+            </div>
+            <small class="text-muted">Create daily backups at 2:00 AM</small>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <h6>Database Optimization</h6>
+        <div class="btn-group" role="group">
+            <button class="btn btn-outline-primary btn-sm" onclick="optimizeTables()">
+                <i class="fas fa-tools me-1"></i>Optimize Tables
+            </button>
+            <button class="btn btn-outline-info btn-sm" onclick="analyzePerformance()">
+                <i class="fas fa-chart-line me-1"></i>Analyze Performance
+            </button>
+            <button class="btn btn-outline-success btn-sm" onclick="repairDatabase()">
+                <i class="fas fa-wrench me-1"></i>Repair Database
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Archive estimation
+document.getElementById('retentionDays').addEventListener('change', function() {
+    const days = this.value;
+    const estimate = document.getElementById('archiveEstimate');
+    
+    let description = '';
+    if (days == 7) {
+        description = 'High frequency archiving - best for high-traffic systems';
+    } else if (days == 14) {
+        description = 'Bi-weekly archiving - balanced approach';
+    } else if (days == 30) {
+        description = 'Monthly archiving - standard for most systems';
+    } else if (days == 60) {
+        description = 'Bi-monthly archiving - for moderate traffic';
+    } else if (days == 90) {
+        description = 'Quarterly archiving - for low traffic systems';
+    } else {
+        description = 'Annual archiving - minimal archiving';
+    }
+    
+    estimate.textContent = `Will archive logs older than ${days} days - ${description}`;
+});
+
+// Start archiving process
+function startArchiving() {
+    const retentionDays = document.getElementById('retentionDays').value;
+    
+    if (!confirm(`Archive Access Logs?\n\nThis will:\n• Move logs older than ${retentionDays} days to archive files\n• Reduce database size and improve performance\n• Preserve data for future investigations\n\nContinue with archiving?`)) {
+        return;
+    }
+    
+    // Show progress
+    const progressDiv = document.getElementById('archiveProgress');
+    const progressBar = document.getElementById('archiveProgressBar');
+    
+    progressDiv.style.display = 'block';
+    progressBar.style.width = '0%';
+    progressBar.textContent = 'Starting archiving process...';
+    
+    // Simulate progress
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress > 90) progress = 90;
+        
+        progressBar.style.width = progress + '%';
+        
+        if (progress < 30) {
+            progressBar.textContent = 'Analyzing logs to archive...';
+        } else if (progress < 60) {
+            progressBar.textContent = 'Creating archive files...';
+        } else if (progress < 90) {
+            progressBar.textContent = 'Moving data to archives...';
+        }
+    }, 500);
+    
+    // Actual archiving request
+    fetch('/admin/archive_old_logs', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            retention_days: parseInt(retentionDays)
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        clearInterval(progressInterval);
+        
+        if (data.success) {
+            progressBar.style.width = '100%';
+            progressBar.textContent = 'Archiving completed!';
+            
+            setTimeout(() => {
+                progressDiv.style.display = 'none';
+                
+                alert(`✅ Archiving Completed Successfully!\n\nArchived Records: ${data.archived_count}\nDatabase Performance: Improved\nArchive Files: Created\n\nArchived data remains searchable through the investigation system.`);
+                
+                // Log activity
+                logActivity('Archive', `Archived ${data.archived_count} access logs older than ${retentionDays} days`);
+                
+                // Refresh page to update stats
+                location.reload();
+            }, 2000);
+        } else {
+            progressBar.style.width = '100%';
+            progressBar.textContent = 'Archiving failed!';
+            progressBar.style.background = '#dc3545';
+            
+            setTimeout(() => {
+                progressDiv.style.display = 'none';
+                alert('❌ Archiving Failed: ' + (data.error || 'Unknown error'));
+            }, 2000);
+        }
+    })
+    .catch(error => {
+        clearInterval(progressInterval);
+        progressDiv.style.display = 'none';
+        alert('❌ Archiving Error: ' + error.message);
+    });
+}
+
+// Create database backup
+function createBackup() {
+    if (!confirm('Create Database Backup?\n\nThis will create a complete backup of:\n• All student records\n• Access logs and security data\n• System configuration\n• User accounts\n\nThis may take several minutes. Continue?')) {
+        return;
+    }
+    
+    // Show progress
+    const progressDiv = document.getElementById('backupProgress');
+    const progressBar = document.getElementById('backupProgressBar');
+    
+    progressDiv.style.display = 'block';
+    progressBar.style.width = '0%';
+    progressBar.textContent = 'Initializing backup...';
+    
+    // Simulate progress
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += Math.random() * 10;
+        if (progress > 95) progress = 95;
+        
+        progressBar.style.width = progress + '%';
+        
+        if (progress < 20) {
+            progressBar.textContent = 'Preparing database export...';
+        } else if (progress < 40) {
+            progressBar.textContent = 'Backing up student records...';
+        } else if (progress < 60) {
+            progressBar.textContent = 'Backing up access logs...';
+        } else if (progress < 80) {
+            progressBar.textContent = 'Backing up security data...';
+        } else {
+            progressBar.textContent = 'Finalizing backup file...';
+        }
+    }, 800);
+    
+    // Actual backup request
+    fetch('/admin/create_backup', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        clearInterval(progressInterval);
+        
+        if (data.success) {
+            progressBar.style.width = '100%';
+            progressBar.textContent = 'Backup completed!';
+            
+            setTimeout(() => {
+                progressDiv.style.display = 'none';
+                
+                alert(`✅ Database Backup Created Successfully!\n\nBackup File: ${data.backup_file}\nFile Size: ${data.backup_size}\nLocation: /backups/\n\nBackup contains complete system data and can be used for disaster recovery.`);
+                
+                // Log activity
+                logActivity('Backup', `Created database backup: ${data.backup_file} (${data.backup_size})`);
+                
+                // Update last backup stat
+                location.reload();
+            }, 2000);
+        } else {
+            progressBar.style.width = '100%';
+            progressBar.textContent = 'Backup failed!';
+            progressBar.style.background = '#dc3545';
+            
+            setTimeout(() => {
+                progressDiv.style.display = 'none';
+                alert('❌ Backup Failed: ' + (data.error || 'Unknown error'));
+            }, 2000);
+        }
+    })
+    .catch(error => {
+        clearInterval(progressInterval);
+        progressDiv.style.display = 'none';
+        alert('❌ Backup Error: ' + error.message);
+    });
+}
+
+// Database optimization functions
+function optimizeTables() {
+    if (confirm('Optimize Database Tables?\n\nThis will:\n• Defragment tables\n• Rebuild indexes\n• Improve query performance\n\nThis may take a few minutes. Continue?')) {
+        alert('Table Optimization\n\nThis feature would:\n• Run OPTIMIZE TABLE on all tables\n• Rebuild corrupted indexes\n• Reclaim unused space\n• Improve overall performance\n\nFeature not implemented in simulation.');
+    }
+}
+
+function analyzePerformance() {
+    alert('Database Performance Analysis\n\nThis feature would analyze:\n• Query execution times\n• Index usage statistics\n• Table scan ratios\n• Memory usage patterns\n• Slow query logs\n\nRecommendations would be provided for optimization.');
+}
+
+function repairDatabase() {
+    if (confirm('⚠️ Repair Database?\n\nThis should only be used if the database is corrupted.\n\nThis will:\n• Check table integrity\n• Repair corrupted tables\n• Fix index issues\n\nContinue only if experiencing database errors.')) {
+        alert('Database Repair\n\nThis feature would:\n• Run CHECK TABLE on all tables\n• Execute REPAIR TABLE if needed\n• Rebuild corrupted indexes\n• Log all repair actions\n\nFeature not implemented in simulation.');
+    }
+}
+
+// Activity logging
+function logActivity(type, description) {
+    const activityLog = document.getElementById('activityLog');
+    const timestamp = new Date().toLocaleString();
+    
+    const logEntry = document.createElement('div');
+    logEntry.className = 'log-entry';
+    logEntry.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <strong>${type} Operation</strong><br>
+                <span>${description}</span>
+            </div>
+            <div class="text-end">
+                <div class="timestamp">${timestamp}</div>
+                <span class="size-indicator">Completed</span>
+            </div>
+        </div>
+    `;
+    
+    // Remove "no activities" message if present
+    if (activityLog.innerHTML.includes('No maintenance activities')) {
+        activityLog.innerHTML = '';
+    }
+    
+    activityLog.insertBefore(logEntry, activityLog.firstChild);
+    
+    // Keep only last 10 entries
+    while (activityLog.children.length > 10) {
+        activityLog.removeChild(activityLog.lastChild);
+    }
+}
+
+// Refresh statistics
+function refreshStats() {
+    location.reload();
+}
+
+// Auto-save settings
+document.getElementById('autoArchive').addEventListener('change', function() {
+    const enabled = this.checked;
+    // In a real system, this would save the setting to the database
+    console.log('Auto-archive setting:', enabled);
+});
+
+document.getElementById('autoBackup').addEventListener('change', function() {
+    const enabled = this.checked;
+    // In a real system, this would save the setting to the database
+    console.log('Auto-backup setting:', enabled);
+});
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if we should show any warnings based on stats
+    const currentLogs = {{ db_stats.current_logs }};
+    const lastBackup = '{{ db_stats.last_backup or "" }}';
+    
+    if (currentLogs > 50000) {
+        setTimeout(() => {
+            if (confirm('⚠️ Large Database Detected\n\nYou have over 50,000 access logs in the database.\n\nRecommended actions:\n• Archive old logs to improve performance\n• Create a backup before archiving\n• Consider reducing retention period\n\nWould you like to start archiving now?')) {
+                startArchiving();
+            }
+        }, 2000);
+    }
+    
+    if (!lastBackup) {
+        setTimeout(() => {
+            if (confirm('⚠️ No Database Backup Found\n\nIt\'s strongly recommended to create a backup before making any changes.\n\nWould you like to create a backup now?')) {
+                createBackup();
+            }
+        }, 1000);
+    }
+    
+    console.log('Database management interface initialized');
+});
+</script>
+{% endblock %}
