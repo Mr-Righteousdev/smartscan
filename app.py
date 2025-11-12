@@ -14,6 +14,7 @@ from auth import (
     security_manager, require_auth, require_api_auth, 
     log_security_event, policy_engine, ROLES
 )
+from ai_engine import get_ai_engine
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -330,8 +331,57 @@ def scan_card():
                 'risk_level': 'high'
             })
         
-        # Perform risk assessment
+        # Perform risk assessment with AI enhancement
         risk_assessment = policy_engine.assess_access_risk(student['student_id'], location_id)
+        
+        # AI-powered anomaly detection
+        ai_engine = get_ai_engine()
+        
+        # Prepare data for AI analysis
+        access_analysis_data = {
+            'student_id': student['student_id'],
+            'location_id': location_id,
+            'hour': datetime.now().hour,
+            'day_of_week': datetime.now().weekday(),
+            'is_weekend': datetime.now().weekday() >= 5,
+            'current_risk_score': risk_assessment['risk_score'],
+            'time_between_access': get_time_since_last_access(student['student_id']),
+            'locations_per_hour': get_recent_location_count(student['student_id']),
+            'location_security_level': location.get('access_level', 'public') if location else 'public'
+        }
+        
+        # Get AI anomaly detection results
+        try:
+            ai_analysis = ai_engine.detect_anomaly(access_analysis_data)
+        except Exception as ai_error:
+            logger.error(f"AI analysis error: {ai_error}")
+            # Fallback AI response
+            ai_analysis = {
+                'is_anomaly': False,
+                'anomaly_score': 1,
+                'confidence': 85,
+                'risk_level': 'low',
+                'explanation': 'AI analysis using fallback mode'
+            }
+        
+        # Ensure AI analysis has all required fields
+        ai_analysis = {
+            'is_anomaly': ai_analysis.get('is_anomaly', False),
+            'anomaly_score': float(ai_analysis.get('anomaly_score', 1)),
+            'confidence': float(ai_analysis.get('confidence', 85)),
+            'risk_level': ai_analysis.get('risk_level', 'low'),
+            'explanation': str(ai_analysis.get('explanation', 'Normal access pattern'))
+        }
+        
+        # Enhance risk assessment with AI insights
+        if ai_analysis['is_anomaly']:
+            risk_assessment['risk_score'] = max(risk_assessment['risk_score'], int(ai_analysis['anomaly_score']))
+            risk_assessment['risk_level'] = ai_analysis['risk_level']
+            risk_assessment['ai_detected'] = True
+            risk_assessment['ai_explanation'] = ai_analysis['explanation']
+        else:
+            risk_assessment['ai_detected'] = False
+            risk_assessment['ai_explanation'] = 'Normal behavior pattern'
         
         # Check if student is active
         if student['status'] != 'active':
@@ -341,7 +391,8 @@ def scan_card():
                 'success': False, 
                 'message': f'ACCESS DENIED: Student status is {student["status"]}',
                 'student_name': student['full_name'],
-                'risk_level': risk_assessment['risk_level']
+                'risk_level': risk_assessment['risk_level'],
+                'ai_analysis': ai_analysis
             })
         
         # Check if card is lost or stolen
@@ -402,12 +453,69 @@ def scan_card():
             'additional_auth_required': risk_assessment['requires_additional_auth'],
             'photo_url': student.get('photo_url'),
             'program': student.get('program'),
-            'year_of_study': student.get('year_of_study')
+            'year_of_study': student.get('year_of_study'),
+            'ai_analysis': ai_analysis,
+            'ai_confidence': ai_analysis.get('confidence', 0)
         })
         
     except mysql.connector.Error as err:
         logger.error(f"Database error during enhanced card scan: {err}")
         return jsonify({'success': False, 'message': 'System error occurred'})
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+def get_time_since_last_access(student_id):
+    """Get minutes since student's last access attempt"""
+    conn = get_db_connection()
+    if not conn:
+        return 60  # Default to 60 minutes
+    
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("""
+            SELECT access_time FROM access_logs 
+            WHERE student_id = %s 
+            ORDER BY access_time DESC 
+            LIMIT 1
+        """, (student_id,))
+        
+        result = cursor.fetchone()
+        if result and result['access_time']:
+            last_access = result['access_time']
+            time_diff = datetime.now() - last_access
+            return int(time_diff.total_seconds() / 60)  # Convert to minutes
+        
+        return 120  # No previous access, return 2 hours
+        
+    except mysql.connector.Error:
+        return 60  # Default fallback
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
+
+def get_recent_location_count(student_id):
+    """Get number of locations accessed in the last hour"""
+    conn = get_db_connection()
+    if not conn:
+        return 1  # Default
+    
+    try:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT COUNT(DISTINCT location_id) as count
+            FROM access_logs 
+            WHERE student_id = %s 
+            AND access_time >= DATE_SUB(NOW(), INTERVAL 1 HOUR)
+        """, (student_id,))
+        
+        result = cursor.fetchone()
+        return result[0] if result else 1
+        
+    except mysql.connector.Error:
+        return 1  # Default fallback
     finally:
         if conn.is_connected():
             cursor.close()

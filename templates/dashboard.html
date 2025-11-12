@@ -325,26 +325,54 @@
                 <h5><i class="fas fa-tools me-2"></i>Quick Actions</h5>
                 <div class="row">
                     <div class="col-md-3">
-                        <button class="btn btn-outline-primary w-100 mb-2" onclick="simulateEmergency()">
-                            <i class="fas fa-exclamation-triangle me-2"></i>Test Emergency Alert
-                        </button>
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-outline-info w-100 mb-2" onclick="generateReport()">
-                            <i class="fas fa-file-download me-2"></i>Generate Report
-                        </button>
-                    </div>
-                    <div class="col-md-3">
                         <a href="{{ url_for('card_simulator') }}" class="btn btn-outline-success w-100 mb-2">
-                            <i class="fas fa-play me-2"></i>Run Simulation
+                            <i class="fas fa-play me-2"></i>Card Simulator
                         </a>
                     </div>
                     <div class="col-md-3">
-                        <button class="btn btn-outline-warning w-100 mb-2" data-bs-toggle="modal" data-bs-target="#settingsModal">
-                            <i class="fas fa-cog me-2"></i>System Settings
+                        <a href="{{ url_for('admin_access_logs') }}" class="btn btn-outline-info w-100 mb-2">
+                            <i class="fas fa-clipboard-list me-2"></i>Access Logs
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('investigation_report') }}" class="btn btn-outline-warning w-100 mb-2">
+                            <i class="fas fa-search me-2"></i>Investigation
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-primary w-100 mb-2" onclick="generateReport()">
+                            <i class="fas fa-file-download me-2"></i>Generate Report
                         </button>
                     </div>
                 </div>
+                
+                <!-- Admin Management Section (only for admins) -->
+                {% if session.role == 'admin' %}
+                <hr>
+                <h6><i class="fas fa-cogs me-2"></i>Administrative Functions</h6>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="{{ url_for('admin_management') }}" class="btn btn-danger w-100 mb-2">
+                            <i class="fas fa-shield-alt me-2"></i>Admin Dashboard
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('admin_students') }}" class="btn btn-outline-primary w-100 mb-2">
+                            <i class="fas fa-user-graduate me-2"></i>Manage Students
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('admin_cards') }}" class="btn btn-outline-warning w-100 mb-2">
+                            <i class="fas fa-id-card me-2"></i>Manage Cards
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{{ url_for('database_management') }}" class="btn btn-outline-success w-100 mb-2">
+                            <i class="fas fa-database me-2"></i>Database Management
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
