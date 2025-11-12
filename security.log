@@ -1,0 +1,162 @@
+2025-11-12 14:34:57,439 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:35:12,650 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:35:13,016 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.18.3:5000
+2025-11-12 14:35:13,017 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-12 14:35:13,033 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:35:14,705 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:35:14,717 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:35:14,722 - werkzeug - INFO -  * Debugger PIN: 117-454-772
+2025-11-12 14:35:21,247 - __main__ - ERROR - Database connection error: 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+2025-11-12 14:35:21,307 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:35:21] "GET / HTTP/1.1" 200 -
+2025-11-12 14:35:22,766 - __main__ - ERROR - Database connection error: 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+2025-11-12 14:35:22,769 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:35:22] "GET / HTTP/1.1" 200 -
+2025-11-12 14:35:50,274 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:35:51,510 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:35:53,829 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:35:53,844 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:35:53,849 - werkzeug - INFO -  * Debugger PIN: 117-454-772
+2025-11-12 14:35:56,625 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:35:56,626 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:35:56,954 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:35:59,226 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:35:59,241 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:35:59,246 - werkzeug - INFO -  * Debugger PIN: 117-454-772
+2025-11-12 14:36:03,960 - __main__ - ERROR - Database connection error: 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+2025-11-12 14:36:04,004 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:36:04] "GET / HTTP/1.1" 200 -
+2025-11-12 14:36:12,098 - __main__ - ERROR - Database connection error: 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+2025-11-12 14:36:12,102 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:36:12] "GET / HTTP/1.1" 200 -
+2025-11-12 14:36:15,891 - __main__ - ERROR - Database connection error: 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+2025-11-12 14:36:15,905 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:36:15] "GET /card_simulator HTTP/1.1" 200 -
+2025-11-12 14:36:16,057 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:36:16] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 14:36:22,263 - __main__ - ERROR - Database connection error: 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+2025-11-12 14:36:22,264 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:36:22] "POST /scan_card HTTP/1.1" 200 -
+2025-11-12 14:36:22,276 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:36:22] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 14:36:46,055 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:36:46] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 14:37:15,428 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:37:15,460 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.18.3:5000
+2025-11-12 14:37:15,461 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-11-12 14:37:15,492 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:37:17,216 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:37:17,227 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:37:17,233 - werkzeug - INFO -  * Debugger PIN: 117-454-772
+2025-11-12 14:37:21,051 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:37:21] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 14:37:21,493 - __main__ - ERROR - Database connection error: 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+2025-11-12 14:37:21,527 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:37:21] "GET /card_simulator HTTP/1.1" 200 -
+2025-11-12 14:37:21,666 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:37:21] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 14:37:37,993 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:37:38,510 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:37:41,064 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:37:41,075 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:37:41,080 - werkzeug - INFO -  * Debugger PIN: 117-454-772
+2025-11-12 14:37:45,328 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:37:45,329 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:37:45,834 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:37:47,587 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:37:47,603 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:37:47,608 - werkzeug - INFO -  * Debugger PIN: 117-454-772
+2025-11-12 14:37:50,540 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 14:37:50,540 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 14:37:50,557 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 14:37:50,964 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:37:50] "GET /card_simulator HTTP/1.1" 200 -
+2025-11-12 14:37:51,091 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:37:51] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 14:37:51,162 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/flask/app.py', reloading
+2025-11-12 14:37:51,164 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:37:51,184 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/flask/templating.py', reloading
+2025-11-12 14:37:51,198 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/jinja2/environment.py', reloading
+2025-11-12 14:37:51,201 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/jinja2/loaders.py', reloading
+2025-11-12 14:37:51,208 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/flask/ctx.py', reloading
+2025-11-12 14:37:51,223 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/werkzeug/routing/map.py', reloading
+2025-11-12 14:37:51,225 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/werkzeug/routing/matcher.py', reloading
+2025-11-12 14:37:51,269 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:37:51] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-11-12 14:37:52,170 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:37:54,090 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:37:54,102 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:37:54,107 - werkzeug - INFO -  * Debugger PIN: 117-454-772
+2025-11-12 14:37:55,313 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 14:37:55,330 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 14:37:55,368 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 14:37:55,640 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:37:55] "GET /card_simulator HTTP/1.1" 200 -
+2025-11-12 14:37:55,726 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:37:55] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 14:38:25,756 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:38:25] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 14:38:55,757 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:38:55] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 14:39:20,264 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:39:20] "GET /card_simulator HTTP/1.1" 200 -
+2025-11-12 14:39:20,556 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/flask/app.py', reloading
+2025-11-12 14:39:20,558 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/flask/templating.py', reloading
+2025-11-12 14:39:20,561 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/jinja2/environment.py', reloading
+2025-11-12 14:39:20,567 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/jinja2/loaders.py', reloading
+2025-11-12 14:39:20,568 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/flask/ctx.py', reloading
+2025-11-12 14:39:20,571 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:39:20] "[31m[1mGET /api/recent_activity HTTP/1.1[0m" 401 -
+2025-11-12 14:39:20,573 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:39:20,582 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/werkzeug/routing/map.py', reloading
+2025-11-12 14:39:20,583 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/scripts/ucc/myenv/lib/python3.13/site-packages/werkzeug/routing/matcher.py', reloading
+2025-11-12 14:39:20,608 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:39:20] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-11-12 14:39:21,065 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:39:23,027 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:39:23,038 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:39:23,043 - werkzeug - INFO -  * Debugger PIN: 117-454-772
+2025-11-12 14:39:24,310 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:39:24] "[32mGET /dashboard HTTP/1.1[0m" 302 -
+2025-11-12 14:39:24,329 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:39:24] "GET /login HTTP/1.1" 200 -
+2025-11-12 14:39:40,519 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 14:39:40,519 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 14:39:40,521 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 14:39:41,055 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:39:41,252 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:39:41] "POST /login HTTP/1.1" 200 -
+2025-11-12 14:39:41,866 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:39:43,703 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:39:43,716 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:39:43,720 - werkzeug - INFO -  * Debugger PIN: 117-454-772
+2025-11-12 14:39:48,902 - mysql.connector - INFO - package: mysql.connector.plugins
+2025-11-12 14:39:48,902 - mysql.connector - INFO - plugin_name: mysql_native_password
+2025-11-12 14:39:48,905 - mysql.connector - INFO - AUTHENTICATION_PLUGIN_CLASS: MySQLNativePasswordAuthPlugin
+2025-11-12 14:39:49,277 - werkzeug - INFO - 127.0.0.1 - - [12/Nov/2025 14:39:49] "GET / HTTP/1.1" 200 -
+2025-11-12 14:41:17,560 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:17,741 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:17,742 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:17,746 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:17,748 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:17,778 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:17,783 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:17,895 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:17,896 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:17,903 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:17,905 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:17,911 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:17,914 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:17,999 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:18,000 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:18,004 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:18,005 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:18,012 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:18,015 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:18,033 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:18,079 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:18,084 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:18,094 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:18,223 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:18,227 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:18,237 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:18,847 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-12 14:41:20,714 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-12 14:41:20,728 - werkzeug - WARNING -  * Debugger is active!
+2025-11-12 14:41:20,732 - werkzeug - INFO -  * Debugger PIN: 117-454-772
+2025-11-12 14:41:26,507 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:26,512 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:26,521 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:26,571 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app_phase2.py', reloading
+2025-11-12 14:41:26,635 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:26,644 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:26,652 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:26,709 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:26,726 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:26,741 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:26,758 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:26,774 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:26,787 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:26,796 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-12 14:41:27,338 - werkzeug - INFO -  * Restarting with watchdog (inotify)
