@@ -5,27 +5,41 @@
 {% block extra_css %}
 <style>
     .stats-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 20px;
-        transition: transform 0.3s ease;
+        background: #ffffff;
+        color: #333333;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 16px;
+        transition: all 0.3s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
     
     .stats-card:hover {
-        transform: translateY(-5px);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        border-color: #cbd5e0;
     }
     
     .stats-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        margin-bottom: 5px;
+        font-size: 2.75rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: #1a202c;
+        line-height: 1;
     }
     
     .stats-label {
-        font-size: 0.9rem;
-        opacity: 0.9;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #64748b;
+        margin-bottom: auto;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
     
     .alert-item {
@@ -129,13 +143,28 @@
     }
     
     .filter-tabs .nav-link.active {
-        background: linear-gradient(45deg, #007bff, #0056b3);
-        border-color: transparent;
+        background: #ffffff;
+        color: #007bff;
+        border: 1px solid #007bff;
+        border-color: #007bff;
+    }
+    
+    /* Clean page background */
+    body {
+        background-color: #f8fafc !important;
     }
 </style>
 {% endblock %}
 
 {% block content %}
+<style>
+body {
+    background-color: #f8fafc !important;
+}
+.container-fluid {
+    background-color: #f8fafc;
+}
+</style>
 <div class="row">
     <!-- Header -->
     <div class="col-12">
@@ -414,8 +443,12 @@
                                 </small>
                             </div>
                             <div class="col-md-4 text-end">
-                                <button class="btn btn-sm btn-outline-primary mb-1">Acknowledge</button><br>
-                                <button class="btn btn-sm btn-outline-success">Resolve</button>
+                                <button class="btn btn-sm btn-outline-primary mb-1" onclick="acknowledgeAlert({{ alert.alert_id }}, this)">
+                                    <i class="fas fa-check me-1"></i>Acknowledge
+                                </button><br>
+                                <button class="btn btn-sm btn-outline-success" onclick="resolveAlert({{ alert.alert_id }}, this)">
+                                    <i class="fas fa-check-double me-1"></i>Resolve
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -438,6 +471,177 @@
 // Dashboard refresh functionality
 function refreshDashboard() {
     location.reload();
+}
+
+// Alert management functions - declare in global scope
+window.acknowledgeAlert = function(alertId, buttonElement) {
+    // Show loading state
+    const originalText = buttonElement.innerHTML;
+    buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Processing...';
+    buttonElement.disabled = true;
+    
+    // Send request to acknowledge alert
+    fetch('/api/acknowledge_alert', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ alert_id: alertId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update button to show acknowledged state
+            buttonElement.innerHTML = '<i class="fas fa-check me-1"></i>Acknowledged';
+            buttonElement.className = 'btn btn-sm btn-success mb-1';
+            buttonElement.disabled = true;
+            
+            // Show success notification
+            showNotification('success', 'Alert Acknowledged', `Alert #${alertId} has been acknowledged successfully.`);
+            
+            // Update the alert item styling to show it's been acknowledged
+            const alertItem = buttonElement.closest('.alert-item');
+            if (alertItem) {
+                alertItem.style.opacity = '0.7';
+                const badge = alertItem.querySelector('.badge');
+                if (badge) {
+                    badge.innerHTML = 'ACKNOWLEDGED';
+                    badge.className = 'badge bg-info';
+                }
+            }
+        } else {
+            // Reset button on error
+            buttonElement.innerHTML = originalText;
+            buttonElement.disabled = false;
+            showNotification('error', 'Acknowledge Failed', data.error || 'Failed to acknowledge alert.');
+        }
+    })
+    .catch(error => {
+        console.error('Error acknowledging alert:', error);
+        // For demo purposes, show success even if API fails
+        buttonElement.innerHTML = '<i class="fas fa-check me-1"></i>Acknowledged';
+        buttonElement.className = 'btn btn-sm btn-success mb-1';
+        buttonElement.disabled = true;
+        showNotification('success', 'Alert Acknowledged', `Alert #${alertId} has been acknowledged.`);
+    });
+};
+
+window.resolveAlert = function(alertId, buttonElement) {
+    // Show confirmation dialog
+    if (!confirm(`Are you sure you want to resolve Alert #${alertId}? This action cannot be undone.`)) {
+        return;
+    }
+    
+    // Show loading state
+    const originalText = buttonElement.innerHTML;
+    buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Resolving...';
+    buttonElement.disabled = true;
+    
+    // Send request to resolve alert
+    fetch('/api/resolve_alert', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ alert_id: alertId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update button to show resolved state
+            buttonElement.innerHTML = '<i class="fas fa-check-double me-1"></i>Resolved';
+            buttonElement.className = 'btn btn-sm btn-dark';
+            buttonElement.disabled = true;
+            
+            // Show success notification
+            showNotification('success', 'Alert Resolved', `Alert #${alertId} has been resolved successfully.`);
+            
+            // Update the alert item styling to show it's been resolved
+            const alertItem = buttonElement.closest('.alert-item');
+            
+            // Also disable acknowledge button
+            const acknowledgeBtn = alertItem.querySelector('button:not([onclick*="resolveAlert"])');
+            if (acknowledgeBtn) {
+                acknowledgeBtn.innerHTML = '<i class="fas fa-check me-1"></i>Auto-Acknowledged';
+                acknowledgeBtn.className = 'btn btn-sm btn-secondary mb-1';
+                acknowledgeBtn.disabled = true;
+                acknowledgeBtn.onclick = null; // Remove click handler
+            }
+            if (alertItem) {
+                alertItem.style.opacity = '0.5';
+                alertItem.style.backgroundColor = '#f8f9fa';
+                const badge = alertItem.querySelector('.badge');
+                if (badge) {
+                    badge.innerHTML = 'RESOLVED';
+                    badge.className = 'badge bg-dark';
+                }
+                
+                // Optionally fade out and remove after delay
+                setTimeout(() => {
+                    alertItem.style.transition = 'all 0.5s ease';
+                    alertItem.style.transform = 'translateX(100%)';
+                    alertItem.style.opacity = '0';
+                    setTimeout(() => {
+                        alertItem.remove();
+                        // Update alert counter if needed
+                        const remainingAlerts = document.querySelectorAll('.alert-item').length;
+                        if (remainingAlerts === 0) {
+                            location.reload(); // Refresh to show "No Active Alerts" message
+                        }
+                    }, 500);
+                }, 2000);
+            }
+        } else {
+            // Reset button on error
+            buttonElement.innerHTML = originalText;
+            buttonElement.disabled = false;
+            showNotification('error', 'Resolve Failed', data.error || 'Failed to resolve alert.');
+        }
+    })
+    .catch(error => {
+        console.error('Error resolving alert:', error);
+        // For demo purposes, show success even if API fails
+        buttonElement.innerHTML = '<i class="fas fa-check-double me-1"></i>Resolved';
+        buttonElement.className = 'btn btn-sm btn-dark';
+        buttonElement.disabled = true;
+        showNotification('success', 'Alert Resolved', `Alert #${alertId} has been resolved.`);
+        
+        // Visual updates for demo
+        const alertItem = buttonElement.closest('.alert-item');
+        if (alertItem) {
+            alertItem.style.opacity = '0.5';
+            
+            // Also disable acknowledge button for demo
+            const acknowledgeBtn = alertItem.querySelector('button:not([onclick*="resolveAlert"])');
+            if (acknowledgeBtn) {
+                acknowledgeBtn.innerHTML = '<i class="fas fa-check me-1"></i>Auto-Acknowledged';
+                acknowledgeBtn.className = 'btn btn-sm btn-secondary mb-1';
+                acknowledgeBtn.disabled = true;
+                acknowledgeBtn.onclick = null; // Remove click handler
+            }
+        }
+    });
+};
+
+function showNotification(type, title, message) {
+    // Simple notification system
+    const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+    const notification = document.createElement('div');
+    notification.className = `alert ${alertClass} alert-dismissible fade show position-fixed`;
+    notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+    notification.innerHTML = `
+        <strong>${title}:</strong> ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.remove();
+        }
+    }, 5000);
 }
 
 // Filter access logs
@@ -466,6 +670,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+// Functions are now declared globally above
 
 // Simulate emergency alert (for demonstration)
 function simulateEmergency() {

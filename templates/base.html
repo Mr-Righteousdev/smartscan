@@ -20,7 +20,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ffffff;
             min-height: 100vh;
             font-family: 'Inter', sans-serif;
         }
@@ -88,6 +88,171 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
+        }
+
+        /* Admin Navigation Sidebar */
+        .admin-nav-sidebar {
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            height: calc(100vh - 76px);
+            position: fixed;
+            left: 0;
+            top: 76px;
+            width: 280px;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.05);
+        }
+
+        .admin-nav-sidebar.collapsed {
+            width: 60px;
+        }
+
+        .admin-nav-toggle {
+            position: fixed;
+            top: 90px;
+            left: 240px;
+            z-index: 1001;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .admin-nav-sidebar.collapsed + .admin-nav-toggle {
+            left: 20px;
+        }
+
+        .admin-nav-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+
+        .admin-nav-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin: 0;
+        }
+
+        .admin-nav-menu {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .admin-nav-section {
+            padding: 16px 20px 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 8px;
+        }
+
+        .admin-nav-item {
+            margin-bottom: 2px;
+        }
+
+        .admin-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #64748b;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .admin-nav-link:hover {
+            background: #f8fafc;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .admin-nav-link.active {
+            background: #e0e7ff;
+            color: #667eea;
+            border-right: 3px solid #667eea;
+        }
+
+        .admin-nav-icon {
+            width: 20px;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        .admin-nav-text {
+            flex: 1;
+        }
+
+        .main-content-admin {
+            margin-left: 280px;
+            transition: all 0.3s ease;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .main-content-admin.expanded {
+            margin-left: 60px;
+        }
+        
+        /* Footer adjustments for admin layout */
+        .footer.main-content-admin {
+            margin-left: 280px;
+            transition: all 0.3s ease;
+        }
+        
+        .footer.main-content-admin.expanded {
+            margin-left: 60px;
+        }
+        
+        /* Sticky header for admin pages */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+        }
+
+        .admin-nav-sidebar.collapsed .admin-nav-text,
+        .admin-nav-sidebar.collapsed .admin-nav-section,
+        .admin-nav-sidebar.collapsed .admin-nav-title {
+            display: none;
+        }
+
+        .admin-nav-sidebar.collapsed .admin-nav-link {
+            justify-content: center;
+            padding: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-nav-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .admin-nav-sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content-admin {
+                margin-left: 0;
+            }
+            
+            .admin-nav-toggle {
+                left: 20px;
+            }
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -169,13 +334,130 @@
         </div>
     </nav>
 
+    <!-- Admin Navigation Sidebar - Only for admin users -->
+    {% if session.get('role') == 'admin' %}
+    <nav class="admin-nav-sidebar" id="adminNavSidebar">
+        <div class="admin-nav-header">
+            <h6 class="admin-nav-title">
+                <i class="fas fa-shield-alt me-2"></i>Admin Control
+            </h6>
+        </div>
+        
+        <ul class="admin-nav-menu">
+            <!-- Dashboard Section -->
+            <li class="admin-nav-section">Dashboard</li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('advanced_dashboard') }}" class="admin-nav-link">
+                    <i class="fas fa-tachometer-alt admin-nav-icon"></i>
+                    <span class="admin-nav-text">Security Dashboard</span>
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('dashboard') }}" class="admin-nav-link">
+                    <i class="fas fa-chart-line admin-nav-icon"></i>
+                    <span class="admin-nav-text">Analytics Dashboard</span>
+                </a>
+            </li>
+            
+            <!-- User Management Section -->
+            <li class="admin-nav-section">User Management</li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('admin_students') }}" class="admin-nav-link">
+                    <i class="fas fa-users admin-nav-icon"></i>
+                    <span class="admin-nav-text">Students</span>
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('admin_cards') }}" class="admin-nav-link">
+                    <i class="fas fa-id-card admin-nav-icon"></i>
+                    <span class="admin-nav-text">Card Management</span>
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('add_student') }}" class="admin-nav-link">
+                    <i class="fas fa-user-plus admin-nav-icon"></i>
+                    <span class="admin-nav-text">Add Student</span>
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('add_staff') }}" class="admin-nav-link">
+                    <i class="fas fa-user-tie admin-nav-icon"></i>
+                    <span class="admin-nav-text">Add Staff</span>
+                </a>
+            </li>
+            
+            <!-- System Management Section -->
+            <li class="admin-nav-section">System</li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('admin_locations') }}" class="admin-nav-link">
+                    <i class="fas fa-map-marker-alt admin-nav-icon"></i>
+                    <span class="admin-nav-text">Locations</span>
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('add_location') }}" class="admin-nav-link">
+                    <i class="fas fa-plus-square admin-nav-icon"></i>
+                    <span class="admin-nav-text">Add Location</span>
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('admin_management') }}" class="admin-nav-link">
+                    <i class="fas fa-cogs admin-nav-icon"></i>
+                    <span class="admin-nav-text">System Settings</span>
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('database_management') }}" class="admin-nav-link">
+                    <i class="fas fa-database admin-nav-icon"></i>
+                    <span class="admin-nav-text">Database</span>
+                </a>
+            </li>
+            
+            <!-- Security Section -->
+            <li class="admin-nav-section">Security</li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('investigation_report') }}" class="admin-nav-link">
+                    <i class="fas fa-search admin-nav-icon"></i>
+                    <span class="admin-nav-text">Investigations</span>
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('admin_locations') }}" class="admin-nav-link">
+                    <i class="fas fa-file-alt admin-nav-icon"></i>
+                    <span class="admin-nav-text">Access Reports</span>
+                </a>
+            </li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('dashboard') }}" class="admin-nav-link">
+                    <i class="fas fa-map admin-nav-icon"></i>
+                    <span class="admin-nav-text">Campus Monitor</span>
+                </a>
+            </li>
+            
+            <!-- Quick Actions Section -->
+            <li class="admin-nav-section">Quick Actions</li>
+            <li class="admin-nav-item">
+                <a href="{{ url_for('index') }}" class="admin-nav-link">
+                    <i class="fas fa-credit-card admin-nav-icon"></i>
+                    <span class="admin-nav-text">Card Simulator</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Navigation Toggle Button -->
+    <button class="admin-nav-toggle" id="navToggle" onclick="toggleAdminNav()" style="display: {{ 'block' if session.get('role') == 'admin' else 'none' }}">
+        <i class="fas fa-chevron-left" id="navToggleIcon"></i>
+    </button>
+    {% endif %}
+
     <!-- Main Content -->
-    <div class="container my-4">
+    <div class="{% if session.get('role') == 'admin' %}main-content-admin{% else %}container{% endif %} my-4" id="mainContent">
         {% block content %}{% endblock %}
     </div>
 
     <!-- Footer -->
-    <footer class="footer mt-auto">
+    <footer class="footer mt-auto {% if session.get('role') == 'admin' %}main-content-admin{% endif %}">
         <div class="container text-center">
             <div class="row">
                 <div class="col-md-6">
@@ -195,6 +477,87 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    {% if session.get('role') == 'admin' %}
+    <script>
+        // Admin Navigation functionality
+        function toggleAdminNav() {
+            const sidebar = document.getElementById('adminNavSidebar');
+            const mainContent = document.getElementById('mainContent');
+            const footer = document.querySelector('.footer.main-content-admin');
+            const toggleIcon = document.getElementById('navToggleIcon');
+            
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+            
+            // Also toggle footer if it exists
+            if (footer) {
+                footer.classList.toggle('expanded');
+            }
+            
+            if (sidebar.classList.contains('collapsed')) {
+                toggleIcon.classList.remove('fa-chevron-left');
+                toggleIcon.classList.add('fa-chevron-right');
+            } else {
+                toggleIcon.classList.remove('fa-chevron-right');
+                toggleIcon.classList.add('fa-chevron-left');
+            }
+            
+            // Save preference
+            localStorage.setItem('adminNavCollapsed', sidebar.classList.contains('collapsed'));
+        }
+
+        // Set active navigation item based on current page
+        function setActiveNavItem() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.admin-nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Handle window resize
+        function handleResize() {
+            const sidebar = document.getElementById('adminNavSidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('expanded');
+            }
+        }
+
+        // Initialize admin navigation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set active navigation item
+            setActiveNavItem();
+            
+            // Restore navigation state from localStorage
+            const isCollapsed = localStorage.getItem('adminNavCollapsed') === 'true';
+            if (isCollapsed) {
+                document.getElementById('adminNavSidebar').classList.add('collapsed');
+                document.getElementById('mainContent').classList.add('expanded');
+                
+                // Also handle footer if it exists
+                const footer = document.querySelector('.footer.main-content-admin');
+                if (footer) {
+                    footer.classList.add('expanded');
+                }
+                
+                document.getElementById('navToggleIcon').classList.remove('fa-chevron-left');
+                document.getElementById('navToggleIcon').classList.add('fa-chevron-right');
+            }
+            
+            // Add event listeners
+            window.addEventListener('resize', handleResize);
+        });
+    </script>
+    {% endif %}
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html>

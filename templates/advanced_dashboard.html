@@ -5,48 +5,58 @@
 {% block extra_css %}
 <style>
     .security-metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 20px;
+        background: #ffffff;
+        color: #333333;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 16px;
         transition: all 0.3s ease;
         position: relative;
-        overflow: hidden;
-    }
-    
-    .security-metric-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100px;
-        height: 100px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 50%;
-        transform: translate(30px, -30px);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
     
     .security-metric-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        border-color: #cbd5e0;
     }
     
     .metric-value {
-        font-size: 2.5rem;
-        font-weight: bold;
-        margin-bottom: 5px;
+        font-size: 2.75rem;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: #1a202c;
+        line-height: 1;
     }
     
     .metric-label {
-        font-size: 0.9rem;
-        opacity: 0.9;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #64748b;
+        margin-bottom: auto;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
     
     .metric-change {
         font-size: 0.8rem;
-        margin-top: 5px;
+        color: #64748b;
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        gap: 4px;
     }
+    
+    .metric-change .text-success { color: #27ae60 !important; }
+    .metric-change .text-info { color: #3498db !important; }
+    .metric-change .text-warning { color: #f39c12 !important; }
+    .metric-change .text-danger { color: #e74c3c !important; }
+    .metric-change .text-primary { color: #3498db !important; }
     
     .risk-indicator {
         display: inline-block;
@@ -201,6 +211,15 @@
 {% endblock %}
 
 {% block content %}
+<style>
+body {
+    background-color: #f8fafc !important;
+}
+
+/* Advanced dashboard specific styles */
+</style>
+
+<!-- Content now uses full available width from sidebar -->
 <!-- Threat Level Indicator -->
 <div class="threat-level-indicator">
     <div class="d-flex align-items-center">
@@ -229,7 +248,7 @@
                 <button class="btn btn-outline-primary me-2" onclick="refreshDashboard()">
                     <i class="fas fa-sync-alt"></i> Refresh
                 </button>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#incidentModal">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newIncidentModal">
                     <i class="fas fa-exclamation-triangle"></i> New Incident
                 </button>
             </div>
@@ -237,57 +256,60 @@
     </div>
 </div>
 
-<!-- Security Metrics Row -->
-<div class="row">
-    <div class="col-lg-2 col-md-4 col-sm-6">
-        <div class="security-metric-card text-center">
-            <div class="metric-value">{{ security_score|default(85) }}</div>
+<!-- Security Metrics Grid -->
+<div class="row mb-3">
+    <div class="col-lg-4 col-md-6">
+        <div class="security-metric-card">
             <div class="metric-label">Security Score</div>
+            <div class="metric-value">{{ security_score|default(85) }}</div>
             <div class="metric-change">
                 <i class="fas fa-arrow-up text-success"></i> +3% from last week
             </div>
         </div>
     </div>
-    <div class="col-lg-2 col-md-4 col-sm-6">
-        <div class="security-metric-card text-center">
-            <div class="metric-value">{{ data.stats.active_sessions|default(12) }}</div>
+    <div class="col-lg-4 col-md-6">
+        <div class="security-metric-card">
             <div class="metric-label">Active Sessions</div>
+            <div class="metric-value">{{ data.stats.active_sessions|default(12) }}</div>
             <div class="metric-change">
                 <i class="fas fa-users text-info"></i> {{ data.stats.unique_users|default(8) }} unique users
             </div>
         </div>
     </div>
-    <div class="col-lg-2 col-md-4 col-sm-6">
-        <div class="security-metric-card text-center">
-            <div class="metric-value">{{ data.stats.blocked_attempts|default(7) }}</div>
+    <div class="col-lg-4 col-md-6">
+        <div class="security-metric-card">
             <div class="metric-label">Blocked Attempts</div>
+            <div class="metric-value">{{ data.stats.blocked_attempts|default(7) }}</div>
             <div class="metric-change">
                 <i class="fas fa-shield-alt text-warning"></i> Last 24 hours
             </div>
         </div>
     </div>
-    <div class="col-lg-2 col-md-4 col-sm-6">
-        <div class="security-metric-card text-center">
-            <div class="metric-value">{{ data.stats.policy_violations|default(3) }}</div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-lg-4 col-md-6">
+        <div class="security-metric-card">
             <div class="metric-label">Policy Violations</div>
+            <div class="metric-value">{{ data.stats.policy_violations|default(3) }}</div>
             <div class="metric-change">
                 <i class="fas fa-exclamation-circle text-danger"></i> Requires review
             </div>
         </div>
     </div>
-    <div class="col-lg-2 col-md-4 col-sm-6">
-        <div class="security-metric-card text-center">
-            <div class="metric-value">{{ data.stats.risk_assessments|default(156) }}</div>
+    <div class="col-lg-4 col-md-6">
+        <div class="security-metric-card">
             <div class="metric-label">Risk Assessments</div>
+            <div class="metric-value">{{ data.stats.risk_assessments|default(156) }}</div>
             <div class="metric-change">
                 <i class="fas fa-chart-line text-primary"></i> Today
             </div>
         </div>
     </div>
-    <div class="col-lg-2 col-md-4 col-sm-6">
-        <div class="security-metric-card text-center">
-            <div class="metric-value">99.8%</div>
+    <div class="col-lg-4 col-md-6">
+        <div class="security-metric-card">
             <div class="metric-label">System Uptime</div>
+            <div class="metric-value">99.8%</div>
             <div class="metric-change">
                 <i class="fas fa-server text-success"></i> All systems operational
             </div>
@@ -437,7 +459,7 @@
                 {% endif %}
                 
                 <div class="text-center mt-3">
-                    <button class="btn btn-sm btn-outline-primary" onclick="showPolicyManager()">
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addPolicyModal">
                         <i class="fas fa-plus me-1"></i>Add Policy
                     </button>
                 </div>
@@ -525,10 +547,10 @@
                 
                 <!-- Quick Actions -->
                 <div class="mt-3">
-                    <button class="btn btn-sm btn-outline-success w-100 mb-2" onclick="runSecurityScan()">
+                    <button class="btn btn-sm btn-outline-success w-100 mb-2" data-bs-toggle="modal" data-bs-target="#securityScanModal">
                         <i class="fas fa-search me-1"></i>Run Security Scan
                     </button>
-                    <button class="btn btn-sm btn-outline-info w-100" onclick="generateSecurityReport()">
+                    <button class="btn btn-sm btn-outline-info w-100" data-bs-toggle="modal" data-bs-target="#generateReportModal">
                         <i class="fas fa-file-alt me-1"></i>Generate Report
                     </button>
                 </div>
@@ -549,6 +571,665 @@
         <span class="filter-chip" data-filter="system_events">System Events</span>
     </div>
 </div>
+
+<!-- Add Policy Modal -->
+<div class="modal fade" id="addPolicyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius: 4px;">
+            <div class="modal-header" style="border-bottom: 1px solid #e9ecef;">
+                <h5 class="modal-title">
+                    <i class="fas fa-shield-alt me-2"></i>Create Security Policy
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addPolicyForm" method="POST" action="/admin/add_policy">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="policyName" class="form-label">Policy Name</label>
+                                <input type="text" class="form-control" id="policyName" name="policy_name" required 
+                                       style="border-radius: 4px;" placeholder="e.g., Night Access Restriction">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="policyType" class="form-label">Policy Type</label>
+                                <select class="form-select" id="policyType" name="policy_type" required style="border-radius: 4px;">
+                                    <option value="">Select Type</option>
+                                    <option value="time_based">Time-Based Restriction</option>
+                                    <option value="location_based">Location-Based Access</option>
+                                    <option value="role_based">Role-Based Control</option>
+                                    <option value="risk_based">Risk-Based Authentication</option>
+                                    <option value="behavioral">Behavioral Monitoring</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="timeStart" class="form-label">Start Time (optional)</label>
+                                <input type="time" class="form-control" id="timeStart" name="time_start" style="border-radius: 4px;">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="timeEnd" class="form-label">End Time (optional)</label>
+                                <input type="time" class="form-control" id="timeEnd" name="time_end" style="border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="targetRole" class="form-label">Target Role</label>
+                                <select class="form-select" id="targetRole" name="target_role" style="border-radius: 4px;">
+                                    <option value="all">All Users</option>
+                                    <option value="student">Students Only</option>
+                                    <option value="staff">Staff Only</option>
+                                    <option value="security_officer">Security Officers</option>
+                                    <option value="admin">Administrators</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="riskThreshold" class="form-label">Risk Threshold (1-5)</label>
+                                <input type="number" class="form-control" id="riskThreshold" name="risk_threshold" 
+                                       min="1" max="5" value="3" style="border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="policyDescription" class="form-label">Policy Description</label>
+                        <textarea class="form-control" id="policyDescription" name="description" rows="3" 
+                                  style="border-radius: 4px;" placeholder="Describe what this policy does and when it applies..."></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="isActive" name="is_active" checked>
+                                    <label class="form-check-label" for="isActive">
+                                        Enable policy immediately
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="logViolations" name="log_violations" checked>
+                                    <label class="form-check-label" for="logViolations">
+                                        Log policy violations
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #e9ecef;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 4px;">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitPolicy()" style="border-radius: 4px;">
+                    <i class="fas fa-plus me-1"></i>Create Policy
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Security Scan Modal -->
+<div class="modal fade" id="securityScanModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 4px;">
+            <div class="modal-header" style="border-bottom: 1px solid #e9ecef;">
+                <h5 class="modal-title">
+                    <i class="fas fa-search me-2"></i>Security System Scan
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="securityScanForm" method="POST" action="/admin/run_security_scan">
+                    <div class="mb-3">
+                        <label for="scanType" class="form-label">Scan Type</label>
+                        <select class="form-select" id="scanType" name="scan_type" required style="border-radius: 4px;">
+                            <option value="">Select Scan Type</option>
+                            <option value="quick">Quick Scan (5 minutes)</option>
+                            <option value="comprehensive">Comprehensive Scan (15 minutes)</option>
+                            <option value="deep">Deep Security Audit (30 minutes)</option>
+                            <option value="vulnerability">Vulnerability Assessment</option>
+                            <option value="compliance">Compliance Check</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Scan Components</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="scanAccessLogs" name="scan_components" value="access_logs" checked>
+                                    <label class="form-check-label" for="scanAccessLogs">Access Logs</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="scanUsers" name="scan_components" value="user_accounts" checked>
+                                    <label class="form-check-label" for="scanUsers">User Accounts</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="scanPolicies" name="scan_components" value="policies" checked>
+                                    <label class="form-check-label" for="scanPolicies">Security Policies</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="scanDatabase" name="scan_components" value="database" checked>
+                                    <label class="form-check-label" for="scanDatabase">Database Security</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="scanSessions" name="scan_components" value="sessions">
+                                    <label class="form-check-label" for="scanSessions">Active Sessions</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="scanIncidents" name="scan_components" value="incidents">
+                                    <label class="form-check-label" for="scanIncidents">Security Incidents</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="notifyOnComplete" name="notify_completion" checked>
+                            <label class="form-check-label" for="notifyOnComplete">
+                                Notify when scan is complete
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info" role="alert" style="border-radius: 4px;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> Security scans may temporarily impact system performance. 
+                        Schedule during low-usage periods if possible.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #e9ecef;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 4px;">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="startSecurityScan()" style="border-radius: 4px;">
+                    <i class="fas fa-play me-1"></i>Start Scan
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Generate Report Modal -->
+<div class="modal fade" id="generateReportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 4px;">
+            <div class="modal-header" style="border-bottom: 1px solid #e9ecef;">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-alt me-2"></i>Generate Security Report
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="generateReportForm" method="POST" action="/admin/generate_report">
+                    <div class="mb-3">
+                        <label for="reportType" class="form-label">Report Type</label>
+                        <select class="form-select" id="reportType" name="report_type" required style="border-radius: 4px;">
+                            <option value="">Select Report Type</option>
+                            <option value="comprehensive">Comprehensive Security Report</option>
+                            <option value="incident_summary">Incident Response Summary</option>
+                            <option value="access_audit">Access Control Audit</option>
+                            <option value="risk_assessment">Risk Assessment Report</option>
+                            <option value="compliance">Compliance Report</option>
+                            <option value="user_activity">User Activity Report</option>
+                        </select>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="dateFrom" class="form-label">From Date</label>
+                                <input type="date" class="form-control" id="dateFrom" name="date_from" required style="border-radius: 4px;">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="dateTo" class="form-label">To Date</label>
+                                <input type="date" class="form-control" id="dateTo" name="date_to" required style="border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="reportFormat" class="form-label">Output Format</label>
+                        <select class="form-select" id="reportFormat" name="format" style="border-radius: 4px;">
+                            <option value="pdf">PDF Document</option>
+                            <option value="excel">Excel Spreadsheet</option>
+                            <option value="csv">CSV Export</option>
+                            <option value="json">JSON Data</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Include Sections</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incSummary" name="sections" value="executive_summary" checked>
+                                    <label class="form-check-label" for="incSummary">Executive Summary</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incMetrics" name="sections" value="security_metrics" checked>
+                                    <label class="form-check-label" for="incMetrics">Security Metrics</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incIncidents" name="sections" value="incidents" checked>
+                                    <label class="form-check-label" for="incIncidents">Security Incidents</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incAccess" name="sections" value="access_patterns" checked>
+                                    <label class="form-check-label" for="incAccess">Access Patterns</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incRecommendations" name="sections" value="recommendations" checked>
+                                    <label class="form-check-label" for="incRecommendations">Recommendations</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incCharts" name="sections" value="charts">
+                                    <label class="form-check-label" for="incCharts">Charts & Graphs</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="emailReport" name="email_report">
+                        <label class="form-check-label" for="emailReport">
+                            Email report when ready
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #e9ecef;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 4px;">Cancel</button>
+                <button type="button" class="btn btn-info" onclick="generateReport()" style="border-radius: 4px;">
+                    <i class="fas fa-cog me-1"></i>Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- All Incidents Modal -->
+<div class="modal fade" id="allIncidentsModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="border-radius: 4px;">
+            <div class="modal-header" style="border-bottom: 1px solid #e9ecef;">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle me-2"></i>All Security Incidents
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Filters and Search -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" id="incidentSearch" placeholder="Search incidents..." style="border-radius: 0 4px 4px 0;">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="severityFilter" style="border-radius: 4px;">
+                            <option value="">All Severities</option>
+                            <option value="critical">Critical</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="statusFilter" style="border-radius: 4px;">
+                            <option value="">All Statuses</option>
+                            <option value="new">New</option>
+                            <option value="investigating">Investigating</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Incidents Table -->
+                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                    <table class="table table-hover">
+                        <thead class="table-light sticky-top">
+                            <tr>
+                                <th style="width: 80px;">ID</th>
+                                <th style="width: 100px;">Severity</th>
+                                <th>Title</th>
+                                <th style="width: 120px;">Status</th>
+                                <th style="width: 150px;">Detected</th>
+                                <th style="width: 120px;">Assigned To</th>
+                                <th style="width: 100px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incidentsTableBody">
+                            <!-- Sample incidents - in real system this would be populated from backend -->
+                            <tr class="incident-row" data-severity="critical" data-status="new">
+                                <td><strong>#SEC-001</strong></td>
+                                <td><span class="badge bg-danger">CRITICAL</span></td>
+                                <td>
+                                    <strong>Unauthorized Access Attempt</strong><br>
+                                    <small class="text-muted">Multiple failed login attempts detected from external IP</small>
+                                </td>
+                                <td><span class="badge bg-warning">New</span></td>
+                                <td><small>Nov 15, 2024<br>14:23:15</small></td>
+                                <td><small class="text-muted">Unassigned</small></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewIncidentDetail('SEC-001')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="incident-row" data-severity="high" data-status="investigating">
+                                <td><strong>#SEC-002</strong></td>
+                                <td><span class="badge bg-warning">HIGH</span></td>
+                                <td>
+                                    <strong>Suspicious Card Usage</strong><br>
+                                    <small class="text-muted">Student card used in restricted area during off-hours</small>
+                                </td>
+                                <td><span class="badge bg-info">Investigating</span></td>
+                                <td><small>Nov 15, 2024<br>09:45:22</small></td>
+                                <td><small>J. Smith</small></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewIncidentDetail('SEC-002')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="incident-row" data-severity="medium" data-status="in_progress">
+                                <td><strong>#SEC-003</strong></td>
+                                <td><span class="badge bg-info">MEDIUM</span></td>
+                                <td>
+                                    <strong>Policy Violation Detected</strong><br>
+                                    <small class="text-muted">Access attempt outside permitted time window</small>
+                                </td>
+                                <td><span class="badge bg-primary">In Progress</span></td>
+                                <td><small>Nov 15, 2024<br>08:12:33</small></td>
+                                <td><small>M. Johnson</small></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewIncidentDetail('SEC-003')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="incident-row" data-severity="high" data-status="resolved">
+                                <td><strong>#SEC-004</strong></td>
+                                <td><span class="badge bg-warning">HIGH</span></td>
+                                <td>
+                                    <strong>Unknown Card Detected</strong><br>
+                                    <small class="text-muted">Unregistered RFID card attempted building access</small>
+                                </td>
+                                <td><span class="badge bg-success">Resolved</span></td>
+                                <td><small>Nov 14, 2024<br>16:30:45</small></td>
+                                <td><small>A. Wilson</small></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewIncidentDetail('SEC-004')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="incident-row" data-severity="critical" data-status="investigating">
+                                <td><strong>#SEC-005</strong></td>
+                                <td><span class="badge bg-danger">CRITICAL</span></td>
+                                <td>
+                                    <strong>System Intrusion Attempt</strong><br>
+                                    <small class="text-muted">Unusual network activity detected on security server</small>
+                                </td>
+                                <td><span class="badge bg-info">Investigating</span></td>
+                                <td><small>Nov 14, 2024<br>12:15:20</small></td>
+                                <td><small>D. Brown</small></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewIncidentDetail('SEC-005')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr class="incident-row" data-severity="low" data-status="closed">
+                                <td><strong>#SEC-006</strong></td>
+                                <td><span class="badge bg-secondary">LOW</span></td>
+                                <td>
+                                    <strong>Routine Access Anomaly</strong><br>
+                                    <small class="text-muted">Student accessed lab during unusual hours - verified legitimate</small>
+                                </td>
+                                <td><span class="badge bg-dark">Closed</span></td>
+                                <td><small>Nov 14, 2024<br>07:22:18</small></td>
+                                <td><small>R. Davis</small></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" onclick="viewIncidentDetail('SEC-006')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Summary Stats -->
+                <div class="row mt-4">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h5 class="text-danger">2</h5>
+                            <small class="text-muted">Critical Incidents</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h5 class="text-warning">2</h5>
+                            <small class="text-muted">High Priority</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h5 class="text-info">1</h5>
+                            <small class="text-muted">Under Investigation</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h5 class="text-success">3</h5>
+                            <small class="text-muted">Resolved Today</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #e9ecef;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 4px;">Close</button>
+                <button type="button" class="btn btn-success" onclick="exportIncidents()" style="border-radius: 4px;">
+                    <i class="fas fa-download me-1"></i>Export Report
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newIncidentModal" style="border-radius: 4px;">
+                    <i class="fas fa-plus me-1"></i>New Incident
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Create New Incident Modal -->
+<div class="modal fade" id="newIncidentModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius: 4px;">
+            <div class="modal-header" style="border-bottom: 1px solid #e9ecef;">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus-circle me-2"></i>Create New Security Incident
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newIncidentForm" method="POST" action="/admin/create_incident">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="incidentTitle" class="form-label">Incident Title *</label>
+                                <input type="text" class="form-control" id="incidentTitle" name="title" required 
+                                       style="border-radius: 4px;" placeholder="Brief description of the incident">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="incidentSeverity" class="form-label">Severity Level *</label>
+                                <select class="form-select" id="incidentSeverity" name="severity" required style="border-radius: 4px;">
+                                    <option value="">Select Severity</option>
+                                    <option value="critical">Critical - Immediate Response Required</option>
+                                    <option value="high">High - Urgent Investigation</option>
+                                    <option value="medium">Medium - Standard Response</option>
+                                    <option value="low">Low - Monitor and Document</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="incidentType" class="form-label">Incident Type *</label>
+                                <select class="form-select" id="incidentType" name="incident_type" required style="border-radius: 4px;">
+                                    <option value="">Select Type</option>
+                                    <option value="unauthorized_access">Unauthorized Access</option>
+                                    <option value="policy_violation">Policy Violation</option>
+                                    <option value="suspicious_activity">Suspicious Activity</option>
+                                    <option value="system_breach">System Breach</option>
+                                    <option value="card_misuse">Card Misuse</option>
+                                    <option value="physical_security">Physical Security</option>
+                                    <option value="data_security">Data Security</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="incidentLocation" class="form-label">Location</label>
+                                <select class="form-select" id="incidentLocation" name="location_id" style="border-radius: 4px;">
+                                    <option value="">Select Location (if applicable)</option>
+                                    <option value="1">University Main Library</option>
+                                    <option value="3">Computer Laboratory 1</option>
+                                    <option value="5">Student Center</option>
+                                    <option value="11">Science Building Main Entrance</option>
+                                    <option value="29">ICT Department Office</option>
+                                    <option value="30">Cybersecurity Lab</option>
+                                    <option value="0">Multiple/Unknown Locations</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="incidentDate" class="form-label">Incident Date *</label>
+                                <input type="datetime-local" class="form-control" id="incidentDate" name="incident_date" required style="border-radius: 4px;">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="assignTo" class="form-label">Assign To</label>
+                                <select class="form-select" id="assignTo" name="assigned_to" style="border-radius: 4px;">
+                                    <option value="">Unassigned</option>
+                                    <option value="1">John Smith - Security Officer</option>
+                                    <option value="2">Mary Johnson - Investigation Lead</option>
+                                    <option value="3">Alex Wilson - Security Admin</option>
+                                    <option value="4">David Brown - Incident Response</option>
+                                    <option value="5">Rachel Davis - Compliance Officer</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="incidentDescription" class="form-label">Detailed Description *</label>
+                        <textarea class="form-control" id="incidentDescription" name="description" rows="4" required
+                                  style="border-radius: 4px;" 
+                                  placeholder="Provide detailed information about the incident including what happened, when it was discovered, potential impact, and any initial observations..."></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="affectedUser" class="form-label">Affected User/Card ID</label>
+                                <input type="text" class="form-control" id="affectedUser" name="affected_user" 
+                                       style="border-radius: 4px;" placeholder="e.g., RFID_BACS_21A_145 or User ID">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="sourceSystem" class="form-label">Source System</label>
+                                <select class="form-select" id="sourceSystem" name="source_system" style="border-radius: 4px;">
+                                    <option value="">Select Source</option>
+                                    <option value="access_control">Access Control System</option>
+                                    <option value="ai_monitoring">AI Monitoring Engine</option>
+                                    <option value="manual_report">Manual Report</option>
+                                    <option value="security_camera">Security Camera</option>
+                                    <option value="intrusion_detection">Intrusion Detection</option>
+                                    <option value="user_report">User Report</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="requiresNotification" name="requires_notification" checked>
+                                    <label class="form-check-label" for="requiresNotification">
+                                        Send immediate notifications
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="escalateToManagement" name="escalate_management">
+                                    <label class="form-check-label" for="escalateToManagement">
+                                        Escalate to management
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info" role="alert" style="border-radius: 4px;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> All incidents are logged immediately upon creation. High and Critical incidents will trigger automated response procedures.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #e9ecef;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 4px;">Cancel</button>
+                <button type="button" class="btn btn-warning" onclick="saveDraftIncident()" style="border-radius: 4px;">
+                    <i class="fas fa-save me-1"></i>Save as Draft
+                </button>
+                <button type="button" class="btn btn-danger" onclick="createIncident()" style="border-radius: 4px;">
+                    <i class="fas fa-exclamation-triangle me-1"></i>Create Incident
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -560,56 +1241,622 @@ function refreshDashboard() {
 
 function showIncidentDetails(incidentId) {
     // In a real system, this would fetch incident details via API
-    alert(`Incident Details\n\nIncident ID: ${incidentId}\n\nThis would open a detailed incident management interface with:\n- Full incident timeline\n- Evidence collection\n- Response actions\n- Assignment management`);
+    console.log(`Opening incident details for ID: ${incidentId}`);
+    // For now, just highlight the clicked incident
+    event.target.style.backgroundColor = '#e3f2fd';
 }
 
 function togglePolicy(policyId) {
     // In a real system, this would update policy status via API
     console.log(`Toggling policy ${policyId}`);
     
-    // Show confirmation
-    if (confirm('This will update the security policy. Continue?')) {
-        // Simulate API call
-        setTimeout(() => {
-            alert('Policy updated successfully!');
-        }, 500);
-    }
+    // Show toast notification instead
+    showNotification('info', 'Policy Updated', `Security policy ${policyId} has been updated.`);
 }
 
 function terminateSession(userId) {
-    if (confirm('Are you sure you want to terminate this user session?')) {
-        // Simulate session termination
-        alert(`Session terminated for user ${userId}`);
-        location.reload();
-    }
-}
-
-function runSecurityScan() {
-    if (confirm('Run comprehensive security scan? This may take a few minutes.')) {
-        alert('Security Scan Initiated\n\nScanning:\n✓ Access logs\n✓ User permissions\n✓ System vulnerabilities\n✓ Policy compliance\n\nResults will be available in the security report.');
-    }
-}
-
-function generateSecurityReport() {
-    const reportTypes = [
-        'Comprehensive Security Report',
-        'Incident Response Summary',
-        'Access Control Audit',
-        'Risk Assessment Report',
-        'Compliance Report'
-    ];
+    // Show toast notification instead of popup
+    showNotification('success', 'Session Terminated', `User session ${userId} has been terminated.`);
     
-    const reportType = prompt(`Select report type:\n${reportTypes.map((type, index) => `${index + 1}. ${type}`).join('\n')}\n\nEnter number (1-5):`);
-    
-    if (reportType && reportType >= 1 && reportType <= 5) {
-        const selectedReport = reportTypes[reportType - 1];
-        alert(`Generating ${selectedReport}...\n\nThis report will include:\n- Executive summary\n- Detailed findings\n- Risk analysis\n- Recommendations\n- Compliance status\n\nReport will be ready for download shortly.`);
+    // Visually update the UI
+    const sessionElement = event.target.closest('.user-session');
+    if (sessionElement) {
+        sessionElement.style.opacity = '0.5';
+        sessionElement.classList.remove('session-active');
+        sessionElement.classList.add('session-inactive');
     }
 }
 
-function showPolicyManager() {
-    alert('Security Policy Manager\n\nHere you can:\n- Create new security policies\n- Modify existing rules\n- Set time-based restrictions\n- Configure risk thresholds\n- Enable/disable policy enforcement\n\nThis would open the policy management interface.');
+// Professional modal-based functions
+function submitPolicy() {
+    const form = document.getElementById('addPolicyForm');
+    const formData = new FormData(form);
+    
+    // Convert FormData to JSON
+    const data = {};
+    formData.forEach((value, key) => {
+        if (data[key]) {
+            if (!Array.isArray(data[key])) {
+                data[key] = [data[key]];
+            }
+            data[key].push(value);
+        } else {
+            data[key] = value;
+        }
+    });
+    
+    // Show loading state
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating...';
+    btn.disabled = true;
+    
+    fetch('/admin/add_policy', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            // Success toast notification
+            showNotification('success', 'Policy Created', `Security policy "${data.policy_name}" has been created successfully.`);
+            // Close modal and refresh
+            $('#addPolicyModal').modal('hide');
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showNotification('error', 'Creation Failed', result.error || 'Failed to create security policy.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('error', 'System Error', 'Unable to create policy. Please try again.');
+    })
+    .finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
 }
+
+function startSecurityScan() {
+    const form = document.getElementById('securityScanForm');
+    const formData = new FormData(form);
+    
+    // Convert FormData to JSON
+    const data = {};
+    formData.forEach((value, key) => {
+        if (data[key]) {
+            if (!Array.isArray(data[key])) {
+                data[key] = [data[key]];
+            }
+            data[key].push(value);
+        } else {
+            data[key] = value;
+        }
+    });
+    
+    // Show loading state
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Starting...';
+    btn.disabled = true;
+    
+    fetch('/admin/run_security_scan', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            showNotification('info', 'Scan Started', `${data.scan_type} security scan has been initiated. Scan ID: ${result.scan_id}`);
+            $('#securityScanModal').modal('hide');
+            // Start progress monitoring
+            monitorScanProgress(result.scan_id);
+        } else {
+            showNotification('error', 'Scan Failed', result.error || 'Failed to start security scan.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('error', 'System Error', 'Unable to start scan. Please try again.');
+    })
+    .finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+}
+
+function generateReport() {
+    const form = document.getElementById('generateReportForm');
+    const formData = new FormData(form);
+    
+    // Convert FormData to JSON
+    const data = {};
+    formData.forEach((value, key) => {
+        if (data[key]) {
+            if (!Array.isArray(data[key])) {
+                data[key] = [data[key]];
+            }
+            data[key].push(value);
+        } else {
+            data[key] = value;
+        }
+    });
+    
+    // Show loading state
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Generating...';
+    btn.disabled = true;
+    
+    fetch('/admin/generate_report', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            showNotification('success', 'Report Generated', `${data.report_type} report has been generated. Download will start shortly.`);
+            $('#generateReportModal').modal('hide');
+            
+            // Trigger download if file is ready
+            if (result.download_url) {
+                setTimeout(() => {
+                    window.open(result.download_url, '_blank');
+                }, 1000);
+            }
+        } else {
+            showNotification('error', 'Generation Failed', result.error || 'Failed to generate report.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('error', 'System Error', 'Unable to generate report. Please try again.');
+    })
+    .finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+}
+
+// Notification system for professional feedback
+function showNotification(type, title, message) {
+    const toastContainer = document.getElementById('toastContainer') || createToastContainer();
+    const toastId = 'toast_' + Date.now();
+    
+    const icons = {
+        'success': 'fas fa-check-circle',
+        'error': 'fas fa-exclamation-circle',
+        'warning': 'fas fa-exclamation-triangle',
+        'info': 'fas fa-info-circle'
+    };
+    
+    const colors = {
+        'success': 'success',
+        'error': 'danger',
+        'warning': 'warning',
+        'info': 'info'
+    };
+    
+    const toastHtml = `
+        <div class="toast align-items-center text-white bg-${colors[type]} border-0" 
+             id="${toastId}" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="${icons[type]} me-2"></i>
+                    <strong>${title}:</strong> ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" 
+                        data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    `;
+    
+    toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+    
+    const toastElement = document.getElementById(toastId);
+    const toast = new bootstrap.Toast(toastElement, { delay: 5000 });
+    toast.show();
+    
+    // Auto-remove after toast hides
+    toastElement.addEventListener('hidden.bs.toast', () => {
+        toastElement.remove();
+    });
+}
+
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.className = 'toast-container position-fixed top-0 end-0 p-3';
+    container.style.zIndex = '9999';
+    document.body.appendChild(container);
+    return container;
+}
+
+function monitorScanProgress(scanId) {
+    // This would monitor scan progress in a real system
+    const progressInterval = setInterval(() => {
+        fetch(`/admin/scan_progress/${scanId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'completed') {
+                clearInterval(progressInterval);
+                showNotification('success', 'Scan Complete', `Security scan ${scanId} has completed successfully.`);
+            } else if (data.status === 'failed') {
+                clearInterval(progressInterval);
+                showNotification('error', 'Scan Failed', `Security scan ${scanId} failed: ${data.error}`);
+            }
+            // Update progress UI if needed
+        })
+        .catch(error => {
+            console.error('Progress monitoring error:', error);
+            clearInterval(progressInterval);
+        });
+    }, 5000); // Check every 5 seconds
+}
+
+// Advanced Security Filter functionality
+function initializeSecurityFilters() {
+    const filterChips = document.querySelectorAll('.filter-chip');
+    
+    filterChips.forEach(chip => {
+        chip.addEventListener('click', function() {
+            // Remove active class from all chips
+            filterChips.forEach(c => c.classList.remove('active'));
+            // Add active class to clicked chip
+            this.classList.add('active');
+            
+            // Get filter type
+            const filterType = this.getAttribute('data-filter');
+            
+            // Apply filter
+            applySecurityFilter(filterType);
+        });
+    });
+}
+
+function applySecurityFilter(filterType) {
+    // Show loading state
+    const securityFeed = document.getElementById('securityFeed');
+    const originalContent = securityFeed.innerHTML;
+    
+    securityFeed.innerHTML = `
+        <div class="text-center py-4">
+            <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+            <p>Filtering security events...</p>
+        </div>
+    `;
+    
+    // Simulate API call to filter data
+    fetch(`/api/security_events?filter=${filterType}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateSecurityFeedWithFilter(data.events, filterType);
+        } else {
+            // Fallback to showing filtered content from current data
+            filterCurrentSecurityFeed(filterType);
+        }
+    })
+    .catch(error => {
+        console.error('Filter error:', error);
+        // Fallback to client-side filtering
+        filterCurrentSecurityFeed(filterType);
+    });
+}
+
+function filterCurrentSecurityFeed(filterType) {
+    const securityFeed = document.getElementById('securityFeed');
+    const auditEntries = document.querySelectorAll('.audit-entry');
+    
+    // Reset feed
+    securityFeed.innerHTML = '';
+    
+    if (filterType === 'all') {
+        // Show all entries
+        auditEntries.forEach(entry => {
+            securityFeed.appendChild(entry.cloneNode(true));
+        });
+    } else {
+        // Filter entries based on type
+        let filteredEntries = [];
+        
+        auditEntries.forEach(entry => {
+            const eventText = entry.textContent.toLowerCase();
+            
+            switch(filterType) {
+                case 'critical':
+                    if (entry.querySelector('.risk-critical') || 
+                        eventText.includes('critical') || 
+                        eventText.includes('urgent') ||
+                        eventText.includes('breach')) {
+                        filteredEntries.push(entry);
+                    }
+                    break;
+                case 'failed_access':
+                    if (eventText.includes('denied') || 
+                        eventText.includes('failed') || 
+                        eventText.includes('unauthorized') ||
+                        eventText.includes('blocked')) {
+                        filteredEntries.push(entry);
+                    }
+                    break;
+                case 'policy_violations':
+                    if (eventText.includes('violation') || 
+                        eventText.includes('policy') || 
+                        eventText.includes('rule') ||
+                        eventText.includes('breach')) {
+                        filteredEntries.push(entry);
+                    }
+                    break;
+                case 'user_activity':
+                    if (eventText.includes('login') || 
+                        eventText.includes('logout') || 
+                        eventText.includes('session') ||
+                        eventText.includes('user')) {
+                        filteredEntries.push(entry);
+                    }
+                    break;
+                case 'system_events':
+                    if (eventText.includes('system') || 
+                        eventText.includes('server') || 
+                        eventText.includes('database') ||
+                        eventText.includes('service')) {
+                        filteredEntries.push(entry);
+                    }
+                    break;
+            }
+        });
+        
+        if (filteredEntries.length > 0) {
+            filteredEntries.forEach(entry => {
+                securityFeed.appendChild(entry.cloneNode(true));
+            });
+        } else {
+            securityFeed.innerHTML = `
+                <div class="text-center text-muted py-4">
+                    <i class="fas fa-search fa-2x mb-3"></i>
+                    <h6>No events found</h6>
+                    <p>No security events match the selected filter: ${filterType.replace('_', ' ')}</p>
+                    <button class="btn btn-sm btn-outline-primary" onclick="resetSecurityFilter()">
+                        <i class="fas fa-refresh me-1"></i>Show All Events
+                    </button>
+                </div>
+            `;
+        }
+    }
+    
+    // Update filter count
+    const activeChip = document.querySelector('.filter-chip.active');
+    if (activeChip && filterType !== 'all') {
+        const count = securityFeed.querySelectorAll('.audit-entry').length;
+        activeChip.innerHTML = `${activeChip.textContent.split('(')[0]} (${count})`;
+    }
+}
+
+function updateSecurityFeedWithFilter(events, filterType) {
+    const securityFeed = document.getElementById('securityFeed');
+    
+    if (events && events.length > 0) {
+        securityFeed.innerHTML = '';
+        
+        events.forEach(event => {
+            const eventHtml = `
+                <div class="audit-entry">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center">
+                                <div class="risk-indicator risk-${event.risk_level || 'low'}"></div>
+                                <strong>${event.event_type.replace('_', ' ').toUpperCase()}</strong>
+                            </div>
+                            <small class="text-muted">
+                                ${event.description || 'No description available'}
+                            </small>
+                            ${event.user_id ? `<br><small class="text-primary"><i class="fas fa-user me-1"></i>User: ${event.user_id}</small>` : ''}
+                        </div>
+                        <small class="text-muted">
+                            ${new Date(event.timestamp).toLocaleTimeString()}
+                        </small>
+                    </div>
+                </div>
+            `;
+            securityFeed.insertAdjacentHTML('beforeend', eventHtml);
+        });
+    } else {
+        securityFeed.innerHTML = `
+            <div class="text-center text-muted py-4">
+                <i class="fas fa-search fa-2x mb-3"></i>
+                <h6>No events found</h6>
+                <p>No security events match the filter: ${filterType.replace('_', ' ')}</p>
+            </div>
+        `;
+    }
+}
+
+function resetSecurityFilter() {
+    const allChip = document.querySelector('.filter-chip[data-filter="all"]');
+    if (allChip) {
+        allChip.click();
+    }
+}
+
+// Incident modal functionality
+function viewIncidentDetail(incidentId) {
+    showNotification('info', 'Incident Details', `Opening detailed view for incident ${incidentId}`);
+    // In a real system, this would open a detailed incident management interface
+    console.log(`Opening incident details for: ${incidentId}`);
+}
+
+function exportIncidents() {
+    showNotification('success', 'Export Started', 'Generating incidents report for download...');
+    // In a real system, this would generate and download a report
+}
+
+function createNewIncident() {
+    // Set current date/time as default when modal opens
+    setTimeout(() => {
+        const now = new Date();
+        const localDateTime = new Date(now.getTime() - (now.getTimezoneOffset() * 60000)).toISOString().slice(0, 16);
+        const dateInput = document.getElementById('incidentDate');
+        if (dateInput) {
+            dateInput.value = localDateTime;
+        }
+    }, 100);
+}
+
+// Initialize modal when it opens
+document.addEventListener('DOMContentLoaded', function() {
+    const newIncidentModal = document.getElementById('newIncidentModal');
+    if (newIncidentModal) {
+        newIncidentModal.addEventListener('shown.bs.modal', function () {
+            createNewIncident();
+        });
+    }
+});
+
+function createIncident() {
+    const form = document.getElementById('newIncidentForm');
+    const formData = new FormData(form);
+    
+    // Convert FormData to JSON
+    const data = {};
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+    
+    // Show loading state
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating...';
+    btn.disabled = true;
+    
+    fetch('/admin/create_incident', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            showNotification('success', 'Incident Created', `Security incident "${data.title}" has been created with ID: ${result.incident_id}`);
+            $('#newIncidentModal').modal('hide');
+            form.reset();
+            setTimeout(() => location.reload(), 1000);
+        } else {
+            showNotification('error', 'Creation Failed', result.error || 'Failed to create security incident.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('error', 'System Error', 'Unable to create incident. Please try again.');
+    })
+    .finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+}
+
+function saveDraftIncident() {
+    const form = document.getElementById('newIncidentForm');
+    const formData = new FormData(form);
+    
+    // Convert FormData to JSON
+    const data = {};
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+    data.status = 'draft';
+    
+    showNotification('info', 'Draft Saved', `Incident draft "${data.title}" has been saved for later completion.`);
+    $('#newIncidentModal').modal('hide');
+}
+
+function initializeIncidentModal() {
+    // Search functionality
+    const searchInput = document.getElementById('incidentSearch');
+    const severityFilter = document.getElementById('severityFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', filterIncidents);
+    }
+    if (severityFilter) {
+        severityFilter.addEventListener('change', filterIncidents);
+    }
+    if (statusFilter) {
+        statusFilter.addEventListener('change', filterIncidents);
+    }
+}
+
+function filterIncidents() {
+    const searchTerm = document.getElementById('incidentSearch')?.value.toLowerCase() || '';
+    const severityFilter = document.getElementById('severityFilter')?.value || '';
+    const statusFilter = document.getElementById('statusFilter')?.value || '';
+    
+    const rows = document.querySelectorAll('.incident-row');
+    let visibleCount = 0;
+    
+    rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const severity = row.getAttribute('data-severity') || '';
+        const status = row.getAttribute('data-status') || '';
+        
+        const matchesSearch = !searchTerm || text.includes(searchTerm);
+        const matchesSeverity = !severityFilter || severity === severityFilter;
+        const matchesStatus = !statusFilter || status === statusFilter;
+        
+        if (matchesSearch && matchesSeverity && matchesStatus) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Update results count (you could add this to the modal if needed)
+    console.log(`Showing ${visibleCount} of ${rows.length} incidents`);
+}
+
+// Advanced dashboard specific functions (navigation functions are now in base template)
+
+// Set default dates for report modal
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize security filters
+    initializeSecurityFilters();
+    
+    // Initialize incident modal functionality
+    initializeIncidentModal();
+    
+    // Set default date range for reports (last 30 days)
+    const today = new Date();
+    const thirtyDaysAgo = new Date(today);
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+    
+    const dateFromInput = document.getElementById('dateFrom');
+    const dateToInput = document.getElementById('dateTo');
+    
+    if (dateFromInput) {
+        dateFromInput.value = thirtyDaysAgo.toISOString().split('T')[0];
+    }
+    if (dateToInput) {
+        dateToInput.value = today.toISOString().split('T')[0];
+    }
+});
 
 // Real-time updates simulation
 function updateSecurityFeed() {
@@ -650,7 +1897,7 @@ document.querySelectorAll('.filter-chip').forEach(chip => {
         // In a real system, this would filter the displayed data
         // For demo, just show notification
         if (filter !== 'all') {
-            alert(`Filtering by: ${filter.replace('_', ' ').toUpperCase()}\n\nThis would show only events matching the selected criteria.`);
+            // Filter silently - no popup needed
         }
     });
 });

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Add Location - Smart Campus Security{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #f8fafc !important;
+    }
+    
+    .form-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2><i class="fas fa-plus me-2"></i>Add New Campus Location</h2>
+                    <p class="text-muted">Configure a new location in the campus security system</p>
+                </div>
+                <a href="{{ url_for('admin_locations') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Locations
+                </a>
+            </div>
+
+            <div class="form-card">
+                <form method="POST" action="{{ url_for('add_location') }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="locationName" class="form-label">Location Name *</label>
+                                <input type="text" class="form-control" id="locationName" name="location_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="building" class="form-label">Building *</label>
+                                <input type="text" class="form-control" id="building" name="building" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="locationType" class="form-label">Location Type *</label>
+                                <select class="form-select" id="locationType" name="location_type" required>
+                                    <option value="">Select Type</option>
+                                    <option value="academic">Academic</option>
+                                    <option value="administrative">Administrative</option>
+                                    <option value="laboratory">Laboratory</option>
+                                    <option value="recreational">Recreational</option>
+                                    <option value="security">Security</option>
+                                    <option value="maintenance">Maintenance</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="accessLevel" class="form-label">Access Level *</label>
+                                <select class="form-select" id="accessLevel" name="access_level" required>
+                                    <option value="">Select Access Level</option>
+                                    <option value="public">Public</option>
+                                    <option value="restricted">Restricted</option>
+                                    <option value="staff_only">Staff Only</option>
+                                    <option value="admin_only">Admin Only</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="floor" class="form-label">Floor</label>
+                                <input type="number" class="form-control" id="floor" name="floor">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" placeholder="Brief description of the location and its purpose..."></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="maxOccupancy" class="form-label">Maximum Occupancy</label>
+                                <input type="number" class="form-control" id="maxOccupancy" name="max_occupancy" min="1">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="roomNumber" class="form-label">Room Number</label>
+                                <input type="text" class="form-control" id="roomNumber" name="room_number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="isActive" name="is_active" checked>
+                                <label class="form-check-label" for="isActive">
+                                    Location is active and operational
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="requiresCard" name="requires_card" checked>
+                                <label class="form-check-label" for="requiresCard">
+                                    Requires card access
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Note:</strong> New locations will be immediately available for access control. 
+                        Make sure all settings are correct before saving.
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ url_for('admin_locations') }}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-2"></i>Add Location
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

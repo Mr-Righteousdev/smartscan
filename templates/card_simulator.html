@@ -101,19 +101,92 @@
         background: #e3f2fd;
     }
     
-    .location-btn.restricted {
-        border-color: #ffc107;
-        background: #fff3cd;
+    /* Toast Notification Styles */
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 350px;
     }
     
-    .location-btn.staff-only {
-        border-color: #dc3545;
-        background: #f8d7da;
+    .toast {
+        margin-bottom: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
     }
+    
+    .toast.show {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    
+    .toast.success {
+        border-left: 4px solid #28a745;
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+    }
+    
+    .toast.error {
+        border-left: 4px solid #dc3545;
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+    }
+    
+    .toast.warning {
+        border-left: 4px solid #ffc107;
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+    }
+    
+    .toast.info {
+        border-left: 4px solid #17a2b8;
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        color: #0c5460;
+    }
+    
+    .toast-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 15px;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .toast-body {
+        padding: 15px;
+        font-size: 14px;
+    }
+    
+    .toast-icon {
+        margin-right: 8px;
+        font-size: 16px;
+    }
+    
+    .toast-close {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        opacity: 0.6;
+        transition: opacity 0.2s;
+    }
+    
+    .toast-close:hover {
+        opacity: 1;
+    }
+    
 </style>
 {% endblock %}
 
 {% block content %}
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
 <div class="row">
     <div class="col-md-8">
         <div class="card">
@@ -175,36 +248,75 @@
                 <div class="mt-4">
                     <h5>Select Campus Location:</h5>
                     <div class="location-grid">
-                        <div class="location-btn" onclick="selectLocation(1, 'Main Library Entrance', 'public')">
-                            <i class="fas fa-book-open"></i><br>
-                            <small>Main Library Entrance</small><br>
-                            <span class="badge bg-success">Public</span>
-                        </div>
-                        <div class="location-btn restricted" onclick="selectLocation(2, 'Library Study Rooms', 'restricted')">
-                            <i class="fas fa-users"></i><br>
-                            <small>Library Study Rooms</small><br>
-                            <span class="badge bg-warning">Restricted</span>
-                        </div>
-                        <div class="location-btn restricted" onclick="selectLocation(3, 'Computer Lab 1', 'restricted')">
-                            <i class="fas fa-laptop"></i><br>
-                            <small>Computer Lab 1</small><br>
-                            <span class="badge bg-warning">Restricted</span>
-                        </div>
-                        <div class="location-btn restricted" onclick="selectLocation(5, 'Cybersecurity Lab', 'restricted')">
-                            <i class="fas fa-shield-alt"></i><br>
-                            <small>Cybersecurity Lab</small><br>
-                            <span class="badge bg-warning">Restricted</span>
-                        </div>
-                        <div class="location-btn staff-only" onclick="selectLocation(10, 'ICT Department Office', 'staff_only')">
-                            <i class="fas fa-building"></i><br>
-                            <small>ICT Department Office</small><br>
-                            <span class="badge bg-danger">Staff Only</span>
-                        </div>
-                        <div class="location-btn" onclick="selectLocation(11, 'Main Cafeteria', 'public')">
-                            <i class="fas fa-utensils"></i><br>
-                            <small>Main Cafeteria</small><br>
-                            <span class="badge bg-success">Public</span>
-                        </div>
+                        {% if locations and locations|length > 0 %}
+                            {% for location in locations %}
+                            <div class="location-btn" onclick="selectLocation({{ location.location_id }}, '{{ location.location_name }}', '{{ location.access_level }}')">
+                                {% if 'Library' in location.location_name %}
+                                    <i class="fas fa-book-open"></i>
+                                {% elif 'Computer' in location.location_name or 'Lab' in location.location_name %}
+                                    <i class="fas fa-laptop"></i>
+                                {% elif 'Office' in location.location_name or 'Department' in location.location_name %}
+                                    <i class="fas fa-building"></i>
+                                {% elif 'Cafeteria' in location.location_name or 'Dining' in location.location_name %}
+                                    <i class="fas fa-utensils"></i>
+                                {% elif 'Study' in location.location_name %}
+                                    <i class="fas fa-users"></i>
+                                {% elif 'Security' in location.location_name or 'Cyber' in location.location_name %}
+                                    <i class="fas fa-shield-alt"></i>
+                                {% else %}
+                                    <i class="fas fa-door-open"></i>
+                                {% endif %}<br>
+                                <small>{{ location.location_name }}</small><br>
+                                <div class="mt-1">
+                                    <span class="badge bg-primary">{{ location.current_occupancy or 0 }} students</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <!-- Fallback to hardcoded locations if database query fails -->
+                            <div class="location-btn" onclick="selectLocation(1, 'Main Library Entrance', 'public')">
+                                <i class="fas fa-book-open"></i><br>
+                                <small>Main Library Entrance</small><br>
+                                <div class="mt-1">
+                                    <span class="badge bg-primary">3 students</span>
+                                </div>
+                            </div>
+                            <div class="location-btn" onclick="selectLocation(2, 'Library Study Rooms', 'restricted')">
+                                <i class="fas fa-users"></i><br>
+                                <small>Library Study Rooms</small><br>
+                                <div class="mt-1">
+                                    <span class="badge bg-primary">8 students</span>
+                                </div>
+                            </div>
+                            <div class="location-btn" onclick="selectLocation(3, 'Computer Lab 1', 'restricted')">
+                                <i class="fas fa-laptop"></i><br>
+                                <small>Computer Lab 1</small><br>
+                                <div class="mt-1">
+                                    <span class="badge bg-primary">12 students</span>
+                                </div>
+                            </div>
+                            <div class="location-btn" onclick="selectLocation(30, 'Cybersecurity Lab', 'restricted')">
+                                <i class="fas fa-shield-alt"></i><br>
+                                <small>Cybersecurity Lab</small><br>
+                                <div class="mt-1">
+                                    <span class="badge bg-primary">5 students</span>
+                                </div>
+                            </div>
+                            <div class="location-btn" onclick="selectLocation(29, 'ICT Department Office', 'staff_only')">
+                                <i class="fas fa-building"></i><br>
+                                <small>ICT Department Office</small><br>
+                                <div class="mt-1">
+                                    <span class="badge bg-primary">2 students</span>
+                                </div>
+                            </div>
+                            <div class="location-btn" onclick="selectLocation(11, 'Main Cafeteria', 'public')">
+                                <i class="fas fa-utensils"></i><br>
+                                <small>Main Cafeteria</small><br>
+                                <div class="mt-1">
+                                    <span class="badge bg-primary">15 students</span>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 
@@ -278,6 +390,75 @@ let selectedLocationId = null;
 let selectedLocationName = '';
 let scanResults = [];
 
+// Toast notification functions
+function showToast(type, title, message, duration = 5000) {
+    const toastContainer = document.getElementById('toastContainer');
+    const toastId = 'toast_' + Date.now();
+    
+    const icons = {
+        'success': '✓',
+        'error': '✗',
+        'warning': '⚠',
+        'info': 'ℹ'
+    };
+    
+    const toastHtml = `
+        <div class="toast ${type}" id="${toastId}">
+            <div class="toast-header">
+                <span class="toast-icon">${icons[type] || icons.info}</span>
+                <span>${title}</span>
+                <button class="toast-close" onclick="hideToast('${toastId}')" type="button">&times;</button>
+            </div>
+            <div class="toast-body">${message}</div>
+        </div>
+    `;
+    
+    toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+    
+    // Show toast with animation
+    setTimeout(() => {
+        const toast = document.getElementById(toastId);
+        if (toast) {
+            toast.classList.add('show');
+        }
+    }, 100);
+    
+    // Auto hide after duration
+    if (duration > 0) {
+        setTimeout(() => {
+            hideToast(toastId);
+        }, duration);
+    }
+    
+    return toastId;
+}
+
+function hideToast(toastId) {
+    const toast = document.getElementById(toastId);
+    if (toast) {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }
+}
+
+function showScanningToast() {
+    return showToast('info', 'Scanning', 'Processing card scan request...', 0);
+}
+
+function showSuccessToast(message) {
+    return showToast('success', 'Access Granted', message, 4000);
+}
+
+function showErrorToast(message) {
+    return showToast('error', 'Access Denied', message, 6000);
+}
+
+function showWarningToast(message) {
+    return showToast('warning', 'Security Alert', message, 8000);
+}
+
 function updateSelectedCard() {
     const select = document.getElementById('studentSelect');
     const display = document.getElementById('selectedCardDisplay');
@@ -332,7 +513,7 @@ function performScan() {
     const accessType = document.getElementById('accessType').value;
     
     if (!cardId || !selectedLocationId) {
-        alert('Please select both a card and a location');
+        showErrorToast('Please select both a student card and location before scanning');
         return;
     }
     
@@ -341,6 +522,9 @@ function performScan() {
     const originalText = scanButton.innerHTML;
     scanButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Scanning...';
     scanButton.disabled = true;
+    
+    // Show scanning toast
+    const scanningToastId = showScanningToast();
     
     // Perform the scan
     fetch('/scan_card', {
@@ -355,12 +539,38 @@ function performScan() {
         })
     })
     .then(response => {
+        // Hide scanning toast
+        hideToast(scanningToastId);
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
+        // Show appropriate toast based on scan result
+        if (data.success) {
+            const studentName = document.getElementById('cardStudentName').textContent;
+            let successMessage = `Access granted for ${studentName} at ${selectedLocationName}`;
+            
+            if (data.message) {
+                successMessage += `<br><small class="text-muted">${data.message}</small>`;
+            }
+            
+            showSuccessToast(successMessage);
+            
+            // Check for security alerts
+            if (data.alert) {
+                showWarningToast(`Security Alert: ${data.alert_message || 'Anomaly detected during access'}`);
+            }
+        } else {
+            let errorMessage = data.message || 'Access denied';
+            if (data.reason) {
+                errorMessage += `<br><small>Reason: ${data.reason}</small>`;
+            }
+            showErrorToast(errorMessage);
+        }
+        
         addScanResult(data, cardId, selectedLocationName, accessType);
         loadRecentActivity();
         
@@ -369,7 +579,12 @@ function performScan() {
         scanButton.disabled = false;
     })
     .catch(error => {
+        // Hide scanning toast
+        hideToast(scanningToastId);
+        
         console.error('Error:', error);
+        showErrorToast(`System error: Unable to process scan request<br><small>Please try again or contact support</small>`);
+        
         addScanResult({
             success: false,
             message: 'System error occurred'
@@ -424,16 +639,18 @@ function quickTest(scenario) {
     
     switch (scenario) {
         case 'valid':
-            studentSelect.value = 'RFID_001_ABC123';
-            selectLocationById(1); // Main Library
+            // Use first real student card from database
+            studentSelect.value = 'RFID_BACS_21A_145';
+            selectLocationById(1); // University Main Library
             break;
         case 'unauthorized':
             studentSelect.value = 'UNKNOWN_CARD_123';
-            selectLocationById(3); // Computer Lab
+            selectLocationById(30); // Cybersecurity Lab (restricted)
             break;
         case 'staff_only':
-            studentSelect.value = 'RFID_002_DEF456';
-            selectLocationById(10); // ICT Department Office
+            // Use real student trying to access staff area
+            studentSelect.value = 'RFID_BACS_22A_024';
+            selectLocationById(29); // ICT Department Office (staff_only)
             break;
     }
     

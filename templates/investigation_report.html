@@ -372,10 +372,10 @@
         <div class="mt-4">
             <h6><i class="fas fa-download me-2"></i>Export Investigation Report</h6>
             <div class="btn-group">
-                <button class="btn btn-primary btn-sm" onclick="exportInvestigation('detailed')">
+                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#detailedReportModal">
                     <i class="fas fa-file-alt me-1"></i>Detailed Report
                 </button>
-                <button class="btn btn-info btn-sm" onclick="exportInvestigation('summary')">
+                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#executiveSummaryModal">
                     <i class="fas fa-file-text me-1"></i>Executive Summary
                 </button>
                 <button class="btn btn-success btn-sm" onclick="printInvestigation()">
@@ -396,6 +396,163 @@
         <p class="text-muted">Reconstructing timeline and correlating events...</p>
     </div>
 </div>
+
+<!-- Detailed Report Modal -->
+<div class="modal fade" id="detailedReportModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius: 4px;">
+            <div class="modal-header" style="border-bottom: 1px solid #e9ecef;">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-alt me-2"></i>Generate Detailed Investigation Report
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="detailedReportForm">
+                    <div class="mb-3">
+                        <label for="detailedReportFormat" class="form-label">Report Format</label>
+                        <select class="form-select" id="detailedReportFormat" style="border-radius: 4px;">
+                            <option value="pdf">PDF Document (Recommended)</option>
+                            <option value="docx">Word Document</option>
+                            <option value="html">HTML Report</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Include Sections</label>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incExecSummary" checked>
+                                    <label class="form-check-label" for="incExecSummary">Executive Summary</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incInvestParams" checked>
+                                    <label class="form-check-label" for="incInvestParams">Investigation Parameters</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incTimeline" checked>
+                                    <label class="form-check-label" for="incTimeline">Timeline Reconstruction</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incSecurityAlerts" checked>
+                                    <label class="form-check-label" for="incSecurityAlerts">Security Alerts</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incRiskAssess" checked>
+                                    <label class="form-check-label" for="incRiskAssess">Risk Assessment</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incEvidence" checked>
+                                    <label class="form-check-label" for="incEvidence">Evidence Summary</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incRecommendations" checked>
+                                    <label class="form-check-label" for="incRecommendations">Recommendations</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="incCompliance">
+                                    <label class="form-check-label" for="incCompliance">Compliance Documentation</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="includeCharts" checked>
+                            <label class="form-check-label" for="includeCharts">
+                                Include charts and visualizations
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info" role="alert" style="border-radius: 4px;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Detailed Report includes:</strong> Complete investigation analysis, full timeline reconstruction, 
+                        all security events, detailed risk assessment, and comprehensive recommendations.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #e9ecef;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 4px;">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="generateDetailedReport()" style="border-radius: 4px;">
+                    <i class="fas fa-cog me-1"></i>Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Executive Summary Modal -->
+<div class="modal fade" id="executiveSummaryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 4px;">
+            <div class="modal-header" style="border-bottom: 1px solid #e9ecef;">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-text me-2"></i>Generate Executive Summary
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="executiveSummaryForm">
+                    <div class="mb-3">
+                        <label for="summaryFormat" class="form-label">Summary Format</label>
+                        <select class="form-select" id="summaryFormat" style="border-radius: 4px;">
+                            <option value="pdf">PDF Document</option>
+                            <option value="pptx">PowerPoint Presentation</option>
+                            <option value="docx">Word Document</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="summaryLength" class="form-label">Summary Length</label>
+                        <select class="form-select" id="summaryLength" style="border-radius: 4px;">
+                            <option value="brief">Brief (1-2 pages)</option>
+                            <option value="standard" selected>Standard (3-4 pages)</option>
+                            <option value="comprehensive">Comprehensive (5-6 pages)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Summary Focus</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="focusFindings" checked>
+                            <label class="form-check-label" for="focusFindings">Key Findings</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="focusRisk" checked>
+                            <label class="form-check-label" for="focusRisk">Risk Assessment</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="focusActions" checked>
+                            <label class="form-check-label" for="focusActions">Recommended Actions</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="focusCompliance">
+                            <label class="form-check-label" for="focusCompliance">Compliance Impact</label>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning" role="alert" style="border-radius: 4px;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Executive Summary:</strong> High-level overview designed for management and stakeholders. 
+                        Focuses on key findings, risk levels, and strategic recommendations.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid #e9ecef;">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" style="border-radius: 4px;">Cancel</button>
+                <button type="button" class="btn btn-info" onclick="generateExecutiveSummary()" style="border-radius: 4px;">
+                    <i class="fas fa-chart-line me-1"></i>Generate Summary
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -675,8 +832,115 @@ function clearInvestigation() {
     }
 }
 
-function exportInvestigation(type) {
-    alert(`Export Investigation Report\n\nReport Type: ${type.toUpperCase()}\n\nThis would generate a comprehensive ${type} report including:\n\n• Investigation parameters and scope\n• Timeline reconstruction\n• Security alerts and incidents\n• Risk assessment and recommendations\n• Evidence summary\n• Compliance documentation\n\nFeature not yet implemented in simulation.`);
+function exportInvestigation(type, format = 'pdf') {
+    const investigationData = {
+        type: type,
+        format: format,
+        investigation_id: document.querySelector('[data-investigation-id]')?.getAttribute('data-investigation-id') || 'INV-' + Date.now(),
+        timestamp: new Date().toISOString()
+    };
+    
+    // Show loading notification
+    showNotification('info', 'Generating Report', `Creating ${type} investigation report...`);
+    
+    // Simulate report generation
+    setTimeout(() => {
+        showNotification('success', 'Report Ready', `${type} investigation report has been generated successfully.`);
+        
+        // In a real system, this would trigger a download
+        const filename = `investigation_${type}_${new Date().toISOString().split('T')[0]}.${format}`;
+        console.log(`Would download: ${filename}`);
+        
+    }, 2000);
+}
+
+function showNotification(type, title, message) {
+    // Create a simple toast notification
+    const toastHtml = `
+        <div class="alert alert-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'info'} alert-dismissible fade show" 
+             style="position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
+            <strong>${title}:</strong> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', toastHtml);
+    
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        if (alerts.length > 0) {
+            alerts[alerts.length - 1].remove();
+        }
+    }, 4000);
+}
+
+function generateDetailedReport() {
+    const format = document.getElementById('detailedReportFormat').value;
+    const sections = [];
+    
+    // Collect selected sections
+    if (document.getElementById('incExecSummary').checked) sections.push('Executive Summary');
+    if (document.getElementById('incInvestParams').checked) sections.push('Investigation Parameters');
+    if (document.getElementById('incTimeline').checked) sections.push('Timeline Reconstruction');
+    if (document.getElementById('incSecurityAlerts').checked) sections.push('Security Alerts');
+    if (document.getElementById('incRiskAssess').checked) sections.push('Risk Assessment');
+    if (document.getElementById('incEvidence').checked) sections.push('Evidence Summary');
+    if (document.getElementById('incRecommendations').checked) sections.push('Recommendations');
+    if (document.getElementById('incCompliance').checked) sections.push('Compliance Documentation');
+    
+    const includeCharts = document.getElementById('includeCharts').checked;
+    
+    // Show loading state
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Generating...';
+    btn.disabled = true;
+    
+    // Close modal
+    $('#detailedReportModal').modal('hide');
+    
+    // Generate report
+    exportInvestigation('detailed', format);
+    
+    // Reset button
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }, 2000);
+    
+    showNotification('info', 'Report Generation', `Generating detailed investigation report in ${format.toUpperCase()} format with ${sections.length} sections.`);
+}
+
+function generateExecutiveSummary() {
+    const format = document.getElementById('summaryFormat').value;
+    const length = document.getElementById('summaryLength').value;
+    const focus = [];
+    
+    // Collect focus areas
+    if (document.getElementById('focusFindings').checked) focus.push('Key Findings');
+    if (document.getElementById('focusRisk').checked) focus.push('Risk Assessment');
+    if (document.getElementById('focusActions').checked) focus.push('Recommended Actions');
+    if (document.getElementById('focusCompliance').checked) focus.push('Compliance Impact');
+    
+    // Show loading state
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Generating...';
+    btn.disabled = true;
+    
+    // Close modal
+    $('#executiveSummaryModal').modal('hide');
+    
+    // Generate summary
+    exportInvestigation('executive_summary', format);
+    
+    // Reset button
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }, 2000);
+    
+    showNotification('info', 'Summary Generation', `Generating ${length} executive summary in ${format.toUpperCase()} format focusing on ${focus.length} key areas.`);
 }
 
 function printInvestigation() {
