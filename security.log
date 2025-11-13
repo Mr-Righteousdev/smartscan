@@ -4485,3 +4485,20 @@
 2025-11-13 03:57:08,999 - werkzeug - WARNING -  * Debugger is active!
 2025-11-13 03:57:09,008 - werkzeug - INFO -  * Debugger PIN: 663-779-245
 2025-11-13 04:09:00,936 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-13 04:09:01,651 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-13 04:09:01,654 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-13 04:09:01,797 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/populate_sample_data.py', reloading
+2025-11-13 04:09:01,816 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/populate_sample_data.py', reloading
+2025-11-13 04:09:06,031 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-13 04:10:04,478 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-13 04:10:04,612 - werkzeug - WARNING -  * Debugger is active!
+2025-11-13 04:10:04,810 - werkzeug - INFO -  * Debugger PIN: 663-779-245
+2025-11-13 04:11:11,898 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/ai_engine.py', reloading
+2025-11-13 04:11:11,928 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/app.py', reloading
+2025-11-13 04:11:11,930 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/auth.py', reloading
+2025-11-13 04:11:11,931 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/install_ai_dependencies.py', reloading
+2025-11-13 04:11:11,933 - werkzeug - INFO -  * Detected change in '/home/mrrighteous/Desktop/smartscan/populate_sample_data.py', reloading
+2025-11-13 04:11:13,746 - werkzeug - INFO -  * Restarting with watchdog (inotify)
+2025-11-13 04:11:22,247 - __main__ - INFO - Starting Smart Campus Security System - Phase 2
+2025-11-13 04:11:22,267 - werkzeug - WARNING -  * Debugger is active!
+2025-11-13 04:11:22,274 - werkzeug - INFO -  * Debugger PIN: 663-779-245
